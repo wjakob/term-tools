@@ -16,8 +16,8 @@ call vundle#begin() " required
 
 " Let Vundle manage Vundle
 Plugin 'gmarik/Vundle.vim'
-" Tomorrow night theme
-Plugin 'wjakob/vim-tomorrow-night'
+" Assorted scripts, modified tomorrow night colorscheme
+Plugin 'wjakob/wjakob.vim'
 " Airline status bar
 Plugin 'bling/vim-airline'
 " C++/Python autocompletion
