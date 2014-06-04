@@ -14,6 +14,6 @@ How to install
 --------------
 
 * Clone this repository:
-		git clone https://github.com/wjakob/term-tools.git
+        git clone https://github.com/wjakob/term-tools.git
         cd term-tools
         ./install.sh
