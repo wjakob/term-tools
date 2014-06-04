@@ -24,7 +24,11 @@ fi
 if [ -e /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
 	export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
 	export LESS=' -R '
+elif [ -e /usr/local/bin/src-hilite-lesspipe.sh ]; then
+	export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+	export LESS=' -R '
 fi
+
 
 # autojump
 [[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && source ~/.autojump/etc/profile.d/autojump.sh
