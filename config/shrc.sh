@@ -4,8 +4,7 @@
 # directory containing these tools
 export TERM_TOOLS=~/term-tools
 
-# vim by default instead of emacs
-#set -o vi
+# vim by default
 export EDITOR="vim"
 
 # store more shell history
@@ -32,6 +31,11 @@ fi
 
 [[ -s /usr/share/autojump/autojump.sh ]] && source /usr/share/autojump/autojump.sh
 [[ -s /usr/local/etc/autojump.sh ]] && source /usr/local/etc/autojump.sh
+
+# send ctrl-s to vim
+# see http://unix.stackexchange.com/questions/12107/how-to-unfreeze-after-accidentally-pressing-ctrl-s-in-a-terminal
+stty stop undef
+stty -ixon
 
 if uname | grep Darwin > /dev/null; then
 	# Mac specific commands
@@ -134,10 +138,29 @@ if [ "$BASH_VERSION" ]; then
 	# automatically correct cd spelling errors
 	shopt -s cdspell
 
-	# The correctall feature is at times painful to use with 'cp' and 'mv' -- disable it!
+	# The correctall feature is at times painful to use with 'cp', 'mv', and 'mkdir' -- disable it!
 	# http://superuser.com/questions/251818/exceptions-to-zsh-correctall-feature
 	alias cp='nocorrect cp '
 	alias mv='nocorrect mv '
+	alias mkdir='nocorrect mkdir '
 fi
 
 function pw { $TERM_TOOLS/config/make-password.pl -p -a $1 ~/.pwdata ; }
+
+function get_timezone {
+	if [ -z "$TZNAME" ]; then
+		if [ -f /etc/timezone ]; then
+			TZNAME=`cat /etc/timezone`
+		elif [ -h /etc/localtime ]; then
+			TZNAME=`readlink /etc/localtime | sed "s/\/usr\/share\/zoneinfo\///"`
+		fi
+	fi
+}
+
+# Convenience to convert between EST/PST/CE(S)T
+function from_pst { gdate --date="TZ=\"US/Pacific\"    $@" }
+function from_est { gdate --date="TZ=\"US/Eastern\"    $@" }
+function from_cet { gdate --date="TZ=\"Europe/Berlin\" $@" }
+function to_pst   { get_timezone; TZ="US/Pacific"    gdate --date="TZ=\"$TZNAME\" $@" }
+function to_est   { get_timezone; TZ="US/Eastern"    gdate --date="TZ=\"$TZNAME\" $@" }
+function to_cet   { get_timezone; TZ="Europe/Berlin" gdate --date="TZ=\"$TZNAME\" $@" }

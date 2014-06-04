@@ -24,7 +24,7 @@
 [merge]
 	tool = kdiff3
 [core]
-	pager = less -r
+	pager = less -x4
 [credential]
 	helper = cache --timeout=360000
 [color]
