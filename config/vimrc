@@ -1,0 +1,414 @@
+" Wenzel's .vimrc
+
+" Useful shortcuts:
+"
+" :b <..> switch to buffer
+
+" Must be first since this sets some options as a side effect
+set nocompatible
+
+" Plugins {{{
+
+filetype off " Needed (this interferes with Vundle)
+
+set rtp+=~/.vim/bundle/Vundle.vim/
+call vundle#rc()
+
+" Let Vundle manage Vundle
+Plugin 'gmarik/Vundle.vim'
+Plugin 'bling/vim-airline'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'tomorrow-night'
+Plugin 'ivanov/vim-ipython'
+Plugin 'Lokaltog/vim-easymotion'
+Plugin 'bogado/file-line'
+Plugin 'ctrlp.vim'
+Plugin 'mhinz/vim-hugefile'
+Plugin 'tell-k/vim-autopep8'
+Plugin 'vhdirk/vim-cmake'
+Plugin 'mileszs/ack.vim'
+Plugin 'rking/ag.vim'
+Plugin 'itchyny/calendar.vim'
+
+filetype plugin indent on
+
+" }}}
+
+" Core VIM settings {{{
+set encoding=utf-8             " use UTF-8 (default latin1)
+set autoread                   " auto-reload modified files (with no local changes)
+set undolevels=65536           " lots of undo (default 1000)
+set history=1024               " lots of history (default 20)
+set mouse=a                    " enable mouse (set mouse= to disable mouse)
+set hidden                     " allow un-saved buffers in background
+set lazyredraw                 " no redraws in macros
+set confirm                    " dialog when :q, :w, :x, :wq fails
+set title                      " change terminal title
+set nostartofline              " don't move cursor when switching buffers/files
+set ttyfast                    " smoother changes
+set backspace=2                " Backspace can move back beyond the start of the insertion
+set backspace=indent,eol,start " Make backspace behave more like in other editors
+set splitbelow                 " Open splits below (more natural), :sp makes a split
+set splitright                 " Similar to the above (for vsplit)
+let mapleader=","              " Map the leader key to comma
+
+" Control what extra information is shown
+set showmode                   " show which mode we are in
+set showcmd                    " show state of keyboard input
+set showmatch                  " show brace match
+set matchtime=2                " when writing braces, only briefly flash the opening one (200ms)
+set report=0                   " always report how many occurrences were changed by search/replace etc
+set ruler                      " show position in bottom right
+set winminheight=0             " allow to collapse down windows to their status line only
+
+" Tabs, wrapping, folding, and indentation
+set autoindent                 " automatic indentation
+set copyindent                 " copy the previous indentation on autoindenting
+set smartindent                " enable C-style indenting by default (useful for C/C++)
+set tabstop=4                  " Number of spaces that a <Tab> in the file counts for (default 8)
+set shiftwidth=4               " Number of spaces to use for each step of (auto)indent.
+set smarttab                   " insert tabs on the start of a line according to
+                               " shiftwidth, not tabstop
+set textwidth=0                " no hard wrapping by default
+set foldmethod=syntax          " fold using syntax by default
+set foldminlines=4             " require a medium size to fold
+set foldnestmax=3              " max 3 fold levels for syntax/indent folding
+
+" Appearance
+set number                     " enable line numbers
+set scrolloff=3                " keep 3 lines below and above cursor
+set linebreak                  " show wrap at word boundaries
+set showbreak=\ ↪\             " prefix wrap with ↪
+
+" Autocompletion
+set wildmenu                   " completion with menu
+set wildmode=full              " show list with navigation
+set wildignore=*~,*.o,*.d,*.obj,*.class,*.pyc,*.bak,*.swp,.svn,.git,.hg
+set suffixes=~,.o,.d,.obj,.class,.pyc,.bak,.swp
+set completeopt=menu,preview   " Completion with a menu
+
+" Searching
+set incsearch                  " incremental search
+set hlsearch                   " enable search highlighting
+
+" Store swapfiles in a central location
+set backup
+set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set backupskip=/tmp/*,/private/tmp/*
+set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set writebackup
+
+" Get rid of bad habits
+inoremap  <Up>     <NOP>
+inoremap  <Down>   <NOP>
+inoremap  <Left>   <NOP>
+inoremap  <Right>  <NOP>
+noremap   <Up>     <NOP>
+noremap   <Down>   <NOP>
+noremap   <Left>   <NOP>
+noremap   <Right>  <NOP>
+
+" Window navigation {{{
+" Move around using Alt + navigation keys
+nmap <silent> <M-k> :wincmd k<CR>
+nmap <silent> <M-j> :wincmd j<CR>
+nmap <silent> <M-h> :wincmd h<CR>
+nmap <silent> <M-l> :wincmd l<CR>
+
+" As above (Mac keyboard)
+nmap <silent> ˙ :wincmd h<CR>
+nmap <silent> ∆ :wincmd j<CR>
+nmap <silent> ˚ :wincmd k<CR>
+nmap <silent> ¬ :wincmd l<CR>
+
+nmap <silent> <C-h> :bp<CR>
+nmap <silent> <C-l> :bn<CR>
+
+" ctrl+a : select all
+nmap <C-A> 1GVG
+
+" C-x: close window
+nmap <silent> <C-X> :wincmd c<CR>
+
+" Change the size of splits using + and -
+map - 5<C-W>-
+map + 5<C-W>+
+map = <C-W>_
+
+" Use Q for formatting the current paragraph (or selection)
+vmap Q gqp
+nmap Q gqap
+
+" Move by displayed lines, not physical lines
+nnoremap j gj
+nnoremap k gk
+
+" Map cn/cp to navigate through search results (formerly :cn/:cp)
+nnoremap cn :cn<CR>
+nnoremap cp :cp<CR>
+
+" Allow 'gf' to jump to file:line links
+"nnoremap gf gF
+
+" Bind F2 as a quick paste mode toggle key
+set pastetoggle=<F2>
+
+" Hide shown search results
+nmap <silent> ,/ :nohlsearch<CR>
+
+" Automaticall unfold when jumping to a line in a file
+nnoremap <expr> G (v:count ? 'Gzv' : 'G')
+
+" }}}
+
+" Tell vim to remember certain things when we exit
+"  '50  :  marks will be remembered for up to 50 previously edited files
+"  "100 :  will save up to 100 lines for each register
+"  :50  :  up to 20 lines of command-line history will be remembered
+"  %    :  saves and restores the buffer list
+"  n... :  where to save the viminfo files
+set viminfo='50,\"100,:50,%,n~/.viminfo
+
+" }}}
+
+" Global fixes {{{
+
+" Be quiet
+set noerrorbells visualbell t_vb=  " No bell
+au GUIEnter * set visualbell t_vb= " No bell in GUI mode
+
+" Faster timeouts
+set timeout timeoutlen=1000 ttimeoutlen=100
+
+" Use OS clipboard
+if has('unix') && system("uname") == "Linux\n"
+    set clipboard=unnamedplus  " Share X windows clipboard.
+else
+    set clipboard=unnamed      " Share system clipboard.
+endif
+
+" Re-adjust windows on window resize
+autocmd VimResized * wincmd =
+
+" Insert mode -- don't create/close folds when typing
+autocmd InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
+autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+
+" Remove the toolbar if we're running under a GUI
+if has("gui_running")
+  set guioptions=-t
+endif
+
+if has('mac')
+	fixdel
+endif
+
+" Jump to last known line when opening a file (change ' to ` to do column too)
+autocmd BufReadPost *
+  \ if line("'\"") > 0 && line("'\"") <= line("$") |
+  \   exe "normal g'\"" |
+  \   if foldlevel('.') > 0 |
+  \     exe "normal zO" |
+  \   endif |
+  \ endif
+
+" Highlight trailing whitespace in the most annoying way possible.
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+
+" Delete trailing white space
+fun! DeleteTrailingWS()
+	exe "normal mq"
+	%s/\s\+$//ge
+	exe "normal `q"
+	":ShowMarksClearMark
+endfun
+
+noremap <leader>dw <esc>:call DeleteTrailingWS()<cr>
+
+" Remove trailing newlines
+noremap <leader>dd :%s/\r\n/\r/g<CR>
+" }}}
+
+" Color scheme {{{
+set t_Co=256
+set background=dark
+syntax on
+colorscheme tomorrow-night
+hi Folded ctermfg=248 ctermbg=237 guibg=#3a3a3a guifg=#a8a8a8
+" }}}
+
+" Plugin config {{{
+" Powerline -- fancy status line
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+let g:airline_symbols.branch = '⎇'
+let g:airline_left_sep = '⮀'
+let g:airline_left_alt_sep = '⮁'
+let g:airline_right_sep = '⮂'
+let g:airline_right_alt_sep = '⮃'
+"
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='base16'
+
+set laststatus=2  " 2 means always show status
+
+" YouCompleteMe settings
+let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+let g:ycm_key_list_previous_completion = ['<S-TAB>']
+let g:ycm_key_list_select_completion = ['<TAB>']
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+nnoremap J :YcmCompleter GoTo<CR>zv
+
+" CtrlP setting
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+"  ignore files
+let g:ctrlp_custom_ignore = {
+	\ 'dir':  '\.git$\|\.hg$\|\.svn$',
+	\ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.d$\|\.swp$',
+	\ }
+
+" Search the whole repository (searches for .git/.hg/.svn..)
+let g:ctrlp_working_path_mode = 'r'
+
+" refresh file tree on write or focus change
+augroup CtrlPExtension
+  autocmd!
+  autocmd FocusGained * ClearCtrlPCache
+  autocmd BufWritePost * ClearCtrlPCache
+augroup END
+
+" Folding for TeX files
+let g:tex_fold_enabled = 1
+
+" Bi-directional find motion
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+nmap s <Plug>(easymotion-s)
+
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+
+" <leader>l to format Python
+au FileType python nnoremap <leader>l <esc>:call Autopep8()<cr><esc>:redraw!<cr>
+let g:autopep8_disable_show_diff = 1
+
+let g:calendar_google_calendar = 1
+let g:calendar_date_endian = "little"
+let g:calendar_first_day = "monday"
+let g:calendar_clock_12hour = 1
+let g:calendar_frame = "unicode"
+let g:calendar_date_separator = "."
+let g:calendar_view = "days"
+" }}}
+
+" Mitsuba specific {{{
+
+let c_no_curly_error=1 " Be more lenient with C++11 syntax
+au Syntax cpp syn keyword cType Float
+
+" }}}
+
+" Filetype-specific settings {{{
+
+" SCons* files are Python scripts
+au BufRead,BufNewFile SCons* set filetype=python
+
+" Latex and Python: do not use tabs
+au FileType python   setlocal expandtab softtabstop=4
+au FileType tex      setlocal expandtab softtabstop=4
+au FileType plaintex setlocal expandtab softtabstop=4
+
+" Vimrc -- fold with markers
+au FileType vim setlocal foldmethod=marker
+
+" Mathematica binding files
+au BufNewFile,BufRead *.tm set filetype=cpp
+
+" C/C++ -- smart indentation
+au FileType c,cpp,h,hpp setlocal cindent
+
+
+" Spell-check text files
+au FileType txt,tex,html setlocal spell
+
+" Highlight repeated words
+au FileType txt,tex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
+au FileType txt,tex,html hi link TmlDoubleWords WarningMsg
+" }}}
+
+" PBRT editing environment {{{
+
+au BufNewFile,BufRead ~/pbrt-3ed/src/* syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal | set conceallevel=2 concealcursor=nc
+
+function JumpToFile()
+	if matchstr(expand('%:p'), 'pbrt-3ed/src/.*') != ''
+		" This is PBRT code: move to the column with file/line number information and jump
+		normal 3|gF
+	else
+		" Perform a normal jump
+		normal gF
+	endif
+endfunction
+
+nnoremap gf :call JumpToFile()<CR>
+
+" }}}
+
+" Other commands and abbreviations {{{
+
+" Multiprocessor builds
+function! SetMakeprg()
+	if !empty($NUMBER_OF_PROCESSORS)
+		let n = $NUMBER_OF_PROCESSORS + 0
+	elseif has('mac')
+		let n = system("sysctl -n hw.ncpu")
+	elseif filereadable('/proc/cpuinfo')
+		let n = system('grep -c ^processor /proc/cpuinfo') + 0
+	else
+		let n = 1
+	endif
+	let &makeprg = 'make' . (n > 1 ? (' -j'.(n + 1)) : '')
+endfunction
+call SetMakeprg()
+
+
+function! CommandCabbr(abbreviation, expansion)
+  execute 'cabbr ' . a:abbreviation . ' <c-r>=getcmdpos() == 1 && getcmdtype() == ":" ? "' . a:expansion . '" : "' . a:abbreviation . '"<CR>'
+endfunction
+
+command! -nargs=+ CommandCabbr call CommandCabbr(<f-args>)
+
+command IPy execute 'IPython' | set foldmethod=marker | set foldmarker=#-,##
+
+command Build make! | copen
+" command -nargs=+ Grep execute 'silent vimgrep! /<args>/j *.tex' | copen 20
+
+" w!! command which writes with root permissions
+cmap w!! w !sudo tee % >/dev/null
+
+CommandCabbr build Build
+CommandCabbr ag Ag
+CommandCabbr ack Ack
+CommandCabbr bc Bclose
+
+" Automatically insert C++ header gates for new h/hpp files
+function! s:insert_gates()
+  let gatename = '__' . substitute(toupper(expand("%:t")), "\\.", "_", "g")
+  execute "normal! i#if !defined(" . gatename . ")\n#define " . gatename
+  execute "normal! Go#endif /* " . gatename . " */"
+  execute "normal! ggjo"
+endfunction
+
+au BufNewFile *.{h,hpp} call <SID>insert_gates()
+
+" }}}
