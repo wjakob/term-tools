@@ -1,0 +1,16 @@
+[ui]
+username = Wenzel Jakob <wenzel@inf.ethz.ch>
+
+[web]
+cacerts = ~/term-tools/config/ca-certificates.crt
+
+[hooks]
+# Always show a list of changed files
+preupdate = hg status --rev .:$HG_PARENT1
+
+[merge-tools]
+kdiff3.args = $base $local $other -o $output
+
+[extensions]
+hgext.mq=
+shelve=

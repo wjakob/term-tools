@@ -1,0 +1,31 @@
+[user]
+	email = wenzel@inf.ethz.ch
+	name = Wenzel Jakob
+[alias]
+	co = checkout
+	df = diff -w
+	staged = diff --staged
+	unstage = reset HEAD
+	lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+[push]
+	default = upstream
+[difftool "kdiff3"]
+    path = kdiff3
+    trustExitCode = false
+[difftool]
+    prompt = false
+[diff]
+    tool = kdiff3
+[mergetool "kdiff3"]
+    path = kdiff3
+    trustExitCode = false
+[mergetool]
+    keepBackup = false
+[merge]
+	tool = kdiff3
+[core]
+	pager = less -r
+[credential]
+	helper = cache --timeout=360000
+[color]
+	ui = auto
