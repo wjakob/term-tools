@@ -2,6 +2,8 @@
 echo "$0: TERM-TOOLS INSTALLER"
 echo ""
 
+export TERM_TOOLS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # if -f, make sure it is intended
 for f in $@; do
 	if [ "$f" == "-f" ]; then
@@ -54,9 +56,6 @@ echo ""
 echo " == INSTALL COMPLETE =="
 echo ""
 echo "To overwrite existing config, rerun with -f (this will delete any existing configuration)"
-echo ""
-echo "Add this line to both your ~/.bashrc and ~/.zshrc:"
-echo "    [[ -s ~/term-tools/config/shrc.sh ]] && source ~/term-tools/config/shrc.sh"
 echo ""
 echo "To make zsh the default shell, run:"
 echo "    chsh -s /bin/zsh"

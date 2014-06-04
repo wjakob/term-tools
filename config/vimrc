@@ -12,23 +12,40 @@ set nocompatible
 filetype off " Needed (this interferes with Vundle)
 
 set rtp+=~/.vim/bundle/Vundle.vim/
-call vundle#rc()
+call vundle#begin() " required
 
 " Let Vundle manage Vundle
 Plugin 'gmarik/Vundle.vim'
+" Tomorrow night theme
+Plugin 'wjakob/vim-tomorrow-night'
+" Airline status bar
 Plugin 'bling/vim-airline'
+" C++/Python autocompletion
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'tomorrow-night'
+" Git integration
+Plugin 'tpope/vim-fugitive'
+" IPython integration
 Plugin 'ivanov/vim-ipython'
+" Easymotion plugin2
 Plugin 'Lokaltog/vim-easymotion'
+" Support for directly opening file:linenumber
 Plugin 'bogado/file-line'
+" Convenient recursive filename search
 Plugin 'ctrlp.vim'
+" Accelerates loading of big files
 Plugin 'mhinz/vim-hugefile'
+" Format Python files
 Plugin 'tell-k/vim-autopep8'
+" Cmake integration
 Plugin 'vhdirk/vim-cmake'
+" Ack searcher
 Plugin 'mileszs/ack.vim'
+" Ag searcher
 Plugin 'rking/ag.vim'
+" Google calendar viewer
 Plugin 'itchyny/calendar.vim'
+
+call vundle#end() " required
 
 filetype plugin indent on
 
@@ -244,16 +261,20 @@ hi Folded ctermfg=248 ctermbg=237 guibg=#3a3a3a guifg=#a8a8a8
 " Plugin config {{{
 " Powerline -- fancy status line
 if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
+	let g:airline_symbols = {}
 endif
-let g:airline_symbols.branch = '⎇'
 let g:airline_left_sep = '⮀'
 let g:airline_left_alt_sep = '⮁'
 let g:airline_right_sep = '⮂'
 let g:airline_right_alt_sep = '⮃'
-"
+let g:airline_symbols.branch = '⭠'
+let g:airline_symbols.readonly = '⭤'
+let g:airline_symbols.linenr = '⭡'
+let g:airline_powerline_fonts=1
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|' 
 let g:airline_theme='base16'
 
 set laststatus=2  " 2 means always show status
