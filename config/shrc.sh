@@ -2,7 +2,7 @@
 # source from ~/.bashrc or ~/.zshrc
 
 # directory containing these tools
-export TERM_TOOLS_DIR=~/term-tools
+export TERM_TOOLS_DIR=~/term-tools2
 
 # vim by default instead of emacs
 #set -o vi
@@ -17,17 +17,14 @@ ulimit -c unlimited 2>/dev/null
 
 # 256 colors
 if [[ "$TERM" == "xterm" ]]; then
-    export TERM="xterm-256color"
+	export TERM="xterm-256color"
 fi
 
 # syntax highlighting in less
 if [ -e /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
-  export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
-  export LESS=' -R '
+	export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
+	export LESS=' -R '
 fi
-
-# python autocomplete
-[[ -s ~/.pythonrc ]] && export PYTHONSTARTUP=~/.pythonrc
 
 # autojump
 [[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && source ~/.autojump/etc/profile.d/autojump.sh
@@ -39,16 +36,21 @@ fi
 if uname | grep Darwin > /dev/null; then
 	# Mac version
 	function ls_safe {
-		~/term-tools/config/timeout3.sh -t 1 ls -G
+		$TERM_TOOLS/config/timeout3.sh -t 1 ls -G
 	}
 
 	# Also bind find to 'gfind' (install via brew)
 	alias find=gfind
 else
 	function ls_safe {
-		~/term-tools/config/timeout3.sh -t 1 ls --color=auto
+		$TERM_TOOLS/config/timeout3.sh -t 1 ls --color=auto
 	}
 fi
+
+alias gnome-open=gvfs-open
+alias gqview=geeqie
+alias open=gvfs-open
+
 
 # autojump wrapper (I've renamed "function j" in
 #   autojump.sh to "function j_impl")
@@ -64,6 +66,7 @@ function j {
 
 # ZSH-SPECIFIC CONFIG
 if [ "$ZSH_VERSION" ]; then
+	ZSH_THEME="wjakob"
 
 	# ls after every cd
 	function chpwd() {
@@ -72,12 +75,16 @@ if [ "$ZSH_VERSION" ]; then
 	}
 
 	# vim keybindings for zsh
-	#bindkey -v
 	bindkey '\e[3~' delete-char
-	bindkey '^R' history-incremental-pattern-search-backward
 
-	# make scp work the way it does in bash
+	# no error if glob fails to expand (scp fix)
 	unsetopt nomatch
+
+	# Automatically escape wildcards in 'scp' and 'rsync' commands
+	__remote_commands=(scp rsync)
+	autoload -U url-quote-magic
+	zle -N self-insert url-quote-magic
+	zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le ${#__remote_commands} ]] && reply=("*") || reply=(http https ftp)'
 fi
 
 # BASH-SPECIFIC CONFIG
@@ -91,13 +98,8 @@ if [ "$BASH_VERSION" ]; then
 	#export PROMPT_DIRTRIM=2  # uncomment to trim to 2 directories
 	DEFAULT_COLOR="\[\e[0m\]"
 	PS1_COLOR="\[\e[34m\]"
-	GIT_COLOR="\[\e[33m\]"
 	TITLEBAR="\[\e]0;\h \w\007\]"
-	if command -v __git_ps1 >/dev/null 2>&1; then
-	  PS1="$TITLEBAR\n$PS1_COLOR\h:\w$GIT_COLOR\$(__git_ps1)$PS1_COLOR\n \$$DEFAULT_COLOR "
-	else
-	  PS1="$TITLEBAR\n$PS1_COLOR\h:\w\n \$$DEFAULT_COLOR "
-	fi
+	PS1="$TITLEBAR\n$PS1_COLOR\h:\w\n \$$DEFAULT_COLOR "
 
 	# don't put duplicate lines or lines starting with space in the history.
 	export HISTCONTROL=ignoreboth
@@ -118,4 +120,4 @@ if [ "$BASH_VERSION" ]; then
 	alias mv='nocorrect mv '
 fi
 
-function pw { ~/term-tools/config/make-password.pl -p -a $1 ~/.pwdata ; }
+function pw { $TERM_TOOLS/config/make-password.pl -p -a $1 ~/.pwdata ; }
