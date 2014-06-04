@@ -26,7 +26,7 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'tpope/vim-fugitive'
 " IPython integration
 Plugin 'ivanov/vim-ipython'
-" Easymotion plugin2
+" Easymotion plugin
 Plugin 'Lokaltog/vim-easymotion'
 " Support for directly opening file:linenumber
 Plugin 'bogado/file-line'
