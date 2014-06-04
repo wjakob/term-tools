@@ -3,6 +3,7 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="wjakob"
 plugins=(git zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
+source ~/term-tools/config/shrc.sh
 
 # Search paths
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/pbrt-3ed/src/bin

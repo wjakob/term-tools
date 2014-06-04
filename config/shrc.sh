@@ -2,7 +2,7 @@
 # source from ~/.bashrc or ~/.zshrc
 
 # directory containing these tools
-export TERM_TOOLS_DIR=~/term-tools2
+export TERM_TOOLS=~/term-tools
 
 # vim by default instead of emacs
 #set -o vi
