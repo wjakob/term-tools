@@ -32,25 +32,30 @@ if [ "$BASH_VERSION" ]; then
 	complete -F _cd j
 fi
 
-# ls with a 1-second timeout
 if uname | grep Darwin > /dev/null; then
-	# Mac version
+	# Mac specific commands
+
+	# ls with a 1-second timeout
 	function ls_safe {
 		$TERM_TOOLS/config/timeout3.sh -t 1 ls -G
 	}
 
 	# Also bind find to 'gfind' (install via brew)
 	alias find=gfind
+
+	# top: sort by cpu
+	alias top="top -o cpu"
 else
+	alias gnome-open=gvfs-open
+	alias gqview=geeqie
+	alias open=gvfs-open
+
 	function ls_safe {
 		$TERM_TOOLS/config/timeout3.sh -t 1 ls --color=auto
 	}
 fi
 
-alias gnome-open=gvfs-open
-alias gqview=geeqie
-alias open=gvfs-open
-
+alias today="google calendar today"
 
 # autojump wrapper (I've renamed "function j" in
 #   autojump.sh to "function j_impl")
@@ -66,7 +71,10 @@ function j {
 
 # ZSH-SPECIFIC CONFIG
 if [ "$ZSH_VERSION" ]; then
+	ZSH=$HOME/.oh-my-zsh
 	ZSH_THEME="wjakob"
+	plugins=(zsh-syntax-highlighting)
+	source $ZSH/oh-my-zsh.sh
 
 	# ls after every cd
 	function chpwd() {
@@ -85,6 +93,29 @@ if [ "$ZSH_VERSION" ]; then
 	autoload -U url-quote-magic
 	zle -N self-insert url-quote-magic
 	zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le ${#__remote_commands} ]] && reply=("*") || reply=(http https ftp)'
+
+	# Enable VIM mode, adjust delays
+	export KEYTIMEOUT=1
+	bindkey -v
+
+	# VIM mode: visualize the current editing mode
+	vim_ins_mode="[INS]"
+	vim_cmd_mode="[CMD]"
+	vim_mode=$vim_ins_mode
+	function zle-keymap-select {
+		vim_mode="${${KEYMAP/vicmd/${vim_cmd_mode}}/(main|viins)/${vim_ins_mode}}"
+		zle reset-prompt
+	}
+	function zle-line-finish {
+		vim_mode=$vim_ins_mode
+	}
+	zle -N zle-keymap-select
+	zle -N zle-line-finish
+	RPROMPT='${vim_mode}'
+
+	# Perform a previx history search when navigating previous commands
+	bindkey -M vicmd 'k' history-search-backward
+	bindkey -M vicmd 'j' history-search-forward
 fi
 
 # BASH-SPECIFIC CONFIG
