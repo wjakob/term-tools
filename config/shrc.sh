@@ -26,11 +26,8 @@ if [ -e /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
 	export LESS=' -R '
 fi
 
-# autojump
-[[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && source ~/.autojump/etc/profile.d/autojump.sh
-if [ "$BASH_VERSION" ]; then
-	complete -F _cd j
-fi
+[[ -s /usr/share/autojump/autojump.sh ]] && source /usr/share/autojump/autojump.sh
+[[ -s /usr/local/etc/autojump.sh ]] && source /usr/local/etc/autojump.sh
 
 if uname | grep Darwin > /dev/null; then
 	# Mac specific commands
@@ -56,18 +53,6 @@ else
 fi
 
 alias today="google calendar today"
-
-# autojump wrapper (I've renamed "function j" in
-#   autojump.sh to "function j_impl")
-function j {
-	local _p=$PWD
-	j_impl $@
-
-	if [[ "$PWD" == "$_p" ]] && [ -d "$1" ]; then
-		cd $1
-		echo -e "\\033[31m${PWD}\\033[0m"
-	fi
-}
 
 # ZSH-SPECIFIC CONFIG
 if [ "$ZSH_VERSION" ]; then
