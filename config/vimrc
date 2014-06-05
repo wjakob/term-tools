@@ -1,7 +1,7 @@
 " Wenzel's .vimrc
 
 " Useful shortcuts:
-"
+" Ctrl-O/I: move forward/backwards through previously visited buffer positions
 " :b <..> switch to buffer
 
 " Must be first since this sets some options as a side effect
@@ -38,12 +38,14 @@ Plugin 'mhinz/vim-hugefile'
 Plugin 'tell-k/vim-autopep8'
 " Cmake integration
 Plugin 'vhdirk/vim-cmake'
-" Ack searcher
-Plugin 'mileszs/ack.vim'
 " Ag searcher
 Plugin 'rking/ag.vim'
 " Google calendar viewer
 Plugin 'itchyny/calendar.vim'
+" Snippet manager
+Plugin 'SirVer/ultisnips'
+" Hard mode :)
+Plugin 'takac/vim-hardtime'
 
 call vundle#end() " required
 
@@ -114,6 +116,9 @@ set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set backupskip=/tmp/*,/private/tmp/*
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set writebackup
+
+set spelllang=en
+set spellfile=$HOME/Dropbox/spell-en.utf-8.add
 
 " Get rid of bad habits
 inoremap  <Up>     <NOP>
@@ -229,13 +234,6 @@ autocmd BufReadPost *
   \   endif |
   \ endif
 
-" Highlight trailing whitespace in the most annoying way possible.
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
-autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-
 " Delete trailing white space
 fun! DeleteTrailingWS()
 	exe "normal mq"
@@ -251,6 +249,14 @@ noremap <leader>dd :%s/\r\n/\r/g<CR>
 " }}}
 
 " Color scheme {{{
+" Highlight trailing whitespace in the most annoying way possible.
+hi ExtraWhitespace ctermbg=red guibg=red
+au ColorScheme * hi ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+au BufWinEnter * match ExtraWhitespace /\s\+$/
+au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+au InsertLeave * match ExtraWhitespace /\s\+$/
+
 set t_Co=256
 set background=dark
 syntax on
@@ -274,7 +280,7 @@ let g:airline_powerline_fonts=1
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|' 
+let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline_theme='base16'
 
 set laststatus=2  " 2 means always show status
@@ -286,7 +292,6 @@ let g:ycm_key_list_select_completion = ['<TAB>']
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
-nnoremap J :YcmCompleter GoTo<CR>zv
 
 " CtrlP setting
 let g:ctrlp_map = '<c-p>'
@@ -313,11 +318,8 @@ let g:tex_fold_enabled = 1
 " Bi-directional find motion
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " `s{char}{label}`
+map <Leader> <Plug>(easymotion-prefix)
 nmap s <Plug>(easymotion-s)
-
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
 
 " <leader>l to format Python
 au FileType python nnoremap <leader>l <esc>:call Autopep8()<cr><esc>:redraw!<cr>
@@ -330,6 +332,32 @@ let g:calendar_clock_12hour = 1
 let g:calendar_frame = "unicode"
 let g:calendar_date_separator = "."
 let g:calendar_view = "days"
+
+" UltiSnips shortcuts
+let g:UltiSnipsExpandTrigger       = "<tab>"
+let g:UltiSnipsJumpForwardTrigger  = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+function! g:UltiSnips_Complete()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res == 0
+        if pumvisible()
+            return "\<C-n>"
+        else
+            call UltiSnips#JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+               return "\<TAB>"
+            endif
+        endif
+    endif
+    return ""
+endfunction
+
+let g:hardtime_default_on = 1
+let g:hardtime_allow_different_key = 1
+
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+
 " }}}
 
 " Mitsuba specific {{{
@@ -356,15 +384,18 @@ au FileType vim setlocal foldmethod=marker
 au BufNewFile,BufRead *.tm set filetype=cpp
 
 " C/C++ -- smart indentation
-au FileType c,cpp,h,hpp setlocal cindent
-
+au FileType cpp setlocal cindent
 
 " Spell-check text files
-au FileType txt,tex,html setlocal spell
+au FileType text,tex,html setlocal spell
 
 " Highlight repeated words
-au FileType txt,tex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
-au FileType txt,tex,html hi link TmlDoubleWords WarningMsg
+au FileType text,tex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
+au FileType text,tex,html hi link TmlDoubleWords WarningMsg
+
+" Autocompletion
+au FileType python,cpp nnoremap J :YcmCompleter GoTo<CR>zv
+
 " }}}
 
 " PBRT editing environment {{{
