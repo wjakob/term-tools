@@ -135,16 +135,6 @@ set writebackup
 set spelllang=en
 set spellfile=$HOME/Dropbox/spell-en.utf-8.add
 
-" Get rid of bad habits
-inoremap  <Up>     <NOP>
-inoremap  <Down>   <NOP>
-inoremap  <Left>   <NOP>
-inoremap  <Right>  <NOP>
-noremap   <Up>     <NOP>
-noremap   <Down>   <NOP>
-noremap   <Left>   <NOP>
-noremap   <Right>  <NOP>
-
 " Window navigation {{{
 " Move around using Alt + navigation keys
 nmap <silent> <M-k> :wincmd k<CR>
@@ -262,6 +252,7 @@ endfun
 " }}}
 
 " Color scheme {{{
+
 " Highlight trailing whitespace in the most annoying way possible.
 hi ExtraWhitespace ctermbg=red guibg=red
 au ColorScheme * hi ExtraWhitespace ctermbg=red guibg=red
@@ -275,6 +266,7 @@ set background=dark
 syntax on
 colorscheme tomorrow-night
 hi Folded ctermfg=248 ctermbg=237 guibg=#3a3a3a guifg=#a8a8a8
+
 " }}}
 
 " Plugin config {{{
@@ -366,8 +358,19 @@ function! g:UltiSnips_Complete()
     return ""
 endfunction
 
+" Get rid of bad habits
 let g:hardtime_default_on = 1
 let g:hardtime_allow_different_key = 1
+let g:hardtime_maxcount = 1
+set mouse=
+inoremap  <Up>     <NOP>
+inoremap  <Down>   <NOP>
+inoremap  <Left>   <NOP>
+inoremap  <Right>  <NOP>
+noremap   <Up>     <NOP>
+noremap   <Down>   <NOP>
+noremap   <Left>   <NOP>
+noremap   <Right>  <NOP>
 
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 
@@ -386,8 +389,6 @@ let g:indentLine_faster = 1
 
 " Visualize TeX characters using the conceal feature
 let g:tex_conceal="adgm"
-
-let g:hardtime_maxcount = 2
 
 " }}}
 

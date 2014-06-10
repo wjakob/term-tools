@@ -54,6 +54,7 @@ else
 	alias gnome-open=gvfs-open
 	alias gqview=geeqie
 	alias open=gvfs-open
+	alias gdate=date
 
 	function ls_safe {
 		$TERM_TOOLS/config/timeout3.sh -t 1 ls --color=auto
