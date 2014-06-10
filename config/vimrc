@@ -386,6 +386,7 @@ let g:indentLine_faster = 1
 
 " Visualize TeX characters using the conceal feature
 let g:tex_conceal="adgm"
+set ambw="double"
 
 let g:hardtime_maxcount = 2
 
