@@ -2,8 +2,9 @@
 
 " Useful shortcuts:
 " Ctrl-O/I: move forward/backwards through previously visited buffer positions
-" :b <..> switch to buffer
 
+" use ]p/]P to paste while respecting the current indent level.
+" gv re-selects a previous visual selection
 " Must be first since this sets some options as a side effect
 set nocompatible
 
@@ -24,6 +25,8 @@ Plugin 'bling/vim-airline'
 Plugin 'Valloric/YouCompleteMe'
 " Git integration
 Plugin 'tpope/vim-fugitive'
+" GUI extension for the fugitive plugin
+Plugin 'gregsexton/gitv'
 " IPython integration
 Plugin 'ivanov/vim-ipython'
 " Easymotion plugin
@@ -44,8 +47,20 @@ Plugin 'rking/ag.vim'
 Plugin 'itchyny/calendar.vim'
 " Snippet manager
 Plugin 'SirVer/ultisnips'
+" Nice indentation marks
+Plugin 'Yggdroot/indentLine'
+" Show marks visually
+Plugin 'ShowMarks'
 " Hard mode :)
 Plugin 'takac/vim-hardtime'
+" Automatic generation of closing braces etc
+Plugin 'Raimondi/delimitMate'
+" Easily comment / uncomment text
+Plugin 'scrooloose/nerdcommenter'
+" Maximize a buffer and restore later on (C-W o)
+Plugin 'regedarek/ZoomWin'
+" Git gutter
+Plugin 'airblade/vim-gitgutter'
 
 call vundle#end() " required
 
@@ -136,12 +151,14 @@ nmap <silent> <M-k> :wincmd k<CR>
 nmap <silent> <M-j> :wincmd j<CR>
 nmap <silent> <M-h> :wincmd h<CR>
 nmap <silent> <M-l> :wincmd l<CR>
+nmap <silent> <M-o> :ZoomWin<CR>
 
 " As above (Mac keyboard)
 nmap <silent> ˙ :wincmd h<CR>
 nmap <silent> ∆ :wincmd j<CR>
 nmap <silent> ˚ :wincmd k<CR>
 nmap <silent> ¬ :wincmd l<CR>
+nmap <silent> ø :ZoomWin<CR>
 
 nmap <silent> <C-h> :bp<CR>
 nmap <silent> <C-l> :bn<CR>
@@ -158,8 +175,8 @@ map + 5<C-W>+
 map = <C-W>_
 
 " Use Q for formatting the current paragraph (or selection)
-vmap Q gqp
-nmap Q gqap
+vnoremap Q gqp
+nnoremap Q gqap
 
 " Move by displayed lines, not physical lines
 nnoremap j gj
@@ -242,10 +259,6 @@ fun! DeleteTrailingWS()
 	":ShowMarksClearMark
 endfun
 
-noremap <leader>dw <esc>:call DeleteTrailingWS()<cr>
-
-" Remove trailing newlines
-noremap <leader>dd :%s/\r\n/\r/g<CR>
 " }}}
 
 " Color scheme {{{
@@ -287,6 +300,7 @@ set laststatus=2  " 2 means always show status
 
 " YouCompleteMe settings
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
+let g:ycm_filetype_whitelist = {'cpp' : '', 'python' : '' }
 let g:ycm_key_list_previous_completion = ['<S-TAB>']
 let g:ycm_key_list_select_completion = ['<TAB>']
 let g:ycm_confirm_extra_conf = 0
@@ -313,16 +327,15 @@ augroup CtrlPExtension
 augroup END
 
 " Folding for TeX files
-let g:tex_fold_enabled = 1
+"let g:tex_fold_enabled = 1
 
 " Bi-directional find motion
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " `s{char}{label}`
 map <Leader> <Plug>(easymotion-prefix)
 nmap s <Plug>(easymotion-s)
+omap s <Plug>(easymotion-s)
 
-" <leader>l to format Python
-au FileType python nnoremap <leader>l <esc>:call Autopep8()<cr><esc>:redraw!<cr>
 let g:autopep8_disable_show_diff = 1
 
 let g:calendar_google_calendar = 1
@@ -358,6 +371,24 @@ let g:hardtime_allow_different_key = 1
 
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 
+" Indentline
+let g:indentLine_char = '¦'
+let g:indentLine_color_term = 236
+let g:indentLine_fileType = ['python']
+
+" Show marks
+let showmarks_include = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+" Convenient key binding for delimitMate
+inoremap {<CR> {<CR>}<C-o>O
+
+let g:indentLine_faster = 1
+
+" Visualize TeX characters using the conceal feature
+let g:tex_conceal="adgm"
+
+let g:hardtime_maxcount = 2
+
 " }}}
 
 " Mitsuba specific {{{
@@ -373,9 +404,10 @@ au Syntax cpp syn keyword cType Float
 au BufRead,BufNewFile SCons* set filetype=python
 
 " Latex and Python: do not use tabs
-au FileType python   setlocal expandtab softtabstop=4
-au FileType tex      setlocal expandtab softtabstop=4
-au FileType plaintex setlocal expandtab softtabstop=4
+au FileType python setlocal expandtab softtabstop=4
+au FileType cmake setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+au FileType tex,plaintex setlocal expandtab softtabstop=4 conceallevel=2 concealcursor=nc
+au BufEnter *.tex hi Conceal ctermfg=4
 
 " Vimrc -- fold with markers
 au FileType vim setlocal foldmethod=marker
@@ -412,10 +444,35 @@ function JumpToFile()
 	endif
 endfunction
 
+python << EOF
+def pbrt_search(search):
+	import os, glob, vim
+	search += ">="
+	for name in list(glob.iglob('ch*.tex')) + list(glob.iglob('app*.tex')):
+		with open(name, 'r') as f:
+			lines = f.readlines()
+			for row, text in enumerate(lines):
+				col = text.find(search)
+				if col != -1:
+					vim.command("silent edit %s:%i:%i" % (name, row+1, col+1))
+EOF
+
+function! PBRTJump()
+	let l:save_clipboard = &clipboard
+	set clipboard= " Avoid clobbering the selection and clipboard registers.
+	let l:save_reg = getreg('"')
+	let l:save_regmode = getregtype('"')
+	normal! ya<
+	let l:text = @@
+	call setreg('"', l:save_reg, l:save_regmode)
+	let &clipboard = l:save_clipboard
+	python pbrt_search(vim.eval('l:text'))
+endfunction
+
 nnoremap gf :call JumpToFile()<CR>
+au BufNewFile,BufRead ~/pbrt-3ed/book/*.tex setlocal cindent | let cur_syntax = b:current_syntax | unlet! b:current_syntax | syntax include @CPP syntax/cpp.vim | syntax region cppSnip matchgroup=Snip start=/^@.*=$/ end=/^@\./ contains=@CPP | nnoremap J :call PBRTJump()<CR>
 
 " }}}
-
 " Other commands and abbreviations {{{
 
 " Multiprocessor builds
@@ -442,16 +499,21 @@ command! -nargs=+ CommandCabbr call CommandCabbr(<f-args>)
 
 command IPy execute 'IPython' | set foldmethod=marker | set foldmarker=#-,##
 
-command Build make! | copen
-" command -nargs=+ Grep execute 'silent vimgrep! /<args>/j *.tex' | copen 20
+" Run make and don't prompt for ENTER
+nmap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
+vmap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
+
+" Like the above, but open in a quickfix window
+"command Makec make! | copen
 
 " w!! command which writes with root permissions
 cmap w!! w !sudo tee % >/dev/null
 
-CommandCabbr build Build
+"CommandCabbr build makec
 CommandCabbr ag Ag
-CommandCabbr ack Ack
 CommandCabbr bc Bclose
+CommandCabbr git Git
+CommandCabbr gitv Gitv
 
 " Automatically insert C++ header gates for new h/hpp files
 function! s:insert_gates()
@@ -462,5 +524,56 @@ function! s:insert_gates()
 endfunction
 
 au BufNewFile *.{h,hpp} call <SID>insert_gates()
+
+function! BackwardSkipConceal()
+    let l = line(".")
+    let c = col(".") - 1
+    while synconcealed(l, c)[0] && c > 1
+        if c <= 2
+            break
+        endif
+        let c -= 1
+    endwhile
+    call cursor(l, c)
+endfunction
+
+function! ForwardSkipConceal()
+    let l = line(".")
+    let c = col(".")
+    while synconcealed(l, c)[0]
+        if c == col("$")
+            break
+        endif
+        let c += 1
+    endwhile
+    call cursor(l, c+1)
+endfunction
+
+nnoremap <silent> h :call BackwardSkipConceal()<cr>
+nnoremap <silent> l :call ForwardSkipConceal()<cr>
+
+" Execute a python script
+au FileType python nnoremap <leader>r <esc>:w !python3<cr>
+
+" Paste into new line
+nmap <leader>P O<space><bs><esc>]pk"_dd
+nmap <leader>p o<space><bs><esc>]pk"_dd
+
+" <leader>l to format Python
+au FileType python nnoremap <leader>l <esc>:call Autopep8()<cr><esc>:redraw!<cr>
+
+noremap <leader>dw <esc>:call DeleteTrailingWS()<cr>
+" Remove trailing newlines
+noremap <leader>dd :%s/\r\n/\r/g<CR>
+
+"smart indent when entering insert mode with i on empty lines
+function! IndentWithI()
+    if len(getline('.')) == 0
+        return "\"_ddO"
+    else
+        return "i"
+    endif
+endfunction
+nnoremap <expr> i IndentWithI()
 
 " }}}
