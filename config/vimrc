@@ -6,6 +6,7 @@
 " use ]p/]P to paste while respecting the current indent level.
 " gv re-selects a previous visual selection
 " Must be first since this sets some options as a side effect
+" git log origin/master ^master --stat
 set nocompatible
 
 " Plugins {{{
@@ -61,6 +62,10 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'regedarek/ZoomWin'
 " Git gutter
 Plugin 'airblade/vim-gitgutter'
+" Secure way of sourcing local vimrc files
+Plugin 'MarcWeber/vim-addon-local-vimrc'
+" Delete all but the current buffer
+Plugin 'vim-scripts/BufOnly.vim'
 
 call vundle#end() " required
 
@@ -298,7 +303,8 @@ let g:ycm_key_list_select_completion = ['<TAB>']
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
-
+let g:ycm_enable_diagnostic_signs = 0
+"
 " CtrlP setting
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -390,6 +396,12 @@ let g:indentLine_faster = 1
 " Visualize TeX characters using the conceal feature
 let g:tex_conceal="adgm"
 set ambw="double"
+
+let g:gitgutter_map_keys = 0
+nmap [h <Plug>GitGutterPrevHunk
+nmap ]h <Plug>GitGutterNextHunk
+nmap <Leader>hs <Plug>GitGutterStageHunk
+nmap <Leader>hr <Plug>GitGutterRevertHunk
 
 " }}}
 
@@ -578,4 +590,67 @@ function! IndentWithI()
 endfunction
 nnoremap <expr> i IndentWithI()
 
+nnoremap <buffer> ][ :<c-u>call <SID>JumpMethod('{', 'W',  'n')<cr>
+nnoremap <buffer> [[ :<c-u>call <SID>JumpMethod('{', 'Wb', 'n')<cr>
+nnoremap <buffer> ]] :<c-u>call <SID>JumpMethod('}', 'W',  'n')<cr>
+nnoremap <buffer> [] :<c-u>call <SID>JumpMethod('}', 'Wb', 'n')<cr>
+
+xnoremap <buffer> ][ :<c-u>call <SID>JumpMethod('{', 'W',  'v')<cr>
+xnoremap <buffer> [[ :<c-u>call <SID>JumpMethod('{', 'Wb', 'v')<cr>
+xnoremap <buffer> ]] :<c-u>call <SID>JumpMethod('}', 'W',  'v')<cr>
+xnoremap <buffer> [] :<c-u>call <SID>JumpMethod('}', 'Wb', 'v')<cr>
+
+onoremap <buffer> ][ :<c-u>call <SID>JumpMethod('{', 'W',  'o')<cr>
+onoremap <buffer> [[ :<c-u>call <SID>JumpMethod('{', 'Wb', 'o')<cr>
+onoremap <buffer> ]] :<c-u>call <SID>JumpMethod('}', 'W',  'o')<cr>
+onoremap <buffer> [] :<c-u>call <SID>JumpMethod('}', 'Wb', 'o')<cr>
+
+function! s:JumpMethod(char, flags, mode)
+  let original_cursor = getpos('.')
+
+  if a:mode == 'v'
+    normal! gv
+  elseif a:mode == 'o'
+    normal! v
+  endif
+
+  while search(a:char, a:flags) > 0
+    if a:char == '}'
+      " jump to the opening one to analyze the definition
+      normal! %
+    endif
+
+    let current_line = line('.')
+
+    if getline(current_line) =~ '^\s*{'
+      " it's alone on the line, check the above one
+      let method_line = current_line - 1
+    else
+      let method_line = current_line
+    endif
+
+    let method_line_body = getline(method_line)
+
+    if method_line_body =~ '\k\+\s*(.*)' && method_line_body !~ '\<\(for\|foreach\|if\|while\|switch\|using\|catch\|get\|set\)\>'
+      " it's probably a function call
+
+      if a:char == '}'
+        " we need to go back to the closing bracket
+        normal! %
+      endif
+
+      echo
+      return
+    else
+      if a:char == '}'
+        " we still need to go back to the closing bracket
+        normal! %
+      endif
+    endif
+  endwhile
+
+  " if we're here, the search has failed, restore cursor position
+  echo
+  call setpos('.', original_cursor)
+endfunction
 " }}}
