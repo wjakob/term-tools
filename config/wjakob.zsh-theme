@@ -17,8 +17,6 @@ precmd () {
     vcs_info
 }
  
-PROMPT='%F{blue}%n@%m %c${vcs_info_msg_0_}%F{blue} %(?/%F{blue}/%F{red})%% %{$reset_color%}'
-
 PROMPT='%{%f%k%b%}
 %{%K{black}%B%F{green}%}%n%{%B%F{blue}%}@%{%B%F{cyan}%}%m%{%B%F{green}%} %{%b%F{yellow}%K{black}%}%~%{%B%F{green}%}${vcs_info_msg_0_}%E%{%b%}
 %{%K{black}%}%{%K{black}%} %#%{%f%k%b%} '

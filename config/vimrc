@@ -446,16 +446,16 @@ endfun
 let c_no_curly_error=1 " Be more lenient with C++11 syntax
 au Syntax cpp syn keyword cType Float
 
-au BufNewFile,BufRead ~/mitsuba* call HighlightTrailingSpaces()
+au BufNewFile,BufRead *mitsuba* call HighlightTrailingSpaces()
 
 " }}}
 
 " PBRT editing environment {{{
 
-au BufNewFile,BufRead ~/pbrt-3ed/src/* syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal | set conceallevel=2 concealcursor=nc
+au BufNewFile,BufRead */pbrt-3ed/src/* syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal | set conceallevel=2 concealcursor=nc
 
 function JumpToFile()
-	if matchstr(expand('%:p'), 'pbrt-3ed/src/.*') != ''
+	if matchstr(expand('%:p'), '.*/pbrt-3ed/src/.*') != ''
 		" This is PBRT code: move to the column with file/line number information and jump
 		normal 3|gF
 	else
