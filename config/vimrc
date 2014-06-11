@@ -5,8 +5,15 @@
 
 " use ]p/]P to paste while respecting the current indent level.
 " gv re-selects a previous visual selection
-" Must be first since this sets some options as a side effect
 " git log origin/master ^master --stat
+" 
+" <leader> s/f/F -- EasyMotion 1 character searches 
+" <leader> j/k   -- EasyMotion row searches
+" <leader> m     -- run make
+" <leader> p/P   -- indented paste
+" <leader> dw    -- fix trailing ^M characters
+" <leader> l     -- format Python/C++ code
+
 set nocompatible
 
 " Plugins {{{
@@ -14,6 +21,7 @@ set nocompatible
 filetype off " Needed (this interferes with Vundle)
 
 set rtp+=~/.vim/bundle/Vundle.vim/
+
 call vundle#begin() " required
 
 " Let Vundle manage Vundle
@@ -304,7 +312,7 @@ let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 "  ignore files
 let g:ctrlp_custom_ignore = {
-	\ 'dir':  '\.git$\|\.hg$\|\.svn$',
+	\ 'dir':  '\.git$\|\.hg$\|\.svn\|\CMakeFiles$',
 	\ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.d$\|\.swp$',
 	\ }
 
@@ -569,24 +577,6 @@ function! ForwardSkipConceal()
     call cursor(l, c+1)
 endfunction
 
-nnoremap <silent> h :call BackwardSkipConceal()<cr>
-nnoremap <silent> l :call ForwardSkipConceal()<cr>
-
-" Execute a python script
-au FileType python nnoremap <leader>r <esc>:w !python3<cr>
-
-" Paste into new line
-nmap <leader>P O<space><bs><esc>]pk"_dd
-nmap <leader>p o<space><bs><esc>]pk"_dd
-
-" <leader>l to format Python
-au FileType python nnoremap <leader>l <esc>:call Autopep8()<cr><esc>:redraw!<cr>
-
-" Remove trailing newlines
-noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
-" Remove incorrect line endings from Windows machines
-noremap <leader>dd :%s/\r\n/\r/g<CR>
-
 "smart indent when entering insert mode with i on empty lines
 function! IndentWithI()
     if len(getline('.')) == 0
@@ -595,7 +585,26 @@ function! IndentWithI()
         return "i"
     endif
 endfunction
+
+nnoremap <silent> h :call BackwardSkipConceal()<cr>
+nnoremap <silent> l :call ForwardSkipConceal()<cr>
 nnoremap <expr> i IndentWithI()
+
+" Execute a python script
+au FileType python nnoremap <buffer> <leader>r <esc>:w !python3<cr>
+
+" Paste into new line
+nmap <leader>P O<space><bs><esc>]pk"_dd
+nmap <leader>p o<space><bs><esc>]pk"_dd
+
+" <leader>l to format Python
+au FileType python nnoremap <buffer> <leader>l <esc>:call Autopep8()<cr><esc>:redraw!<CR>
+au FileType cpp    map <buffer> <leader>l :pyf $TERM_TOOLS/config/clang-format.py<CR>
+
+" Remove trailing newlines
+noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
+" Remove incorrect line endings from Windows machines
+noremap <leader>dd :%s/\r\n/\r/g<CR>
 
 nnoremap <buffer> ][ :<c-u>call <SID>JumpMethod('{', 'W',  'n')<cr>
 nnoremap <buffer> [[ :<c-u>call <SID>JumpMethod('{', 'Wb', 'n')<cr>
@@ -661,3 +670,4 @@ function! s:JumpMethod(char, flags, mode)
   call setpos('.', original_cursor)
 endfunction
 " }}}
+
