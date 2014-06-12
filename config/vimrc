@@ -302,7 +302,7 @@ set laststatus=2  " 2 means always show status
 
 " YouCompleteMe settings
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
-let g:ycm_filetype_whitelist = {'cpp' : '', 'python' : '' }
+let g:ycm_filetype_whitelist = {'cpp' : '', 'python' : '' , 'bib' : '', 'sh' : '', 'tex' : '', 'plaintex' : '', 'xml' : ''}
 let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 let g:ycm_confirm_extra_conf = 0
@@ -583,7 +583,7 @@ endfunction
 
 "smart indent when entering insert mode with i on empty lines
 function! IndentWithI()
-    if len(getline('.')) == 0
+    if len(getline('.')) == 0 && line('.') != line('$')
         return "\"_ddO"
     else
         return "i"
@@ -597,11 +597,11 @@ nnoremap <expr> i IndentWithI()
 " Execute a python script
 au FileType python nnoremap <buffer> <leader>r <esc>:w !python3<cr>
 
-" Paste into new line
+" Paste into new line while respecting the current indent level
 nmap <leader>P O<space><bs><esc>]pk"_dd
 nmap <leader>p o<space><bs><esc>]pk"_dd
 
-" <leader>l to format Python
+" <leader>l to format Python or C++
 au filetype python nnoremap <buffer> <leader>l :call Autopep8()<cr><esc>:redraw!<CR>
 au filetype python vnoremap <buffer> <leader>l :call Autopep8(printf(" --range %i %i", line("'<"), line("'>")))<cr><esc>:redraw!<CR>
 au filetype cpp    map <quiet> <buffer> <leader>l :pyf $term_tools/config/clang-format.py<cr>
