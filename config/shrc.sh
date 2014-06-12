@@ -61,7 +61,7 @@ else
 	}
 fi
 
-alias today="google calendar today"
+alias today="{ echo 'Today: ' && google calendar list --cal=.* --date=today && echo -e ' \nTomorrow: ' && google calendar list --cal=.* --date=tomorrow } | grep -ve '^\[' | grep -ve '^$'"
 
 # ZSH-SPECIFIC CONFIG
 if [ "$ZSH_VERSION" ]; then
@@ -110,6 +110,7 @@ if [ "$ZSH_VERSION" ]; then
 	# Perform a previx history search when navigating previous commands
 	bindkey -M vicmd 'k' history-search-backward
 	bindkey -M vicmd 'j' history-search-forward
+	bindkey -M vicmd 'v' edit-command-line
 
 	autoload zkbd
 	autoload up-line-or-history

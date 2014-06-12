@@ -232,11 +232,14 @@ else
 endif
 
 " Re-adjust windows on window resize
-autocmd VimResized * wincmd =
+au VimResized * wincmd =
 
 " Insert mode -- don't create/close folds when typing
-autocmd InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
-autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+aug NoInsertFolding
+	au!
+	au InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
+	au InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+aug END
 
 " Remove the toolbar if we're running under a GUI
 if has("gui_running")
@@ -248,7 +251,7 @@ if has('mac')
 endif
 
 " Jump to last known line when opening a file (change ' to ` to do column too)
-autocmd BufReadPost *
+au BufReadPost *
   \ if line("'\"") > 0 && line("'\"") <= line("$") |
   \   exe "normal g'\"" |
   \   if foldlevel('.') > 0 |
@@ -300,13 +303,13 @@ set laststatus=2  " 2 means always show status
 " YouCompleteMe settings
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
 let g:ycm_filetype_whitelist = {'cpp' : '', 'python' : '' }
-let g:ycm_key_list_previous_completion = ['<S-TAB>']
-let g:ycm_key_list_select_completion = ['<TAB>']
+let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
+let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_enable_diagnostic_signs = 0
-"
+
 " CtrlP setting
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -321,13 +324,10 @@ let g:ctrlp_working_path_mode = 'r'
 
 " refresh file tree on write or focus change
 augroup CtrlPExtension
-  autocmd!
-  autocmd FocusGained * ClearCtrlPCache
-  autocmd BufWritePost * ClearCtrlPCache
+  au!
+  au FocusGained * ClearCtrlPCache
+  au BufWritePost * ClearCtrlPCache
 augroup END
-
-" Folding for TeX files
-"let g:tex_fold_enabled = 1
 
 " Bi-directional find motion
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
@@ -366,6 +366,8 @@ function! g:UltiSnips_Complete()
     return ""
 endfunction
 
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr><C-O>zv"
+
 " Get rid of bad habits
 let g:hardtime_default_on = 1
 let g:hardtime_allow_different_key = 1
@@ -379,8 +381,6 @@ noremap   <Up>     <NOP>
 noremap   <Down>   <NOP>
 noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
-
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 
 " Indentline
 let g:indentLine_char = '¦'
@@ -398,6 +398,10 @@ let g:indentLine_faster = 1
 " Visualize TeX characters using the conceal feature
 let g:tex_conceal="adgm"
 set ambw="double"
+" Folding for TeX files (disabled)
+"let g:tex_fold_enabled = 1
+" Don't spell-check comments
+let g:tex_comment_nospell=1
 
 let g:gitgutter_map_keys = 0
 nmap [h <Plug>GitGutterPrevHunk
@@ -410,7 +414,7 @@ nmap <Leader>hr <Plug>GitGutterRevertHunk
 " Filetype-specific settings {{{
 
 " SCons* files are Python scripts
-au BufRead,BufNewFile SCons* set filetype=python
+au BufRead,BufNewFile SCons* setlocal filetype=python
 
 " Latex and Python: do not use tabs
 au FileType python setlocal expandtab
@@ -422,7 +426,7 @@ au BufEnter *.tex hi Conceal ctermfg=4
 au FileType vim setlocal foldmethod=marker
 
 " Mathematica binding files
-au BufNewFile,BufRead *.tm set filetype=cpp
+au BufNewFile,BufRead *.tm setlocal filetype=cpp
 
 " C/C++ -- smart indentation
 au FileType cpp setlocal cindent
@@ -435,7 +439,7 @@ au FileType text,tex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ c
 au FileType text,tex,html hi link TmlDoubleWords WarningMsg
 
 " Autocompletion
-au FileType python,cpp nnoremap J :YcmCompleter GoTo<CR>zv
+au FileType python,cpp nnoremap <buffer> J :YcmCompleter GoTo<CR>zv
 
 " }}}
 
@@ -598,30 +602,31 @@ nmap <leader>P O<space><bs><esc>]pk"_dd
 nmap <leader>p o<space><bs><esc>]pk"_dd
 
 " <leader>l to format Python
-au FileType python nnoremap <buffer> <leader>l <esc>:call Autopep8()<cr><esc>:redraw!<CR>
-au FileType cpp    map <buffer> <leader>l :pyf $TERM_TOOLS/config/clang-format.py<CR>
+au filetype python nnoremap <buffer> <leader>l :call Autopep8()<cr><esc>:redraw!<CR>
+au filetype python vnoremap <buffer> <leader>l :call Autopep8(printf(" --range %i %i", line("'<"), line("'>")))<cr><esc>:redraw!<CR>
+au filetype cpp    map <quiet> <buffer> <leader>l :pyf $term_tools/config/clang-format.py<cr>
 
-" Remove trailing newlines
-noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
-" Remove incorrect line endings from Windows machines
-noremap <leader>dd :%s/\r\n/\r/g<CR>
+" remove trailing newlines
+noremap <silent> <leader>dw <esc>:call deletetrailingws()<cr>
+" remove incorrect line endings from windows machines
+noremap <leader>dd :%s/\r\n/\r/g<cr>
 
-nnoremap <buffer> ][ :<c-u>call <SID>JumpMethod('{', 'W',  'n')<cr>
-nnoremap <buffer> [[ :<c-u>call <SID>JumpMethod('{', 'Wb', 'n')<cr>
-nnoremap <buffer> ]] :<c-u>call <SID>JumpMethod('}', 'W',  'n')<cr>
-nnoremap <buffer> [] :<c-u>call <SID>JumpMethod('}', 'Wb', 'n')<cr>
+nnoremap <buffer> ][ :<c-u>call <sid>jumpmethod('{', 'w',  'n')<cr>
+nnoremap <buffer> [[ :<c-u>call <sid>jumpmethod('{', 'wb', 'n')<cr>
+nnoremap <buffer> ]] :<c-u>call <sid>jumpmethod('}', 'w',  'n')<cr>
+nnoremap <buffer> [] :<c-u>call <sid>jumpmethod('}', 'wb', 'n')<cr>
 
-xnoremap <buffer> ][ :<c-u>call <SID>JumpMethod('{', 'W',  'v')<cr>
-xnoremap <buffer> [[ :<c-u>call <SID>JumpMethod('{', 'Wb', 'v')<cr>
-xnoremap <buffer> ]] :<c-u>call <SID>JumpMethod('}', 'W',  'v')<cr>
-xnoremap <buffer> [] :<c-u>call <SID>JumpMethod('}', 'Wb', 'v')<cr>
+xnoremap <buffer> ][ :<c-u>call <sid>jumpmethod('{', 'w',  'v')<cr>
+xnoremap <buffer> [[ :<c-u>call <sid>jumpmethod('{', 'wb', 'v')<cr>
+xnoremap <buffer> ]] :<c-u>call <sid>jumpmethod('}', 'w',  'v')<cr>
+xnoremap <buffer> [] :<c-u>call <sid>jumpmethod('}', 'wb', 'v')<cr>
 
-onoremap <buffer> ][ :<c-u>call <SID>JumpMethod('{', 'W',  'o')<cr>
-onoremap <buffer> [[ :<c-u>call <SID>JumpMethod('{', 'Wb', 'o')<cr>
-onoremap <buffer> ]] :<c-u>call <SID>JumpMethod('}', 'W',  'o')<cr>
-onoremap <buffer> [] :<c-u>call <SID>JumpMethod('}', 'Wb', 'o')<cr>
+onoremap <buffer> ][ :<c-u>call <sid>jumpmethod('{', 'w',  'o')<cr>
+onoremap <buffer> [[ :<c-u>call <sid>jumpmethod('{', 'wb', 'o')<cr>
+onoremap <buffer> ]] :<c-u>call <sid>jumpmethod('}', 'w',  'o')<cr>
+onoremap <buffer> [] :<c-u>call <sid>jumpmethod('}', 'wb', 'o')<cr>
 
-function! s:JumpMethod(char, flags, mode)
+function! s:jumpmethod(char, flags, mode)
   let original_cursor = getpos('.')
 
   if a:mode == 'v'
