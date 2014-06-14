@@ -7,12 +7,15 @@
 " gv re-selects a previous visual selection
 " git log origin/master ^master --stat
 " 
-" <leader> s/f/F -- EasyMotion 1 character searches 
-" <leader> j/k   -- EasyMotion row searches
-" <leader> m     -- run make
-" <leader> p/P   -- indented paste
-" <leader> dw    -- fix trailing ^M characters
-" <leader> l     -- format Python/C++ code
+" <leader> s/f/F   -- EasyMotion 1 character searches
+" <leader> j/k     -- EasyMotion row searches
+" <leader> m       -- run make
+" <leader> p/P     -- indented paste
+" <leader> dw      -- remove trailing spaces
+" <leader> dd      -- fix trailing ^M characters
+" <leader> l       -- format Python/C++ code
+" <leader> /       -- clear highlighted search results
+" <leader><leader> -- comment/uncomment a code block
 
 set nocompatible
 
@@ -61,7 +64,7 @@ Plugin 'Yggdroot/indentLine'
 " Show marks visually
 Plugin 'ShowMarks'
 " Hard mode :)
-Plugin 'takac/vim-hardtime'
+"Plugin 'takac/vim-hardtime'
 " Automatic generation of closing braces etc
 Plugin 'Raimondi/delimitMate'
 " Easily comment / uncomment text
@@ -74,6 +77,11 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'MarcWeber/vim-addon-local-vimrc'
 " Delete all but the current buffer
 Plugin 'vim-scripts/BufOnly.vim'
+" Align tabular data
+Plugin 'godlygeek/tabular'
+" Text object for Java/VIM/C functions
+Plugin 'kana/vim-textobj-user'
+Plugin 'kana/vim-textobj-function'
 
 call vundle#end() " required
 
@@ -111,7 +119,6 @@ set winminheight=0             " allow to collapse down windows to their status 
 " Tabs, wrapping, folding, and indentation
 set autoindent                 " automatic indentation
 set copyindent                 " copy the previous indentation on autoindenting
-set smartindent                " enable C-style indenting by default (useful for C/C++)
 set tabstop=4                  " Number of spaces that a <Tab> in the file counts for (default 8)
 set shiftwidth=4               " Number of spaces to use for each step of (auto)indent.
 set softtabstop=-1             " Disable softtabstop (reverts to shiftwidth)
@@ -131,8 +138,8 @@ set showbreak=\ ↪\             " prefix wrap with ↪
 " Autocompletion
 set wildmenu                   " completion with menu
 set wildmode=full              " show list with navigation
-set wildignore=*~,*.o,*.d,*.obj,*.class,*.pyc,*.bak,*.swp,.svn,.git,.hg
-set suffixes=~,.o,.d,.obj,.class,.pyc,.bak,.swp
+set wildignore=*~,*.o,*.d,*.obj,*.class,*.pyc,*.bak,*.swp,.svn,.git,.hg,*.orig
+set suffixes=~,.o,.d,.obj,.class,.pyc,.bak,.swp,.orig
 set completeopt=menu,preview   " Completion with a menu
 
 " Searching
@@ -165,10 +172,10 @@ nmap <silent> ¬ :wincmd l<CR>
 nmap <silent> ø :ZoomWin<CR>
 
 " Window resize / close commands
-nnoremap <silent> <C-L> :vertical resize -5<cr>
-nnoremap <silent> <C-H> :vertical resize +5<cr>
-nnoremap <silent> <C-K> :resize +5<cr>
-nnoremap <silent> <C-J> :resize -5<cr>
+nnoremap <silent> <C-L> :vertical resize +5<cr>
+nnoremap <silent> <C-H> :vertical resize -5<cr>
+nnoremap <silent> <C-K> :resize -5<cr>
+nnoremap <silent> <C-J> :resize +5<cr>
 nnoremap <silent> <C-X> :wincmd c<CR>     " close
 nnoremap <silent> <C-F> <C-W>_            " fullscreen
 
@@ -182,10 +189,6 @@ nmap <C-A> 1GVG
 vnoremap Q gqp
 nnoremap Q gqap
 
-" Move by displayed lines, not physical lines
-nnoremap j gj
-nnoremap k gk
-
 " Map cn/cp to navigate through search results (formerly :cn/:cp)
 nnoremap cn :cn<CR>zv
 nnoremap cp :cp<CR>zv
@@ -198,7 +201,7 @@ nnoremap cp :cp<CR>zv
 set pastetoggle=<F2>
 
 " Hide shown search results
-nmap <silent> ,/ :nohlsearch<CR>
+nmap <silent> <leader>/ :nohlsearch<CR>
 
 " Automaticall unfold when jumping to a line in a file
 nnoremap <expr> G (v:count ? 'Gzv' : 'G')
@@ -226,9 +229,9 @@ set timeout timeoutlen=1000 ttimeoutlen=100
 
 " Use OS clipboard
 if has('unix') && system("uname") == "Linux\n"
-    set clipboard=unnamedplus  " Share X windows clipboard.
+	set clipboard=unnamedplus  " Share X windows clipboard.
 else
-    set clipboard=unnamed      " Share system clipboard.
+	set clipboard=unnamed      " Share system clipboard.
 endif
 
 " Re-adjust windows on window resize
@@ -255,7 +258,7 @@ au BufReadPost *
   \ if line("'\"") > 0 && line("'\"") <= line("$") |
   \   exe "normal g'\"" |
   \   if foldlevel('.') > 0 |
-  \     exe "normal zO" |
+  \	 exe "normal zO" |
   \   endif |
   \ endif
 
@@ -264,7 +267,6 @@ fun! DeleteTrailingWS()
 	exe "normal mq"
 	%s/\s\+$//ge
 	exe "normal `q"
-	":ShowMarksClearMark
 endfun
 
 " }}}
@@ -297,8 +299,11 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline_theme='base16'
-
 set laststatus=2  " 2 means always show status
+
+" Nerd commenter
+let g:NERDCreateDefaultMappings = 0
+map <Leader><Leader> <Plug>NERDCommenterToggle
 
 " YouCompleteMe settings
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
@@ -316,7 +321,7 @@ let g:ctrlp_cmd = 'CtrlP'
 "  ignore files
 let g:ctrlp_custom_ignore = {
 	\ 'dir':  '\.git$\|\.hg$\|\.svn\|\CMakeFiles$',
-	\ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.d$\|\.swp$',
+	\ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.d$\|\.swp$\|\.orig$',
 	\ }
 
 " Search the whole repository (searches for .git/.hg/.svn..)
@@ -333,8 +338,7 @@ augroup END
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " `s{char}{label}`
 map <Leader> <Plug>(easymotion-prefix)
-nmap s <Plug>(easymotion-s)
-omap s <Plug>(easymotion-s)
+map s <Plug>(easymotion-s)
 
 let g:autopep8_disable_show_diff = 1
 
@@ -352,18 +356,18 @@ let g:UltiSnipsJumpForwardTrigger  = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 function! g:UltiSnips_Complete()
-    call UltiSnips#ExpandSnippet()
-    if g:ulti_expand_res == 0
-        if pumvisible()
-            return "\<C-n>"
-        else
-            call UltiSnips#JumpForwards()
-            if g:ulti_jump_forwards_res == 0
-               return "\<TAB>"
-            endif
-        endif
-    endif
-    return ""
+	call UltiSnips#ExpandSnippet()
+	if g:ulti_expand_res == 0
+		if pumvisible()
+			return "\<C-n>"
+		else
+			call UltiSnips#JumpForwards()
+			if g:ulti_jump_forwards_res == 0
+			   return "\<TAB>"
+			endif
+		endif
+	endif
+	return ""
 endfunction
 
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr><C-O>zv"
@@ -391,7 +395,7 @@ let g:indentLine_fileType = ['python']
 let showmarks_include = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 " Convenient key binding for delimitMate
-inoremap {<CR> {<CR>}<C-o>O
+au FileType cpp inoremap <buffer> {<CR> {<CR>}<C-o>O
 
 let g:indentLine_faster = 1
 
@@ -419,7 +423,7 @@ au BufRead,BufNewFile SCons* setlocal filetype=python
 " Latex and Python: do not use tabs
 au FileType python setlocal expandtab
 au FileType cmake setlocal expandtab tabstop=2 shiftwidth=2
-au FileType tex,plaintex setlocal expandtab conceallevel=2 concealcursor=nc
+au FileType tex,plaintex setlocal expandtab | :call EnableConceal()
 au BufEnter *.tex hi Conceal ctermfg=4
 
 " Vimrc -- fold with markers
@@ -427,9 +431,6 @@ au FileType vim setlocal foldmethod=marker
 
 " Mathematica binding files
 au BufNewFile,BufRead *.tm setlocal filetype=cpp
-
-" C/C++ -- smart indentation
-au FileType cpp setlocal cindent
 
 " Spell-check text files
 au FileType text,tex,html setlocal spell
@@ -463,8 +464,7 @@ au BufNewFile,BufRead *mitsuba* call HighlightTrailingSpaces()
 " }}}
 
 " PBRT editing environment {{{
-
-au BufNewFile,BufRead */pbrt-3ed/src/* syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal | set conceallevel=2 concealcursor=nc
+au BufNewFile,BufRead */pbrt-3ed/src/* syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal | :call EnableConceal()
 
 function JumpToFile()
 	if matchstr(expand('%:p'), '.*/pbrt-3ed/src/.*') != ''
@@ -505,6 +505,7 @@ nnoremap gf :call JumpToFile()<CR>
 au BufNewFile,BufRead ~/pbrt-3ed/book/*.tex setlocal cindent | let cur_syntax = b:current_syntax | unlet! b:current_syntax | syntax include @CPP syntax/cpp.vim | syntax region cppSnip matchgroup=Snip start=/^@.*=$/ end=/^@\./ contains=@CPP | nnoremap J :call PBRTJump()<CR>
 
 " }}}
+"
 " Other commands and abbreviations {{{
 
 " Multiprocessor builds
@@ -557,41 +558,102 @@ endfunction
 
 au BufNewFile *.{h,hpp} call <SID>insert_gates()
 
-function! BackwardSkipConceal()
-    let l = line(".")
-    let c = col(".") - 1
-    while synconcealed(l, c)[0] && c > 1
-        if c <= 2
-            break
-        endif
-        let c -= 1
-    endwhile
-    call cursor(l, c)
+function! ForwardSkipConceal(count)
+	let cnt=a:count
+	let mvcnt=0
+	let c=col('.')
+	let l=line('.')
+	let lc=col('$')
+	let line=getline('.')
+	while cnt
+		if c>=lc
+			let mvcnt+=cnt
+			break
+		endif
+		if stridx(&concealcursor, 'n')==-1
+			let isconcealed=0
+		else
+			let [isconcealed, cchar, group]=synconcealed(l, c)
+		endif
+		if isconcealed
+			let cnt-=strchars(cchar)
+			let oldc=c
+			let c+=1
+			while c < lc
+			  let [isconcealed2, cchar2, group2] = synconcealed(l, c)
+			  if !isconcealed2 || cchar2!=cchar
+				  break
+			  endif
+			  let c+= 1
+			endwhile
+			let mvcnt+=strchars(line[oldc-1:c-2])
+		else
+			let cnt-=1
+			let mvcnt+=1
+			let c+=len(matchstr(line[c-1:], '.'))
+		endif
+	endwhile
+	return ":\<C-u>\e".mvcnt.'l'
 endfunction
 
-function! ForwardSkipConceal()
-    let l = line(".")
-    let c = col(".")
-    while synconcealed(l, c)[0]
-        if c == col("$")
-            break
-        endif
-        let c += 1
-    endwhile
-    call cursor(l, c+1)
+function! BackwardSkipConceal(count)
+	let cnt=a:count
+	let mvcnt=0
+	let c=col('.')
+	let l=line('.')
+	let lc=0
+	let line=getline('.')
+	while cnt
+		if c<=1
+			let mvcnt+=cnt
+			break
+		endif
+		if stridx(&concealcursor, 'n')==-1 || c == 0
+			let isconcealed=0
+		else
+			let [isconcealed, cchar, group]=synconcealed(l, c-1)
+		endif
+		if isconcealed
+			let cnt-=strchars(cchar)
+			let oldc=c
+			let c-=1
+			while c>1
+			  let [isconcealed2, cchar2, group2] = synconcealed(l, c-1)
+			  if !isconcealed2 || cchar2!=cchar
+					break
+			  endif
+			  let c-=1
+			endwhile
+			let c = max([c, 1])
+			let mvcnt+=strchars(line[c-1:oldc-2])
+		else
+			let cnt-=1
+			let mvcnt+=1
+			let c-=len(matchstr(line[:c-2], '.$'))
+		endif
+	endwhile
+	return ":\<C-u>\e".mvcnt.'h'
 endfunction
 
-"smart indent when entering insert mode with i on empty lines
+function! EnableConceal()
+	nnoremap <buffer> <expr> l ForwardSkipConceal(v:count1)
+	nnoremap <buffer> <expr> h BackwardSkipConceal(v:count1)
+	setlocal conceallevel=2 concealcursor=nc
+endfunction
+
+" Move by displayed lines, not physical lines
+nnoremap j gj
+nnoremap k gk
+
+" smart indent when entering insert mode with i on empty lines
 function! IndentWithI()
-    if len(getline('.')) == 0 && line('.') != line('$')
-        return "\"_ddO"
-    else
-        return "i"
-    endif
+	if len(getline('.')) == 0 && line('.') != line('$')
+		return "\"_ddO"
+	else
+		return "i"
+	endif
 endfunction
 
-nnoremap <silent> h :call BackwardSkipConceal()<cr>
-nnoremap <silent> l :call ForwardSkipConceal()<cr>
 nnoremap <expr> i IndentWithI()
 
 " Execute a python script
@@ -604,10 +666,10 @@ nmap <leader>p o<space><bs><esc>]pk"_dd
 " <leader>l to format Python or C++
 au filetype python nnoremap <buffer> <leader>l :call Autopep8()<cr><esc>:redraw!<CR>
 au filetype python vnoremap <buffer> <leader>l :call Autopep8(printf(" --range %i %i", line("'<"), line("'>")))<cr><esc>:redraw!<CR>
-au filetype cpp    map <quiet> <buffer> <leader>l :pyf $term_tools/config/clang-format.py<cr>
+au filetype cpp	map <silent> <buffer> <leader>l :pyf $TERM_TOOLS/config/clang-format.py<cr>
 
 " remove trailing newlines
-noremap <silent> <leader>dw <esc>:call deletetrailingws()<cr>
+noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
 " remove incorrect line endings from windows machines
 noremap <leader>dd :%s/\r\n/\r/g<cr>
 
@@ -627,52 +689,52 @@ onoremap <buffer> ]] :<c-u>call <sid>jumpmethod('}', 'w',  'o')<cr>
 onoremap <buffer> [] :<c-u>call <sid>jumpmethod('}', 'wb', 'o')<cr>
 
 function! s:jumpmethod(char, flags, mode)
-  let original_cursor = getpos('.')
+	let original_cursor = getpos('.')
 
-  if a:mode == 'v'
-    normal! gv
-  elseif a:mode == 'o'
-    normal! v
-  endif
+	if a:mode == 'v'
+		normal! gv
+	elseif a:mode == 'o'
+		normal! v
+	endif
 
-  while search(a:char, a:flags) > 0
-    if a:char == '}'
-      " jump to the opening one to analyze the definition
-      normal! %
-    endif
+	while search(a:char, a:flags) > 0
+		if a:char == '}'
+			" jump to the opening one to analyze the definition
+			normal! %
+		endif
 
-    let current_line = line('.')
+		let current_line = line('.')
 
-    if getline(current_line) =~ '^\s*{'
-      " it's alone on the line, check the above one
-      let method_line = current_line - 1
-    else
-      let method_line = current_line
-    endif
+		if getline(current_line) =~ '^\s*{'
+			" it's alone on the line, check the above one
+			let method_line = current_line - 1
+		else
+			let method_line = current_line
+		endif
 
-    let method_line_body = getline(method_line)
+		let method_line_body = getline(method_line)
 
-    if method_line_body =~ '\k\+\s*(.*)' && method_line_body !~ '\<\(for\|foreach\|if\|while\|switch\|using\|catch\|get\|set\)\>'
-      " it's probably a function call
+		if method_line_body =~ '\k\+\s*(.*)' && method_line_body !~ '\<\(for\|foreach\|if\|while\|switch\|using\|catch\|get\|set\)\>'
+			" it's probably a function call
 
-      if a:char == '}'
-        " we need to go back to the closing bracket
-        normal! %
-      endif
+			if a:char == '}'
+				" we need to go back to the closing bracket
+				normal! %
+			endif
 
-      echo
-      return
-    else
-      if a:char == '}'
-        " we still need to go back to the closing bracket
-        normal! %
-      endif
-    endif
-  endwhile
+			echo
+			return
+		else
+			if a:char == '}'
+				" we still need to go back to the closing bracket
+				normal! %
+			endif
+		endif
+	endwhile
 
-  " if we're here, the search has failed, restore cursor position
-  echo
-  call setpos('.', original_cursor)
+	" if we're here, the search has failed, restore cursor position
+	echo
+	call setpos('.', original_cursor)
 endfunction
 " }}}
 
