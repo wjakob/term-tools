@@ -186,6 +186,12 @@ nnoremap <silent> > :bn<CR>
 " ctrl+a : select all
 nmap <C-A> 1GVG
 
+" Replace colon and semicolon
+nnoremap ; :
+nnoremap : ;
+vnoremap ; :
+vnoremap : ;
+
 vnoremap Q gqp
 nnoremap Q gqap
 
@@ -264,9 +270,9 @@ au BufReadPost *
 
 " Delete trailing white space
 fun! DeleteTrailingWS()
-	exe "normal mq"
+	let l:winview = winsaveview()
 	%s/\s\+$//ge
-	exe "normal `q"
+	call winrestview(l:winview)
 endfun
 
 " }}}
@@ -466,7 +472,7 @@ au BufNewFile,BufRead *mitsuba* call HighlightTrailingSpaces()
 " PBRT editing environment {{{
 au BufNewFile,BufRead */pbrt-3ed/src/* syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal | :call EnableConceal()
 
-function JumpToFile()
+function! JumpToFile()
 	if matchstr(expand('%:p'), '.*/pbrt-3ed/src/.*') != ''
 		" This is PBRT code: move to the column with file/line number information and jump
 		normal 3|gF
@@ -530,7 +536,7 @@ endfunction
 
 command! -nargs=+ CommandCabbr call CommandCabbr(<f-args>)
 
-command IPy execute 'IPython' | set foldmethod=marker | set foldmarker=#-,##
+command! IPy execute 'IPython' | set foldmethod=marker | set foldmarker=#-,##
 
 " Run make and don't prompt for ENTER
 nmap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
