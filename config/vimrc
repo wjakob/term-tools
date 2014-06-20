@@ -439,7 +439,7 @@ au FileType vim setlocal foldmethod=marker
 au BufNewFile,BufRead *.tm setlocal filetype=cpp
 
 " Spell-check text files
-au FileType text,tex,html setlocal spell
+au FileType text,tex,html,gitcommit setlocal spell
 
 " Highlight repeated words
 au FileType text,tex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
