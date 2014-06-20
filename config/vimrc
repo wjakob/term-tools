@@ -41,7 +41,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'gregsexton/gitv'
 " IPython integration
 Plugin 'ivanov/vim-ipython'
-" Easymotion plugin
+" EasyMotion plugin
 Plugin 'Lokaltog/vim-easymotion'
 " Support for directly opening file:linenumber
 Plugin 'bogado/file-line'
@@ -61,8 +61,6 @@ Plugin 'itchyny/calendar.vim'
 Plugin 'SirVer/ultisnips'
 " Nice indentation marks
 Plugin 'Yggdroot/indentLine'
-" Show marks visually
-Plugin 'ShowMarks'
 " Hard mode :)
 "Plugin 'takac/vim-hardtime'
 " Automatic generation of closing braces etc
@@ -158,18 +156,18 @@ set spellfile=$HOME/Dropbox/spell-en.utf-8.add
 
 " Window navigation {{{
 " Move around using Alt + navigation keys
-nmap <silent> <M-k> :wincmd k<CR>
-nmap <silent> <M-j> :wincmd j<CR>
-nmap <silent> <M-h> :wincmd h<CR>
-nmap <silent> <M-l> :wincmd l<CR>
-nmap <silent> <M-o> :ZoomWin<CR>
+nnoremap <silent> <M-k> :wincmd k<CR>
+nnoremap <silent> <M-j> :wincmd j<CR>
+nnoremap <silent> <M-h> :wincmd h<CR>
+nnoremap <silent> <M-l> :wincmd l<CR>
+nnoremap <silent> <M-o> :ZoomWin<CR>
 
 " As above (Mac keyboard)
-nmap <silent> ˙ :wincmd h<CR>
-nmap <silent> ∆ :wincmd j<CR>
-nmap <silent> ˚ :wincmd k<CR>
-nmap <silent> ¬ :wincmd l<CR>
-nmap <silent> ø :ZoomWin<CR>
+nnoremap <silent> ˙ :wincmd h<CR>
+nnoremap <silent> ∆ :wincmd j<CR>
+nnoremap <silent> ˚ :wincmd k<CR>
+nnoremap <silent> ¬ :wincmd l<CR>
+nnoremap <silent> ø :ZoomWin<CR>
 
 " Window resize / close commands
 nnoremap <silent> <C-L> :vertical resize +5<cr>
@@ -184,7 +182,7 @@ nnoremap <silent> < :bp<CR>
 nnoremap <silent> > :bn<CR>
 
 " ctrl+a : select all
-nmap <C-A> 1GVG
+nnoremap <C-A> 1GVG
 
 " Replace colon and semicolon
 nnoremap ; :
@@ -207,7 +205,7 @@ nnoremap cp :cp<CR>zv
 set pastetoggle=<F2>
 
 " Hide shown search results
-nmap <silent> <leader>/ :nohlsearch<CR>
+nnoremap <silent> <leader>/ :nohlsearch<CR>
 
 " Automaticall unfold when jumping to a line in a file
 nnoremap <expr> G (v:count ? 'Gzv' : 'G')
@@ -397,9 +395,6 @@ let g:indentLine_char = '¦'
 let g:indentLine_color_term = 236
 let g:indentLine_fileType = ['python']
 
-" Show marks
-let showmarks_include = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
 " Convenient key binding for delimitMate
 au FileType cpp inoremap <buffer> {<CR> {<CR>}<C-o>O
 
@@ -539,8 +534,8 @@ command! -nargs=+ CommandCabbr call CommandCabbr(<f-args>)
 command! IPy execute 'IPython' | set foldmethod=marker | set foldmarker=#-,##
 
 " Run make and don't prompt for ENTER
-nmap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
-vmap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
+nnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
+vnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
 
 " Like the above, but open in a quickfix window
 "command Makec make! | copen
@@ -669,10 +664,11 @@ au FileType python nnoremap <buffer> <leader>r <esc>:w !python3<cr>
 nmap <leader>P O<space><bs><esc>]pk"_dd
 nmap <leader>p o<space><bs><esc>]pk"_dd
 
-" <leader>l to format Python or C++
-au filetype python nnoremap <buffer> <leader>l :call Autopep8()<cr><esc>:redraw!<CR>
-au filetype python vnoremap <buffer> <leader>l :call Autopep8(printf(" --range %i %i", line("'<"), line("'>")))<cr><esc>:redraw!<CR>
-au filetype cpp	map <silent> <buffer> <leader>l :pyf $TERM_TOOLS/config/clang-format.py<cr>
+" <leader>l to format Python or C++ (visual and normal mode)
+au FileType python nnoremap <buffer> <leader>l :call Autopep8()<cr><esc>:redraw!<CR>
+au FileType python vnoremap <buffer> <leader>l :call Autopep8(printf(" --range %i %i", line("'<"), line("'>")))<cr><esc>:redraw!<CR>
+au FileType cpp	nnoremap <silent> <buffer> <leader>l 1GVG:pyf $TERM_TOOLS/config/clang-format.py<cr>
+au FileType cpp	vnoremap <silent> <buffer> <leader>l :pyf $TERM_TOOLS/config/clang-format.py<cr>
 
 " remove trailing newlines
 noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
