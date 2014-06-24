@@ -422,10 +422,9 @@ nmap <Leader>hr <Plug>GitGutterRevertHunk
 au BufRead,BufNewFile SCons* setlocal filetype=python
 
 " Latex and Python: do not use tabs
-au FileType python setlocal expandtab
 au FileType cmake setlocal expandtab tabstop=2 shiftwidth=2
 au FileType tex,plaintex setlocal expandtab | :call EnableConceal()
-au BufEnter *.tex hi Conceal ctermfg=4
+au FileType python setlocal expandtab | :call EnableConceal()
 
 " Vimrc -- fold with markers
 au FileType vim setlocal foldmethod=marker
@@ -641,6 +640,7 @@ function! EnableConceal()
 	nnoremap <buffer> <expr> h BackwardSkipConceal(v:count1)
 	setlocal conceallevel=2 concealcursor=nc
 endfunction
+au BufEnter *.tex,*.py hi Conceal ctermfg=4 | set concealcursor=nc
 
 " Move by displayed lines, not physical lines
 nnoremap j gj
