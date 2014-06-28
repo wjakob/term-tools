@@ -111,63 +111,6 @@ if [ "$ZSH_VERSION" ]; then
 	bindkey -M vicmd 'k' history-search-backward
 	bindkey -M vicmd 'j' history-search-forward
 	bindkey -M vicmd 'v' edit-command-line
-
-	autoload zkbd
-	autoload up-line-or-history
-	autoload down-line-or-history
-
-	[ ! -d ~/.zsh/zkbd.d ] && mkdir -p ~/.zsh/zkbd.d
-
-	if [[ $OSTYPE == darwin* ]]; then
-		local file_name=xterm-"darwin"
-
-	elif [[ $OSTYPE == linux-gnu && $TERM == xterm* ]]; then
-		local file_name=xterm-linux
-
-	elif [[ $OSTYPE == linux-gnu && $TERM == linux* ]]; then
-		local file_name=console-linux
-
-	else
-		local file_name=$TERM-${${DISPLAY:t}:-$VENDOR-$OSTYPE}
-	fi
-
-	if [ -f ~/.zsh/zkbd.d/$file_name ]; then
-		source ~/.zsh/zkbd.d/$file_name
-
-	elif [ -f ~/.zkbd/$file_name ]; then
-		source ~/.zkbd/$file_name
-
-	else
-		echo ""
-		echo "TERM = $TERM"
-		echo "OSTYPE = $OSTYPE"
-		echo "VENDOR = $VENDOR"
-		echo "DISPLAY = $DISPLAY"
-		echo ""
-
-		mkdir -p ~/.zkbd
-		zkbd
-		source ~/.zkbd/$file_name
-	fi
-
-	[[ -n ${key[Backspace]} ]] && bindkey "${key[Backspace]}" backward-delete-char
-	[[ -n ${key[Delete]} ]] && bindkey "${key[Delete]}" delete-char
-	[[ -n ${key[Insert]} ]] && bindkey "${key[Insert]}" overwrite-mode
-
-	[[ -n ${key[Home]} ]] && bindkey "${key[Home]}" beginning-of-line
-	[[ -n ${key[End]} ]] && bindkey "${key[End]}" end-of-line
-
-	[[ -n ${key[PageUp]} ]] && bindkey "${key[PageUp]}" up-line-or-history
-	[[ -n ${key[PageDown]} ]] && bindkey "${key[PageDown]}" down-line-or-history
-
-	[[ -n ${key[Up]} ]] && bindkey "${key[Up]}" up-line-or-search
-	[[ -n ${key[Down]} ]] && bindkey "${key[Down]}" down-line-or-search
-
-	[[ -n ${key[Left]} ]] && bindkey "${key[Left]}" backward-char
-	[[ -n ${key[Right]} ]] && bindkey "${key[Right]}" forward-char
-
-	[[ -n ${key[AltLeft]} ]] && bindkey "${key[AltLeft]}" backward-word
-	[[ -n ${key[AltRight]} ]] && bindkey "${key[AltRight]}" forward-word
 fi
 
 # BASH-SPECIFIC CONFIG
