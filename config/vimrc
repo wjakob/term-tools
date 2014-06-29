@@ -190,6 +190,7 @@ nnoremap : ;
 vnoremap ; :
 vnoremap : ;
 
+" Use Q for formatting the current paragraph (or selection)
 vnoremap Q gq
 nnoremap Q gqap
 
@@ -197,9 +198,8 @@ nnoremap Q gqap
 nnoremap cn :cn<CR>zv
 nnoremap cp :cp<CR>zv
 
-" Use Q for formatting the current paragraph (or selection)
 " Allow 'gf' to jump to file:line links
-"nnoremap gf gF
+nnoremap gf gF
 
 " Bind F2 as a quick paste mode toggle key
 set pastetoggle=<F2>
@@ -464,18 +464,6 @@ au BufNewFile,BufRead *mitsuba* call HighlightTrailingSpaces()
 " }}}
 
 " PBRT editing environment {{{
-au BufNewFile,BufRead */pbrt-3ed/src/* syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal | :call EnableConceal()
-
-function! JumpToFile()
-	if matchstr(expand('%:p'), '.*/pbrt-3ed/src/.*') != ''
-		" This is PBRT code: move to the column with file/line number information and jump
-		normal 3|gF
-	else
-		" Perform a normal jump
-		normal gF
-	endif
-endfunction
-
 python << EOF
 def pbrt_search(search):
 	import os, glob, vim
@@ -501,8 +489,24 @@ function! PBRTJump()
 	python pbrt_search(vim.eval('l:text'))
 endfunction
 
-nnoremap gf :call JumpToFile()<CR>
-au BufNewFile,BufRead ~/pbrt-3ed/book/*.tex setlocal cindent | let cur_syntax = b:current_syntax | unlet! b:current_syntax | syntax include @CPP syntax/cpp.vim | syntax region cppSnip matchgroup=Snip start=/^@.*=$/ end=/^@\./ contains=@CPP | nnoremap J :call PBRTJump()<CR>
+function! PBRTTeXInit()
+	setlocal cindent
+	let cur_syntax = b:current_syntax | unlet! b:current_syntax
+	syntax include @CPP syntax/cpp.vim
+	syntax region cppSnip matchgroup=Snip start=/^@.*=$/ end=/^@\./ contains=@CPP
+	nnoremap J :call PBRTJump()<CR>
+	nnoremap <Leader>b :wa<CR>:silent! make! pdfbook \| :!open book.pdf<CR><CR>
+endfunction
+
+function! PBRTCPPInit()
+	call EnableConceal()
+	syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal
+	nnoremap <buffer>gf 3\|gF
+endfunction
+
+au BufNewFile,BufRead ~/projects/pbrt-3ed/book/*.tex call PBRTTeXInit()
+au BufNewFile,BufRead */projects/pbrt-3ed/src/* call PBRTCPPInit()
+
 
 " }}}
 "
@@ -535,9 +539,6 @@ command! IPy execute 'IPython' | set foldmethod=marker | set foldmarker=#-,##
 " Run make and don't prompt for ENTER
 nnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
 vnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
-
-" Like the above, but open in a quickfix window
-"command Makec make! | copen
 
 " w!! command which writes with root permissions
 cmap w!! w !sudo tee % >/dev/null
