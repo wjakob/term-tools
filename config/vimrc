@@ -190,7 +190,7 @@ nnoremap : ;
 vnoremap ; :
 vnoremap : ;
 
-vnoremap Q gqp
+vnoremap Q gq
 nnoremap Q gqap
 
 " Map cn/cp to navigate through search results (formerly :cn/:cp)

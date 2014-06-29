@@ -7,6 +7,8 @@
 	staged = diff --staged
 	unstage = reset HEAD
 	lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+	outgoing = log --pretty=oneline --abbrev-commit --graph @{u}..
+	incoming = !git fetch && git log --pretty=oneline --abbrev-commit --graph ..@{u}
 [push]
 	default = upstream
 [difftool "kdiff3"]
