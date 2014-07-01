@@ -107,9 +107,12 @@ if [ "$ZSH_VERSION" ]; then
 	zle -N zle-line-finish
 	RPROMPT='${vim_mode}'
 
+	autoload up-line-or-history
+	autoload down-line-or-history
+
 	# Perform a previx history search when navigating previous commands
-	bindkey -M vicmd 'k' history-search-backward
-	bindkey -M vicmd 'j' history-search-forward
+	bindkey -M vicmd 'k' history-beginning-search-backward
+	bindkey -M vicmd 'j' history-beginning-search-forward
 	bindkey -M vicmd 'v' edit-command-line
 fi
 

@@ -9,16 +9,16 @@ autoload up-line-or-history
 autoload down-line-or-history
 
 # OSX / iTerm2 key bindings
-bindkey '^?'    backward-delete-char    # Backspace
-bindkey '^[[3~' delete-char             # Delete
-bindkey '^[OH'  beginning-of-line       # Home
-bindkey '^[OF'  end-of-line             # End
-bindkey '^[[5~' up-line-or-history      # PageUp
-bindkey '^[[6~' down-line-or-history    # PageDown
-bindkey '^[OA'  up-line-or-search       # Up
-bindkey '^[OB'  down-line-or-search     # Down
-bindkey '^[OD'  backward-char           # Left
-bindkey '^[OC'  forward-char            # Right
+bindkey '^?'    backward-delete-char     # Backspace
+bindkey '^[[3~' delete-char              # Delete
+bindkey '^[OH'  beginning-of-line        # Home
+bindkey '^[OF'  end-of-line              # End
+bindkey '^[[5~' up-line-or-history       # PageUp
+bindkey '^[[6~' down-line-or-history     # PageDown
+bindkey '^[OA'  history-search-backward  # Up 
+bindkey '^[OB'  history-search-forward   # Down
+bindkey '^[OD'  backward-char            # Left
+bindkey '^[OC'  forward-char             # Right
 
 # Search paths
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/projects/pbrt-3ed/src/bin
