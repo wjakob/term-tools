@@ -104,6 +104,7 @@ set backspace=indent,eol,start " Make backspace behave more like in other editor
 set splitbelow                 " Open splits below (more natural), :sp makes a split
 set splitright                 " Similar to the above (for vsplit)
 let mapleader=","              " Map the leader key to comma
+set nojoinspaces               " Don't insert two spaces after a period when joining lines
 
 " Control what extra information is shown
 set showmode                   " show which mode we are in
@@ -402,7 +403,7 @@ let g:indentLine_faster = 1
 
 " Visualize TeX characters using the conceal feature
 let g:tex_conceal="adgm"
-set ambw="double"
+set ambw="single"
 " Folding for TeX files (disabled)
 "let g:tex_fold_enabled = 1
 " Don't spell-check comments
