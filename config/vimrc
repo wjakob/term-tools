@@ -402,8 +402,11 @@ au FileType cpp inoremap <buffer> {<CR> {<CR>}<C-o>O
 let g:indentLine_faster = 1
 
 " Visualize TeX characters using the conceal feature
-let g:tex_conceal="adgm"
+" " (accents, bold/italic, delimiters, greek, math symbols)
+let g:tex_conceal="abgm"
+
 set ambw="single"
+
 " Folding for TeX files (disabled)
 "let g:tex_fold_enabled = 1
 " Don't spell-check comments
@@ -434,11 +437,11 @@ au FileType vim setlocal foldmethod=marker
 au BufNewFile,BufRead *.tm setlocal filetype=cpp
 
 " Spell-check text files
-au FileType text,tex,html,gitcommit setlocal spell
+au FileType text,tex,plaintex,html,gitcommit setlocal spell
 
 " Highlight repeated words
-au FileType text,tex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
-au FileType text,tex,html hi link TmlDoubleWords WarningMsg
+au FileType text,tex,plaintex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
+au FileType text,tex,plaintex,html hi link TmlDoubleWords WarningMsg
 
 " Autocompletion
 au FileType python,cpp nnoremap <buffer> J :YcmCompleter GoTo<CR>zv
@@ -492,9 +495,24 @@ endfunction
 
 function! PBRTTeXInit()
 	setlocal cindent
-	let cur_syntax = b:current_syntax | unlet! b:current_syntax
-	syntax include @CPP syntax/cpp.vim
-	syntax region cppSnip matchgroup=Snip start=/^@.*=$/ end=/^@\./ contains=@CPP
+	unlet! b:current_syntax
+	syn include @CPP syntax/cpp.vim
+	syn region cppSnip matchgroup=Snip start=/^@.*=$/ end=/^@\./ contains=@CPP
+	syn region cppSnip matchgroup=Snip start=/^@.*=(.*)$/ end=/^@\./ contains=@CPP
+	syn spell toplevel
+	let b:current_syntax='pbrt'
+	syn match phantomdfnCommand "\\phantomdfn{[^}]\{-}}"hs=s+12,he=e-1 containedin=texStatement contains=@NoSpell
+	syn match useCommand "\\use{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
+	syn match monoCommand "\\mono{[^}]\{-}}"hs=s+6,he=e-1 containedin=texStatement contains=@NoSpell
+	syn match refCommand "\\ref{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
+	syn match tagCommand "\\tag{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
+	syn match artCommand "\\art{[^}]\{-}}{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
+
+	hi phantomdfnCommand ctermfg=4
+	hi useCommand ctermfg=4
+	hi monoCommand ctermfg=4
+	hi refCommand ctermfg=4
+	hi tagCommand ctermfg=4
 	nnoremap J :call PBRTJump()<CR>
 	nnoremap <Leader>b :wa<CR>:silent! make! pdfbook \| :!open book.pdf<CR><CR>
 endfunction
@@ -676,6 +694,11 @@ au FileType cpp	vnoremap <silent> <buffer> <leader>l :pyf $TERM_TOOLS/config/cla
 noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
 " remove incorrect line endings from windows machines
 noremap <leader>dd :%s/\r\n/\r/g<cr>
+
+" Comments in cursive..
+set t_ZH=[3m
+set t_ZR=[23m
+highlight Comment cterm=italic
 
 nnoremap <buffer> ][ :<c-u>call <sid>jumpmethod('{', 'w',  'n')<cr>
 nnoremap <buffer> [[ :<c-u>call <sid>jumpmethod('{', 'wb', 'n')<cr>
