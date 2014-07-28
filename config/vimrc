@@ -235,6 +235,15 @@ set timeout timeoutlen=1000 ttimeoutlen=100
 " Use OS clipboard
 if has('unix') && system("uname") == "Linux\n"
 	set clipboard=unnamedplus  " Share X windows clipboard.
+	if !has('gui_running')
+		" Fix handling of Alt/Meta in Gnome Terminal
+		let c='a'
+		while c <= 'z'
+		  exec "set <A-".c.">=\e".c
+		  exec "imap \e".c." <A-".c.">"
+		  let c = nr2char(1+char2nr(c))
+		endw
+	endif
 else
 	set clipboard=unnamed      " Share system clipboard.
 endif
