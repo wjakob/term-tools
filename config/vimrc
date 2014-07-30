@@ -240,7 +240,7 @@ if has('unix') && system("uname") == "Linux\n"
 		let c='a'
 		while c <= 'z'
 		  exec "set <A-".c.">=\e".c
-		  exec "imap \e".c." <A-".c.">"
+		  "exec "imap \e".c." <A-".c.">"
 		  let c = nr2char(1+char2nr(c))
 		endw
 	endif
