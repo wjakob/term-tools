@@ -18,7 +18,7 @@
 " <leader><leader> -- comment/uncomment a code block
 
 set nocompatible
-
+"
 " Plugins {{{
 
 filetype off " Needed (this interferes with Vundle)
@@ -532,9 +532,8 @@ function! PBRTCPPInit()
 	nnoremap <buffer>gf 3\|gF
 endfunction
 
-au BufNewFile,BufRead ~/projects/pbrt-3ed/book/*.tex call PBRTTeXInit()
-au BufNewFile,BufRead */projects/pbrt-3ed/src/* call PBRTCPPInit()
-
+au BufEnter,BufRead ~/projects/pbrt-3ed/book/*.tex call PBRTTeXInit()
+au BufEnter,BufRead ~/projects/pbrt-3ed/src/* call PBRTCPPInit()
 
 " }}}
 "
