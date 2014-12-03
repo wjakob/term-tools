@@ -503,6 +503,9 @@ function! PBRTJump()
 endfunction
 
 function! PBRTTeXInit()
+	if exists('b:current_syntax') && b:current_syntax == 'pbrt'
+		return
+	endif
 	setlocal cindent
 	unlet! b:current_syntax
 	syn include @CPP syntax/cpp.vim
@@ -527,6 +530,10 @@ function! PBRTTeXInit()
 endfunction
 
 function! PBRTCPPInit()
+	if exists('b:current_syntax') && b:current_syntax == 'pbrt'
+		return
+	endif
+	let b:current_syntax='pbrt'
 	call EnableConceal()
 	syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal
 	nnoremap <buffer>gf 3\|gF
