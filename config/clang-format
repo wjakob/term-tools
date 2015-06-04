@@ -38,6 +38,7 @@ SpacesInParentheses: false
 SpacesInAngles:  false
 SpaceInEmptyParentheses: false
 SpacesInCStyleCastParentheses: false
+#SpaceAfterCStyleCast: true
 SpaceAfterControlStatementKeyword: true
 SpaceBeforeAssignmentOperators: true
 ContinuationIndentWidth: 4

@@ -40,23 +40,19 @@ Plugin 'tpope/vim-fugitive'
 " GUI extension for the fugitive plugin
 Plugin 'gregsexton/gitv'
 " IPython integration
-Plugin 'ivanov/vim-ipython'
+"Plugin 'ivanov/vim-ipython'
 " EasyMotion plugin
 Plugin 'Lokaltog/vim-easymotion'
 " Support for directly opening file:linenumber
-Plugin 'bogado/file-line'
+" Plugin 'bogado/file-line'
 " Convenient recursive filename search
 Plugin 'ctrlp.vim'
-" Accelerates loading of big files
-Plugin 'mhinz/vim-hugefile'
 " Format Python files
 Plugin 'tell-k/vim-autopep8'
 " Cmake integration
 Plugin 'vhdirk/vim-cmake'
 " Ag searcher
 Plugin 'rking/ag.vim'
-" Google calendar viewer
-Plugin 'itchyny/calendar.vim'
 " Snippet manager
 Plugin 'SirVer/ultisnips'
 " Nice indentation marks
@@ -537,10 +533,17 @@ function! PBRTCPPInit()
 	call EnableConceal()
 	syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal
 	nnoremap <buffer>gf 3\|gF
+	nnoremap <buffer>i 3\|gFi
+	nnoremap <buffer>o 3\|gFo
+	nnoremap <buffer>I 3\|gFI
+	nnoremap <buffer>O 3\|gFO
+	nnoremap <buffer>d 3\|gFd
 endfunction
 
 au BufEnter,BufRead ~/projects/pbrt-3ed/book/*.tex call PBRTTeXInit()
-au BufEnter,BufRead ~/projects/pbrt-3ed/src/* call PBRTCPPInit()
+au BufEnter,BufRead ~/projects/pbrt-3ed/src/*.h call PBRTCPPInit()
+au BufEnter,BufRead ~/projects/pbrt-3ed/src/*.cpp call PBRTCPPInit()
+au BufEnter,BufRead ~/nori2/* set et ts=4 sw=4
 
 " }}}
 "
@@ -573,6 +576,8 @@ command! IPy execute 'IPython' | set foldmethod=marker | set foldmarker=#-,##
 " Run make and don't prompt for ENTER
 nnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
 vnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
+au BufEnter *.tex nnoremap <silent> <buffer> <Leader>m :wa<CR>:silent! make! \| redraw! \| <CR>
+au BufEnter *.tex vnoremap <silent> <buffer> <Leader>m :wa<CR>:silent! make! \| redraw! \| <CR>
 
 " w!! command which writes with root permissions
 cmap w!! w !sudo tee % >/dev/null
