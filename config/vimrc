@@ -119,6 +119,7 @@ set shiftwidth=4               " Number of spaces to use for each step of (auto)
 set softtabstop=-1             " Disable softtabstop (reverts to shiftwidth)
 set smarttab                   " insert tabs on the start of a line according to
                                " shiftwidth, not tabstop
+set expandtab                  " Expand tabs to spaces
 set textwidth=0                " no hard wrapping by default
 set foldmethod=syntax          " fold using syntax by default
 set foldminlines=4             " require a medium size to fold

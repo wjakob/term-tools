@@ -31,7 +31,7 @@ Cpp11BracedListStyle: false
 Standard:        Cpp03
 IndentWidth:     4
 TabWidth:        4
-UseTab:          Always
+UseTab:          Never
 BreakBeforeBraces: Attach
 IndentFunctionDeclarationAfterType: false
 SpacesInParentheses: false
