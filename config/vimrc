@@ -503,7 +503,7 @@ function! PBRTTeXInit()
 	if exists('b:current_syntax') && b:current_syntax == 'pbrt'
 		return
 	endif
-	setlocal cindent
+	setlocal nocindent
 	unlet! b:current_syntax
 	syn include @CPP syntax/cpp.vim
 	syn region cppSnip matchgroup=Snip start=/^@.*=$/ end=/^@\./ contains=@CPP
