@@ -47,8 +47,6 @@ Plugin 'Lokaltog/vim-easymotion'
 Plugin 'ctrlp.vim'
 " Format Python files
 Plugin 'tell-k/vim-autopep8'
-" Cmake integration
-"Plugin 'vhdirk/vim-cmake'
 " Ag searcher (*)
 Plugin 'rking/ag.vim'
 " Snippet manager (*)
@@ -74,6 +72,7 @@ Plugin 'godlygeek/tabular'
 " Text object for Java/VIM/C functions
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-function'
+Plugin 'tikhomirov/vim-glsl'
 " Hard mode :)
 "Plugin 'takac/vim-hardtime'
 " Support for directly opening file:linenumber -- causes issues
@@ -338,6 +337,9 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_enable_diagnostic_signs = 0
 
+" Disable automatic popups (too slow for C++ stuff)
+let g:ycm_auto_trigger = 0
+
 " CtrlP setting
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -364,14 +366,6 @@ map <Leader> <Plug>(easymotion-prefix)
 map s <Plug>(easymotion-s)
 
 let g:autopep8_disable_show_diff = 1
-
-let g:calendar_google_calendar = 1
-let g:calendar_date_endian = "little"
-let g:calendar_first_day = "monday"
-let g:calendar_clock_12hour = 1
-let g:calendar_frame = "unicode"
-let g:calendar_date_separator = "."
-let g:calendar_view = "days"
 
 " UltiSnips shortcuts
 "let g:UltiSnipsExpandTrigger       = "<tab>"
@@ -438,6 +432,10 @@ nmap <Leader>hr <Plug>GitGutterRevertHunk
 
 " Set the right file type for Django when editing .html
 au BufNewFile,BufRead *.html setlocal filetype=htmldjango
+
+au BufNewFile,BufRead *.frag setlocal filetype=glsl
+au BufNewFile,BufRead *.vert setlocal filetype=glsl
+au BufNewFile,BufRead *.geo setlocal filetype=glsl
 
 " }}}
 
@@ -565,21 +563,7 @@ au BufEnter,BufRead ~/nori2/* set et ts=4 sw=4
 "
 " Other commands and abbreviations {{{
 
-" Multiprocessor builds
-function! SetMakeprg()
-	if !empty($NUMBER_OF_PROCESSORS)
-		let n = $NUMBER_OF_PROCESSORS + 0
-	elseif has('mac')
-		let n = system("sysctl -n hw.ncpu")
-	elseif filereadable('/proc/cpuinfo')
-		let n = system('grep -c ^processor /proc/cpuinfo') + 0
-	else
-		let n = 1
-	endif
-	let &makeprg = 'make' . (n > 1 ? (' -j'.(n + 1)) : '')
-endfunction
-call SetMakeprg()
-
+let &makeprg = 'ninja'
 
 function! CommandCabbr(abbreviation, expansion)
   execute 'cabbr ' . a:abbreviation . ' <c-r>=getcmdpos() == 1 && getcmdtype() == ":" ? "' . a:expansion . '" : "' . a:abbreviation . '"<CR>'
