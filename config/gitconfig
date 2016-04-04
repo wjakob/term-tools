@@ -1,5 +1,5 @@
 [user]
-	email = wenzel@inf.ethz.ch
+    email = wenzel.jakob@epfl.ch
 	name = Wenzel Jakob
 [alias]
 	co = checkout
@@ -9,25 +9,17 @@
 	lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
 	outgoing = log --pretty=oneline --abbrev-commit --graph @{u}..
 	incoming = !git fetch && git log --pretty=oneline --abbrev-commit --graph ..@{u}
+	cloner = clone --recursive
+	untrack = update-index --assume-unchanged
 [push]
 	default = upstream
-[difftool "kdiff3"]
-    path = kdiff3
-    trustExitCode = false
-[difftool]
-    prompt = false
-[diff]
-    tool = kdiff3
-[mergetool "kdiff3"]
-    path = kdiff3
-    trustExitCode = false
-[mergetool]
-    keepBackup = false
 [merge]
-	tool = kdiff3
+	tool = araxis
+[diff]
+	tool = araxis
 [core]
 	pager = less -x4
 [credential]
-	helper = cache --timeout=360000
+	helper = osxkeychain
 [color]
 	ui = auto
