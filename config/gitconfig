@@ -11,6 +11,7 @@
 	incoming = !git fetch && git log --pretty=oneline --abbrev-commit --graph ..@{u}
 	cloner = clone --recursive
 	untrack = update-index --assume-unchanged
+	pullall = "!f(){ git pull \"$@\" && git submodule update --init --recursive; }; f"
 [push]
 	default = upstream
 [merge]
