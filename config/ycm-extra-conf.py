@@ -3,7 +3,7 @@ import re
 from sys import platform
 
 flags = [
-    '-x', 'c++', '-std=c++11', '-stdlib=libc++',
+    '-x', 'c++', '-std=c++14', '-stdlib=libc++',
 ]
 
 search_paths = []

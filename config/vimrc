@@ -6,7 +6,7 @@
 " use ]p/]P to paste while respecting the current indent level.
 " gv re-selects a previous visual selection
 " git log origin/master ^master --stat
-" 
+"
 " <leader> s/f/F   -- EasyMotion 1 character searches
 " <leader> j/k     -- EasyMotion row searches
 " <leader> m       -- run make
@@ -306,21 +306,6 @@ let g:syntastic_python_checkers = ['flake8']
 let g:syntastic_python_flake8_args="--ignore=E126,E128,E221"
 
 " Powerline -- fancy status line
-"if !exists('g:airline_symbols')
-	"let g:airline_symbols = {}
-"endif
-"let g:airline_left_sep = '⮀'
-"let g:airline_left_alt_sep = '⮁'
-"let g:airline_right_sep = '⮂'
-"let g:airline_right_alt_sep = '⮃'
-"let g:airline_symbols.branch = '⭠'
-"let g:airline_symbols.readonly = '⭤'
-"let g:airline_symbols.linenr = '⭡'
-"let g:airline_powerline_fonts=1
-"let g:airline#extensions#whitespace#enabled = 0
-"let g:airline#extensions#tabline#enabled = 1
-"let g:airline#extensions#tabline#left_sep = ' '
-"let g:airline#extensions#tabline#left_alt_sep = '|'
 "let g:airline_theme='base16'
 let g:airline_powerline_fonts = 1
 set laststatus=2  " 2 means always show status

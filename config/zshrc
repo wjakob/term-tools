@@ -24,3 +24,10 @@ bindkey $terminfo[kcuf1] forward-char                   # Right
 
 # Search paths
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/projects/pbrt-3ed/src/bin
+
+alias n=ninja
+
+alias cmake_deb='cmake $@ -DCMAKE_BUILD_TYPE=DEBUG'
+alias cmake_rel='cmake $@ -DCMAKE_BUILD_TYPE=RELEASE'
+alias cmake_gcc='cmake $@ -DCMAKE_CXX_COMPILER=g++-5'
+alias cmake_clang='cmake $@ -DCMAKE_CXX_COMPILER=clang++'
