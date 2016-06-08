@@ -152,7 +152,7 @@ set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set writebackup
 
 set spelllang=en
-set spellfile=$HOME/Dropbox/spell-en.utf-8.add
+set spellfile=$HOME/Dropbox/.spell-en.utf-8.add
 
 " Window navigation {{{
 " Move around using Alt + navigation keys
