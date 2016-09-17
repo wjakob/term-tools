@@ -2,7 +2,11 @@
 # source from ~/.bashrc or ~/.zshrc
 
 # directory containing these tools
-export TERM_TOOLS=~/term-tools
+if [ "$ZSH_VERSION" ]; then
+    export TERM_TOOLS=$(dirname $(dirname $0:A))
+else
+    export TERM_TOOLS="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+fi
 
 # vim by default
 export EDITOR="vim"

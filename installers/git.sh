@@ -6,4 +6,8 @@ if [ -z "$TERM_TOOLS" ]; then
     exit 1
 fi
 
-ln $@ -s $TERM_TOOLS/config/gitconfig ~/.gitconfig
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    ln $@ -s $TERM_TOOLS/config/gitconfig-osx ~/.gitconfig
+else
+    ln $@ -s $TERM_TOOLS/config/gitconfig-linux ~/.gitconfig
+fi
