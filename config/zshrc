@@ -3,7 +3,7 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="wjakob"
 plugins=(git zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
-source ~/term-tools/config/shrc.sh
+source ~/.term-tools/config/shrc.sh
 
 autoload up-line-or-beginning-search
 autoload down-line-or-beginning-search
@@ -23,7 +23,7 @@ bindkey $terminfo[kcub1] backward-char                  # Left
 bindkey $terminfo[kcuf1] forward-char                   # Right
 
 # Search paths
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/projects/pbrt-3ed/src/bin
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 alias n=ninja
 
@@ -31,7 +31,7 @@ alias cmake_deb='cmake $@ -GNinja -DCMAKE_BUILD_TYPE=DEBUG'
 alias cmake_rel='cmake $@ -GNinja -DCMAKE_BUILD_TYPE=RELEASE'
 alias cmake_gcc='cmake $@ -GNinja -DCMAKE_CXX_COMPILER=g++-7 -DCMAKE_C_COMPILER=gcc-7'
 alias cmake_clang='cmake $@ -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++'
-alias cmake_icpc='cmake $@ -GNinja -DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=icpc'
+alias cmake_icpc='cmake $@ -GNinja -DCMAKE_C_COMPILER=icc -DCMAKE_C_FLAGS="-gcc-name=gcc-7 -cxxlib=/usr/local" -DCMAKE_CXX_COMPILER=icpc -DCMAKE_CXX_FLAGS="-gxx-name=g++-7 -cxxlib=/usr/local"'
 alias cmake_clean='rm -rf CMakeCache.txt CMakeFiles'
 
 source /opt/intel/bin/compilervars.sh intel64
