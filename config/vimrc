@@ -76,8 +76,6 @@ Plugin 'kana/vim-textobj-function'
 Plugin 'tikhomirov/vim-glsl'
 " Hard mode :)
 "Plugin 'takac/vim-hardtime'
-" Support for directly opening file:linenumber -- causes issues
-" Plugin 'bogado/file-line'
 
 call vundle#end() " required
 

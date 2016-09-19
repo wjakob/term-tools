@@ -27,6 +27,16 @@ export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 alias n=ninja
 
+export NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+function of() {
+  osascript <<EOT
+  tell application "OmniFocus"
+    parse tasks into default document with transport text "$@"
+  end tell
+EOT
+}
+
 alias cmake_deb='cmake $@ -GNinja -DCMAKE_BUILD_TYPE=DEBUG'
 alias cmake_rel='cmake $@ -GNinja -DCMAKE_BUILD_TYPE=RELEASE'
 alias cmake_gcc='cmake $@ -GNinja -DCMAKE_CXX_COMPILER=g++-7 -DCMAKE_C_COMPILER=gcc-7'
