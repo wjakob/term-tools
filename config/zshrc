@@ -34,4 +34,7 @@ alias cmake_clang='cmake $@ -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILE
 alias cmake_icpc='cmake $@ -GNinja -DCMAKE_C_COMPILER=icc -DCMAKE_C_FLAGS="-gcc-name=gcc-7 -cxxlib=/usr/local" -DCMAKE_CXX_COMPILER=icpc -DCMAKE_CXX_FLAGS="-gxx-name=g++-7 -cxxlib=/usr/local"'
 alias cmake_clean='rm -rf CMakeCache.txt CMakeFiles'
 
+# Don't create ~/intel directory after every compiler invocation
+export INTEL_DISABLE_ISIP=1
+
 source /opt/intel/bin/compilervars.sh intel64
