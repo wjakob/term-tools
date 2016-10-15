@@ -46,8 +46,6 @@ Plugin 'gregsexton/gitv'
 Plugin 'Lokaltog/vim-easymotion'
 " Convenient recursive filename search
 Plugin 'ctrlp.vim'
-" Format Python files
-Plugin 'tell-k/vim-autopep8'
 " Ag searcher (*)
 Plugin 'rking/ag.vim'
 " Snippet manager (*)
@@ -76,6 +74,7 @@ Plugin 'kana/vim-textobj-function'
 Plugin 'tikhomirov/vim-glsl'
 " Hard mode :)
 "Plugin 'takac/vim-hardtime'
+Plugin 'pignacio/vim-yapf-format'
 
 call vundle#end() " required
 
@@ -304,7 +303,6 @@ let g:syntastic_python_checkers = ['flake8']
 let g:syntastic_python_flake8_args="--ignore=E126,E128,E221"
 
 " Powerline -- fancy status line
-"let g:airline_theme='base16'
 let g:airline_powerline_fonts = 1
 set laststatus=2  " 2 means always show status
 
@@ -350,8 +348,6 @@ augroup END
 " `s{char}{label}`
 map <Leader> <Plug>(easymotion-prefix)
 map s <Plug>(easymotion-s)
-
-let g:autopep8_disable_show_diff = 1
 
 " UltiSnips shortcuts
 let g:UltiSnipsExpandTrigger       = "<tab>"
@@ -557,8 +553,6 @@ endfunction
 
 command! -nargs=+ CommandCabbr call CommandCabbr(<f-args>)
 
-command! IPy execute 'IPython' | set foldmethod=marker | set foldmarker=#-,##
-
 " Run make and don't prompt for ENTER
 nnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
 vnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
@@ -691,10 +685,10 @@ nmap <leader>P O<space><bs><esc>]pk"_dd
 nmap <leader>p o<space><bs><esc>]pk"_dd
 
 " <leader>l to format Python or C++ (visual and normal mode)
-au FileType python nnoremap <buffer> <leader>l :call Autopep8()<cr><esc>:redraw!<CR>
-au FileType python vnoremap <buffer> <leader>l :call Autopep8(printf(" --range %i %i", line("'<"), line("'>")))<cr><esc>:redraw!<CR>
-au FileType cpp	nnoremap <silent> <buffer> <leader>l 1GVG:pyf $TERM_TOOLS/config/clang-format.py<cr>
-au FileType cpp	vnoremap <silent> <buffer> <leader>l :pyf $TERM_TOOLS/config/clang-format.py<cr>
+au FileType cpp nnoremap <silent> <buffer> <leader>l 1GVG:pyf $TERM_TOOLS/config/clang-format.py<cr>
+au FileType cpp vnoremap <silent> <buffer> <leader>l :pyf $TERM_TOOLS/config/clang-format.py<cr>
+au FileType python vnoremap <silent> <buffer> <leader>l :YapfFormat<cr>
+au FileType python nnoremap <silent> <buffer> <leader>l :YapfFullFormat<cr>
 
 " remove trailing newlines
 noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
