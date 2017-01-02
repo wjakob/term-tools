@@ -7,7 +7,7 @@
 " gv re-selects a previous visual selection
 " git log origin/master ^master --stat
 "
-" <leader> s/f/F   -- EasyMotion 1 character searches
+" s or <leader> s/f/F -- EasyMotion 1 character searches
 " <leader> j/k     -- EasyMotion row searches
 " <leader> m       -- run make
 " <leader> p/P     -- indented paste
@@ -15,7 +15,19 @@
 " <leader> dd      -- fix trailing ^M characters
 " <leader> l       -- format Python/C++ code
 " <leader> /       -- clear highlighted search results
-" <leader><leader> -- comment/uncomment a code block
+"
+" vim-easymotion (“s”)
+" Vim-fugitive:
+" :Git log, etc.
+" :Gwrite (Git add %)
+" :Gread (Git co %), reverts
+" :Gstatus
+" :Gdiff (press - key to add/remove files)
+"
+" Move to next/previous Git change: [h, ]h
+" Stage hunk: <leader> hs
+"
+" :Gitv — show history <leader><leader> -- comment/uncomment a code block
 
 set nocompatible
 "
@@ -34,6 +46,10 @@ Plugin 'wjakob/wjakob.vim'
 " Airline status bar (**)
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+" Display open buffers in airline
+"Plugin 'bling/vim-bufferline'
+" NetRW alternative
+Plugin 'justinmk/vim-dirvish'
 " C++/Python autocompletion (**)
 Plugin 'Valloric/YouCompleteMe'
 " Git integration
@@ -62,8 +78,6 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'regedarek/ZoomWin'
 " Git gutter (**)
 Plugin 'airblade/vim-gitgutter'
-" Secure way of sourcing local vimrc files
-Plugin 'MarcWeber/vim-addon-local-vimrc'
 " Delete all but the current buffer (*)
 Plugin 'vim-scripts/BufOnly.vim'
 " Align tabular data (**)
@@ -71,10 +85,12 @@ Plugin 'godlygeek/tabular'
 " Text object for Java/VIM/C functions
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-function'
+" GLSL syntax highlighting
 Plugin 'tikhomirov/vim-glsl'
-" Hard mode :)
-"Plugin 'takac/vim-hardtime'
+" Python auto-formatting
 Plugin 'pignacio/vim-yapf-format'
+" Hard mode :)
+Plugin 'takac/vim-hardtime'
 
 call vundle#end() " required
 
@@ -230,18 +246,18 @@ set timeout timeoutlen=1000 ttimeoutlen=100
 
 " Use OS clipboard
 if has('unix') && system("uname") == "Linux\n"
-	set clipboard=unnamedplus  " Share X windows clipboard.
-	if !has('gui_running')
-		" Fix handling of Alt/Meta in Gnome Terminal
-		"let c='a'
-		"while c <= 'z'
-		  "exec "set <A-".c.">=\e".c
-		  "exec "imap \e".c." <A-".c.">"
-		  "let c = nr2char(1+char2nr(c))
-		"endw
-	endif
+    set clipboard=unnamedplus  " Share X windows clipboard.
+    if !has('gui_running')
+        " Fix handling of Alt/Meta in Gnome Terminal
+        "let c='a'
+        "while c <= 'z'
+          "exec "set <A-".c.">=\e".c
+          "exec "imap \e".c." <A-".c.">"
+          "let c = nr2char(1+char2nr(c))
+        "endw
+    endif
 else
-	set clipboard=unnamed      " Share system clipboard.
+    set clipboard=unnamed      " Share system clipboard.
 endif
 
 " Re-adjust windows on window resize
@@ -249,9 +265,9 @@ au VimResized * wincmd =
 
 " Insert mode -- don't create/close folds when typing
 aug NoInsertFolding
-	au!
-	au InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
-	au InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+    au!
+    au InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
+    au InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
 aug END
 
 " Remove the toolbar if we're running under a GUI
@@ -260,7 +276,7 @@ if has("gui_running")
 endif
 
 if has('mac') && !has('nvim')
-	fixdel
+    fixdel
 endif
 
 " Jump to last known line when opening a file (change ' to ` to do column too)
@@ -268,15 +284,15 @@ au BufReadPost *
   \ if line("'\"") > 0 && line("'\"") <= line("$") |
   \   exe "normal g'\"" |
   \   if foldlevel('.') > 0 |
-  \	 exe "normal zO" |
+  \     exe "normal zO" |
   \   endif |
   \ endif
 
 " Delete trailing white space
 fun! DeleteTrailingWS()
-	let l:winview = winsaveview()
-	%s/\s\+$//ge
-	call winrestview(l:winview)
+    let l:winview = winsaveview()
+    %s/\s\+$//ge
+    call winrestview(l:winview)
 endfun
 
 " }}}
@@ -304,7 +320,15 @@ let g:syntastic_python_flake8_args="--ignore=E126,E128,E221"
 
 " Powerline -- fancy status line
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#wordcount#enabled = 0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
 set laststatus=2  " 2 means always show status
+
+" Bufferline
+let g:bufferline_echo = 0
+let g:bufferline_show_bufnr = 0
 
 " Nerd commenter
 let g:NERDCreateDefaultMappings = 0
@@ -329,9 +353,9 @@ let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 "  ignore files
 let g:ctrlp_custom_ignore = {
-	\ 'dir':  '\.git$\|\.hg$\|\.svn\|\CMakeFiles$',
-	\ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.d$\|\.swp$\|\.orig$',
-	\ }
+    \ 'dir':  '\.git$\|\.hg$\|\.svn\|\CMakeFiles$',
+    \ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.d$\|\.swp$\|\.orig$',
+    \ }
 
 " Search the whole repository (searches for .git/.hg/.svn..)
 let g:ctrlp_working_path_mode = 'r'
@@ -410,7 +434,7 @@ let g:gitgutter_map_keys = 0
 nmap [h <Plug>GitGutterPrevHunk
 nmap ]h <Plug>GitGutterNextHunk
 nmap <Leader>hs <Plug>GitGutterStageHunk
-nmap <Leader>hr <Plug>GitGutterRevertHunk
+nmap <Leader>hr <Plug>GitGutterUndoHunk
 
 " Set the right file type for Django when editing .html
 au BufNewFile,BufRead *.html setlocal filetype=htmldjango
@@ -450,90 +474,92 @@ au FileType python,cpp nnoremap <buffer> J :YcmCompleter GoTo<CR>zv
 " }}}
 
 " Mitsuba specific {{{
+"
+hi BadWhitespace ctermbg=red guibg=red
+au ColorScheme * hi BadWhitespace ctermbg=red guibg=red
+hi BadTabs ctermbg=red guibg=red
+au ColorScheme * hi BadTabs ctermbg=red guibg=red
 
-" Highlight trailing whitespace in the most annoying way possible.
-fun! HighlightTrailingSpaces()
-	hi ExtraWhitespace ctermbg=red guibg=red
-	au ColorScheme * hi ExtraWhitespace ctermbg=red guibg=red
-	match ExtraWhitespace /\s\+$/
-	au BufWinEnter * match ExtraWhitespace /\s\+$/
-	au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-	au InsertLeave * match ExtraWhitespace /\s\+$/
+" Highlight tabs and trailing whitespace in the most annoying way possible.
+fun! HighlightTabsAndTrailingSpaces()
+    au BufWinEnter * match BadWhitespace /\(\t\|\s\+$\)/
+    au InsertEnter * match BadWhitespace /\(\t\|\s\+\%#\@<!$\)/
+    au InsertLeave * match BadWhitespace /\(\t\|\s\+$\)/
 endfun
 
 let c_no_curly_error=1 " Be more lenient with C++11 syntax
 au Syntax cpp syn keyword cType Float
 
-au BufNewFile,BufRead *mitsuba* call HighlightTrailingSpaces()
+au BufNewFile,BufRead */mitsuba* call HighlightTabsAndTrailingSpaces()
 
 " }}}
 
 " PBRT editing environment {{{
 python << EOF
 def pbrt_search(search):
-	import os, glob, vim
-	search += ">="
-	for name in list(glob.iglob('ch*.tex')) + list(glob.iglob('app*.tex')):
-		with open(name, 'r') as f:
-			lines = f.readlines()
-			for row, text in enumerate(lines):
-				col = text.find(search)
-				if col != -1:
-					vim.command("silent edit %s:%i:%i" % (name, row+1, col+1))
+    import os, glob, vim
+    search += ">="
+    for name in list(glob.iglob('ch*.tex')) + list(glob.iglob('app*.tex')):
+        with open(name, 'r') as f:
+            lines = f.readlines()
+            for row, text in enumerate(lines):
+                col = text.find(search)
+                if col != -1:
+                    vim.command("silent edit %s:%i:%i" % (name, row+1, col+1))
 EOF
 
 function! PBRTJump()
-	let l:save_clipboard = &clipboard
-	set clipboard= " Avoid clobbering the selection and clipboard registers.
-	let l:save_reg = getreg('"')
-	let l:save_regmode = getregtype('"')
-	normal! ya<
-	let l:text = @@
-	call setreg('"', l:save_reg, l:save_regmode)
-	let &clipboard = l:save_clipboard
-	python pbrt_search(vim.eval('l:text'))
+    let l:save_clipboard = &clipboard
+    set clipboard= " Avoid clobbering the selection and clipboard registers.
+    let l:save_reg = getreg('"')
+    let l:save_regmode = getregtype('"')
+    normal! ya<
+    let l:text = @@
+    call setreg('"', l:save_reg, l:save_regmode)
+    let &clipboard = l:save_clipboard
+    python pbrt_search(vim.eval('l:text'))
 endfunction
 
 function! PBRTTeXInit()
-	if exists('b:current_syntax') && b:current_syntax == 'pbrt'
-		return
-	endif
-	setlocal nocindent
-	unlet! b:current_syntax
-	syn include @CPP syntax/cpp.vim
-	syn region cppSnip matchgroup=Snip start=/^@.*=$/ end=/^@\./ contains=@CPP
-	syn region cppSnip matchgroup=Snip start=/^@.*=(.*)$/ end=/^@\./ contains=@CPP
-	syn spell toplevel
-	let b:current_syntax='pbrt'
-	syn match phantomdfnCommand "\\phantomdfn{[^}]\{-}}"hs=s+12,he=e-1 containedin=texStatement contains=@NoSpell
-	syn match useCommand "\\use{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
-	syn match monoCommand "\\mono{[^}]\{-}}"hs=s+6,he=e-1 containedin=texStatement contains=@NoSpell
-	syn match refCommand "\\ref{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
-	syn match tagCommand "\\tag{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
-	syn match artCommand "\\art{[^}]\{-}}{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
+    if exists('b:current_syntax') && b:current_syntax == 'pbrt'
+        return
+    endif
+    setlocal nocindent
+    unlet! b:current_syntax
+    syn include @CPP syntax/cpp.vim
+    syn region cppSnip matchgroup=Snip start=/^@.*=$/ end=/^@\./ contains=@CPP
+    syn region cppSnip matchgroup=Snip start=/^@.*=(.*)$/ end=/^@\./ contains=@CPP
+    syn spell toplevel
+    let b:current_syntax='pbrt'
+    syn match phantomdfnCommand "\\phantomdfn{[^}]\{-}}"hs=s+12,he=e-1 containedin=texStatement contains=@NoSpell
+    syn match useCommand "\\use{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
+    syn match monoCommand "\\mono{[^}]\{-}}"hs=s+6,he=e-1 containedin=texStatement contains=@NoSpell
+    syn match refCommand "\\ref{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
+    syn match tagCommand "\\tag{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
+    syn match artCommand "\\art{[^}]\{-}}{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
 
-	hi phantomdfnCommand ctermfg=4
-	hi useCommand ctermfg=4
-	hi monoCommand ctermfg=4
-	hi refCommand ctermfg=4
-	hi tagCommand ctermfg=4
-	nnoremap J :call PBRTJump()<CR>
-	nnoremap <Leader>b :wa<CR>:silent! make! pdfbook \| :!open book.pdf<CR><CR>
+    hi phantomdfnCommand ctermfg=4
+    hi useCommand ctermfg=4
+    hi monoCommand ctermfg=4
+    hi refCommand ctermfg=4
+    hi tagCommand ctermfg=4
+    nnoremap J :call PBRTJump()<CR>
+    nnoremap <Leader>b :wa<CR>:silent! make! pdfbook \| :!open book.pdf<CR><CR>
 endfunction
 
 function! PBRTCPPInit()
-	if exists('b:current_syntax') && b:current_syntax == 'pbrt'
-		return
-	endif
-	let b:current_syntax='pbrt'
-	call EnableConceal()
-	syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal
-	"nnoremap <buffer>gf 3\|gF
-	"nnoremap <buffer>i 3\|gFi
-	"nnoremap <buffer>o 3\|gFo
-	"nnoremap <buffer>I 3\|gFI
-	"nnoremap <buffer>O 3\|gFO
-	"nnoremap <buffer>d 3\|gFd
+    if exists('b:current_syntax') && b:current_syntax == 'pbrt'
+        return
+    endif
+    let b:current_syntax='pbrt'
+    call EnableConceal()
+    syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal
+    "nnoremap <buffer>gf 3\|gF
+    "nnoremap <buffer>i 3\|gFi
+    "nnoremap <buffer>o 3\|gFo
+    "nnoremap <buffer>I 3\|gFI
+    "nnoremap <buffer>O 3\|gFO
+    "nnoremap <buffer>d 3\|gFd
 endfunction
 
 au BufEnter,BufRead ~/projects/pbrt-3ed/book/*.tex call PBRTTeXInit()
@@ -562,103 +588,91 @@ au BufEnter *.tex vnoremap <silent> <buffer> <Leader>m :wa<CR>:silent! make! \| 
 " w!! command which writes with root permissions
 cmap w!! w !sudo tee % >/dev/null
 
-"CommandCabbr build makec
 CommandCabbr ag Ag
-CommandCabbr bc Bclose
 CommandCabbr git Git
 CommandCabbr gitv Gitv
 
-" Automatically insert C++ header gates for new h/hpp files
-function! s:insert_gates()
-  let gatename = '__' . substitute(toupper(expand("%:t")), "\\.", "_", "g")
-  execute "normal! i#if !defined(" . gatename . ")\n#define " . gatename
-  execute "normal! Go#endif /* " . gatename . " */"
-  execute "normal! ggjo"
-endfunction
-
-au BufNewFile *.{h,hpp} call <SID>insert_gates()
-
 function! ForwardSkipConceal(count)
-	let cnt=a:count
-	let mvcnt=0
-	let c=col('.')
-	let l=line('.')
-	let lc=col('$')
-	let line=getline('.')
-	while cnt
-		if c>=lc
-			let mvcnt+=cnt
-			break
-		endif
-		if stridx(&concealcursor, 'n')==-1
-			let isconcealed=0
-		else
-			let [isconcealed, cchar, group]=synconcealed(l, c)
-		endif
-		if isconcealed
-			let cnt-=strchars(cchar)
-			let oldc=c
-			let c+=1
-			while c < lc
-			  let [isconcealed2, cchar2, group2] = synconcealed(l, c)
-			  if !isconcealed2 || cchar2!=cchar
-				  break
-			  endif
-			  let c+= 1
-			endwhile
-			let mvcnt+=strchars(line[oldc-1:c-2])
-		else
-			let cnt-=1
-			let mvcnt+=1
-			let c+=len(matchstr(line[c-1:], '.'))
-		endif
-	endwhile
-	return ":\<C-u>\e".mvcnt.'l'
+    let cnt=a:count
+    let mvcnt=0
+    let c=col('.')
+    let l=line('.')
+    let lc=col('$')
+    let line=getline('.')
+    while cnt
+        if c>=lc
+            let mvcnt+=cnt
+            break
+        endif
+        if stridx(&concealcursor, 'n')==-1
+            let isconcealed=0
+        else
+            let [isconcealed, cchar, group]=synconcealed(l, c)
+        endif
+        if isconcealed
+            let cnt-=strchars(cchar)
+            let oldc=c
+            let c+=1
+            while c < lc
+              let [isconcealed2, cchar2, group2] = synconcealed(l, c)
+              if !isconcealed2 || cchar2!=cchar
+                  break
+              endif
+              let c+= 1
+            endwhile
+            let mvcnt+=strchars(line[oldc-1:c-2])
+        else
+            let cnt-=1
+            let mvcnt+=1
+            let c+=len(matchstr(line[c-1:], '.'))
+        endif
+    endwhile
+    return ":\<C-u>\e".mvcnt.'l'
 endfunction
 
 function! BackwardSkipConceal(count)
-	let cnt=a:count
-	let mvcnt=0
-	let c=col('.')
-	let l=line('.')
-	let lc=0
-	let line=getline('.')
-	while cnt
-		if c<=1
-			let mvcnt+=cnt
-			break
-		endif
-		if stridx(&concealcursor, 'n')==-1 || c == 0
-			let isconcealed=0
-		else
-			let [isconcealed, cchar, group]=synconcealed(l, c-1)
-		endif
-		if isconcealed
-			let cnt-=strchars(cchar)
-			let oldc=c
-			let c-=1
-			while c>1
-			  let [isconcealed2, cchar2, group2] = synconcealed(l, c-1)
-			  if !isconcealed2 || cchar2!=cchar
-					break
-			  endif
-			  let c-=1
-			endwhile
-			let c = max([c, 1])
-			let mvcnt+=strchars(line[c-1:oldc-2])
-		else
-			let cnt-=1
-			let mvcnt+=1
-			let c-=len(matchstr(line[:c-2], '.$'))
-		endif
-	endwhile
-	return ":\<C-u>\e".mvcnt.'h'
+    let cnt=a:count
+    let mvcnt=0
+    let c=col('.')
+    let l=line('.')
+    let lc=0
+    let line=getline('.')
+    while cnt
+        if c<=1
+            let mvcnt+=cnt
+            break
+        endif
+        if stridx(&concealcursor, 'n')==-1 || c == 0
+            let isconcealed=0
+        else
+            let [isconcealed, cchar, group]=synconcealed(l, c-1)
+        endif
+        if isconcealed
+            let cnt-=strchars(cchar)
+            let oldc=c
+            let c-=1
+            while c>1
+              let [isconcealed2, cchar2, group2] = synconcealed(l, c-1)
+              if !isconcealed2 || cchar2!=cchar
+                    break
+              endif
+              let c-=1
+            endwhile
+            let c = max([c, 1])
+            let mvcnt+=strchars(line[c-1:oldc-2])
+        else
+            let cnt-=1
+            let mvcnt+=1
+            let c-=len(matchstr(line[:c-2], '.$'))
+        endif
+    endwhile
+    return ":\<C-u>\e".mvcnt.'h'
 endfunction
 
 function! EnableConceal()
-	nnoremap <buffer> <expr> l ForwardSkipConceal(v:count1)
-	nnoremap <buffer> <expr> h BackwardSkipConceal(v:count1)
-	setlocal conceallevel=2 concealcursor=nc
+    nnoremap <buffer> <expr> l ForwardSkipConceal(v:count1)
+    nnoremap <buffer> <expr> h BackwardSkipConceal(v:count1)
+    setlocal conceallevel=2 concealcursor=nc
 endfunction
 au BufEnter *.tex,*.py hi Conceal ctermfg=4 | set concealcursor=nc
 
@@ -668,17 +682,14 @@ nnoremap k gk
 
 " smart indent when entering insert mode with i on empty lines
 function! IndentWithI()
-	if len(getline('.')) == 0 && line('.') != line('$')
-		return "\"_ddO"
-	else
-		return "i"
-	endif
+    if len(getline('.')) == 0 && line('.') != line('$')
+        return "\"_ddO"
+    else
+        return "i"
+    endif
 endfunction
 
 nnoremap <expr> i IndentWithI()
-
-" Execute a python script
-au FileType python nnoremap <buffer> <leader>r <esc>:w !python3<cr>
 
 " Paste into new line while respecting the current indent level
 nmap <leader>P O<space><bs><esc>]pk"_dd
@@ -716,52 +727,52 @@ onoremap <buffer> ]] :<c-u>call <sid>jumpmethod('}', 'w',  'o')<cr>
 onoremap <buffer> [] :<c-u>call <sid>jumpmethod('}', 'wb', 'o')<cr>
 
 function! s:jumpmethod(char, flags, mode)
-	let original_cursor = getpos('.')
+    let original_cursor = getpos('.')
 
-	if a:mode == 'v'
-		normal! gv
-	elseif a:mode == 'o'
-		normal! v
-	endif
+    if a:mode == 'v'
+        normal! gv
+    elseif a:mode == 'o'
+        normal! v
+    endif
 
-	while search(a:char, a:flags) > 0
-		if a:char == '}'
-			" jump to the opening one to analyze the definition
-			normal! %
-		endif
+    while search(a:char, a:flags) > 0
+        if a:char == '}'
+            " jump to the opening one to analyze the definition
+            normal! %
+        endif
 
-		let current_line = line('.')
+        let current_line = line('.')
 
-		if getline(current_line) =~ '^\s*{'
-			" it's alone on the line, check the above one
-			let method_line = current_line - 1
-		else
-			let method_line = current_line
-		endif
+        if getline(current_line) =~ '^\s*{'
+            " it's alone on the line, check the above one
+            let method_line = current_line - 1
+        else
+            let method_line = current_line
+        endif
 
-		let method_line_body = getline(method_line)
+        let method_line_body = getline(method_line)
 
-		if method_line_body =~ '\k\+\s*(.*)' && method_line_body !~ '\<\(for\|foreach\|if\|while\|switch\|using\|catch\|get\|set\)\>'
-			" it's probably a function call
+        if method_line_body =~ '\k\+\s*(.*)' && method_line_body !~ '\<\(for\|foreach\|if\|while\|switch\|using\|catch\|get\|set\)\>'
+            " it's probably a function call
 
-			if a:char == '}'
-				" we need to go back to the closing bracket
-				normal! %
-			endif
+            if a:char == '}'
+                " we need to go back to the closing bracket
+                normal! %
+            endif
 
-			echo
-			return
-		else
-			if a:char == '}'
-				" we still need to go back to the closing bracket
-				normal! %
-			endif
-		endif
-	endwhile
+            echo
+            return
+        else
+            if a:char == '}'
+                " we still need to go back to the closing bracket
+                normal! %
+            endif
+        endif
+    endwhile
 
-	" if we're here, the search has failed, restore cursor position
-	echo
-	call setpos('.', original_cursor)
+    " if we're here, the search has failed, restore cursor position
+    echo
+    call setpos('.', original_cursor)
 endfunction
 " }}}
 "

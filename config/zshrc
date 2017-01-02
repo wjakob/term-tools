@@ -36,7 +36,6 @@ function of() {
 EOT
 }
 
-
 # Support High-DPI in Qt5 apps
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 
@@ -50,6 +49,9 @@ alias cmake_clang='cmake $@ -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILE
 alias cmake_icpc='cmake $@ -GNinja -DCMAKE_C_COMPILER=icc -DCMAKE_C_FLAGS="-gcc-name=gcc-5 -cxxlib=/usr/local" -DCMAKE_CXX_COMPILER=icpc -DCMAKE_CXX_FLAGS="-gxx-name=g++-5 -cxxlib=/usr/local"'
 alias cmake_clean='rm -rf CMakeCache.txt CMakeFiles'
 
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
 # Try to place all shared libraries in the same 4GB block to avoid indirect call penalties on Xeon Phi
 export LD_PREFER_MAP_32BIT_EXEC=1
 
@@ -61,3 +63,10 @@ source /opt/intel/vtune_amplifier_xe/amplxe-vars.sh quiet
 
 # Other aliases
 alias n=ninja
+alias python=python3
+alias ipython=ipython3
+alias pip=pip3
+alias octave='octave --no-gui-libs'
+function skim () {
+    /Applications/Skim.app/Contents/MacOS/Skim $@ &> /dev/null &
+}
