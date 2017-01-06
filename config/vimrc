@@ -571,7 +571,7 @@ au BufEnter,BufRead ~/nori2/* set et ts=4 sw=4
 "
 " Other commands and abbreviations {{{
 
-let &makeprg = 'ninja'
+set makeprg='ninja'
 
 function! CommandCabbr(abbreviation, expansion)
   execute 'cabbr ' . a:abbreviation . ' <c-r>=getcmdpos() == 1 && getcmdtype() == ":" ? "' . a:expansion . '" : "' . a:abbreviation . '"<CR>'
@@ -584,6 +584,7 @@ nnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
 vnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
 au BufEnter *.tex nnoremap <silent> <buffer> <Leader>m :wa<CR>:silent! make! \| redraw! \| <CR>
 au BufEnter *.tex vnoremap <silent> <buffer> <Leader>m :wa<CR>:silent! make! \| redraw! \| <CR>
+au BufEnter *.tex set makeprg='make'
 
 " w!! command which writes with root permissions
 cmap w!! w !sudo tee % >/dev/null
