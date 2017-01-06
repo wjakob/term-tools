@@ -90,7 +90,7 @@ Plugin 'tikhomirov/vim-glsl'
 " Python auto-formatting
 Plugin 'pignacio/vim-yapf-format'
 " Hard mode :)
-Plugin 'takac/vim-hardtime'
+"Plugin 'takac/vim-hardtime'
 
 call vundle#end() " required
 

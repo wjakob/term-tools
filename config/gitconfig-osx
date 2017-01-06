@@ -16,6 +16,8 @@
     purify = clean -f -d -x
 [push]
     default = upstream
+[mergetool "araxis"]
+	path = /Applications/Araxis Merge.app/Contents/Utilities/compare
 [merge]
     tool = araxis
 [diff]
