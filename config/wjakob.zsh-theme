@@ -11,7 +11,7 @@ zstyle ':vcs_info:*' unstagedstr "%F{11}$CIRCLE"
 
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{11}%r'
-zstyle ':vcs_info:*' enable git hg svn
+zstyle ':vcs_info:*' enable git
 
 setopt prompt_subst
 

@@ -1,6 +1,8 @@
 [user]
     email = wenzel.jakob@epfl.ch
     name = Wenzel Jakob
+[submodule]
+	fetchJobs = 4
 [alias]
     co = checkout
     df = diff -w
