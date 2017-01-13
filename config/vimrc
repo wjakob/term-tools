@@ -60,8 +60,9 @@ Plugin 'tpope/vim-abolish'
 Plugin 'gregsexton/gitv'
 " EasyMotion plugin
 Plugin 'Lokaltog/vim-easymotion'
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
 " Convenient recursive filename search
-Plugin 'ctrlp.vim'
 " Ag searcher (*)
 Plugin 'rking/ag.vim'
 " Snippet manager (*)
@@ -347,25 +348,6 @@ let g:ycm_path_to_python_interpreter="/usr/bin/python2.7"
 
 " Disable automatic popups (too slow for C++ stuff)
 let g:ycm_auto_trigger = 0
-
-" CtrlP setting
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-"  ignore files
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\.git$\|\.hg$\|\.svn\|\CMakeFiles$',
-    \ 'file': '\.exe$\|\.so$\|\.dll$\|\.o$\|\.d$\|\.swp$\|\.orig$',
-    \ }
-
-" Search the whole repository (searches for .git/.hg/.svn..)
-let g:ctrlp_working_path_mode = 'r'
-
-" refresh file tree on write or focus change
-augroup CtrlPExtension
-  au!
-  au FocusGained * ClearCtrlPCache
-  au BufWritePost * ClearCtrlPCache
-augroup END
 
 " Bi-directional find motion
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
@@ -777,3 +759,6 @@ function! s:jumpmethod(char, flags, mode)
 endfunction
 " }}}
 "
+" Mapping selecting mappings
+nnoremap <c-p> :FZF<cr>
+set rtp+=/usr/local/opt/fzf

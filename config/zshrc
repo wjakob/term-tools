@@ -10,6 +10,7 @@ autoload up-line-or-beginning-search
 autoload down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
+alias grpe=grep
 
 # OSX / iTerm2 key bindings
 bindkey $terminfo[kbs]   backward-delete-char           # Backspace
