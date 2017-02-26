@@ -24,6 +24,9 @@ bindkey $terminfo[kcud1] down-line-or-beginning-search  # Up
 bindkey $terminfo[kcub1] backward-char                  # Left
 bindkey $terminfo[kcuf1] forward-char                   # Right
 
+bindkey -M vicmd $terminfo[khome] beginning-of-line     # Home
+bindkey -M vicmd $terminfo[kend]  end-of-line           # End
+
 # Search paths
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
@@ -64,6 +67,15 @@ ulimit -c 0
 
 source /opt/intel/bin/compilervars.sh intel64
 source /opt/intel/vtune_amplifier_xe/amplxe-vars.sh quiet
+
+# Emulate pbcopy/pbpaste on OSX
+case "$OSTYPE" in
+  linux*)
+        alias pbcopy='xclip -selection clipboard'
+        alias pbpaste='xclip -selection clipboard -o'
+        ;;
+  *)    ;;
+esac
 
 # Other aliases
 alias n=ninja
