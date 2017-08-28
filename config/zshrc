@@ -30,8 +30,6 @@ bindkey -M vicmd $terminfo[kend]  end-of-line           # End
 # Search paths
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
-export NVIM_TUI_ENABLE_TRUE_COLOR=1
-
 function of() {
   osascript <<EOT
   tell application "OmniFocus"
@@ -52,6 +50,9 @@ alias cmake_gcc='cmake $@ -GNinja -DCMAKE_CXX_COMPILER=g++-7 -DCMAKE_C_COMPILER=
 alias cmake_clang='cmake $@ -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++'
 alias cmake_icpc='cmake $@ -GNinja -DCMAKE_C_COMPILER=icc -DCMAKE_C_FLAGS="-gcc-name=gcc-5 -cxxlib=/usr/local" -DCMAKE_CXX_COMPILER=icpc -DCMAKE_CXX_FLAGS="-gxx-name=g++-5 -cxxlib=/usr/local"'
 alias cmake_clean='rm -rf CMakeCache.txt CMakeFiles'
+
+export BROWSER="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+export NINJA_STATUS="[%u/%r/%f] "
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -86,3 +87,6 @@ alias octave='octave --no-gui-libs'
 function skim () {
     /Applications/Skim.app/Contents/MacOS/Skim $@ &> /dev/null &
 }
+
+# Don't include "_something" AppleDouble files in tar files, etc.
+export COPYFILE_DISABLE=1

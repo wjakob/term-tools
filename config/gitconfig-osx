@@ -2,7 +2,7 @@
     email = wenzel.jakob@epfl.ch
     name = Wenzel Jakob
 [submodule]
-	fetchJobs = 4
+    fetchJobs = 4
 [alias]
     co = checkout
     df = diff -w
@@ -19,7 +19,7 @@
 [push]
     default = upstream
 [mergetool "araxis"]
-	path = /Applications/Araxis Merge.app/Contents/Utilities/compare
+    path = /Applications/Araxis Merge.app/Contents/Utilities/compare
 [merge]
     tool = araxis
 [diff]

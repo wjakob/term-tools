@@ -65,13 +65,11 @@ else
 	}
 fi
 
-alias today="{ echo 'Today: ' && google calendar list --cal=.* --date=today && echo -e ' \nTomorrow: ' && google calendar list --cal=.* --date=tomorrow } | grep -ve '^\[' | grep -ve '^$'"
-
 # ZSH-SPECIFIC CONFIG
 if [ "$ZSH_VERSION" ]; then
 	ZSH=$HOME/.oh-my-zsh
-	ZSH_THEME="wjakob"
 	plugins=(zsh-syntax-highlighting)
+	ZSH_THEME="wjakob"
 	source $ZSH/oh-my-zsh.sh
 
 	# ls after every cd
