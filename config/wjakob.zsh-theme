@@ -1,10 +1,6 @@
 autoload -Uz vcs_info
 
-if [[ `uname` = "Linux" ]]; then
-	CIRCLE='⚫'
-else
-	CIRCLE='●'
-fi
+CIRCLE='●'
 
 zstyle ':vcs_info:*' stagedstr "%F{28}$CIRCLE"
 zstyle ':vcs_info:*' unstagedstr "%F{11}$CIRCLE"
