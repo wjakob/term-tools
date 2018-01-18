@@ -51,7 +51,7 @@ Plugin 'vim-airline/vim-airline-themes'
 " NetRW alternative
 Plugin 'justinmk/vim-dirvish'
 " C++/Python autocompletion (**)
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
 " Git integration
 Plugin 'tpope/vim-fugitive'
 " Easily search for, substitute, and abbreviate multiple variants of a word
