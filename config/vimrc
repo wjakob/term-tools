@@ -168,6 +168,13 @@ set writebackup
 set spelllang=en
 set spellfile=$HOME/Dropbox/.spell-en.utf-8.add
 
+" vim hardcodes background color erase even if the terminfo file does
+" not contain bce (not to mention that libvte based terminals
+" incorrectly contain bce in their terminfo files). This causes
+" incorrect background rendering when using a color theme with a
+" background color.
+let &t_ut=''
+
 " Window navigation {{{
 " Move around using Alt + navigation keys
 nnoremap <silent> <M-k> :wincmd k<CR>
