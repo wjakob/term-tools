@@ -30,6 +30,8 @@
 " :Gitv — show history <leader><leader> -- comment/uncomment a code block
 
 set nocompatible
+let g:python2_host_prog = '/usr/bin/python2.7'
+
 "
 " Plugins {{{
 

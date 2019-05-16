@@ -84,6 +84,7 @@ alias python=python3
 alias ipython=ipython3
 alias pip=pip3
 alias octave='octave --no-gui-libs'
+alias pdb='python3 -u -m pdb -c continue'
 function skim () {
     /Applications/Skim.app/Contents/MacOS/Skim $@ &> /dev/null &
 }
