@@ -11,6 +11,7 @@ autoload down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 alias grpe=grep
+alias gdb='gdb -quiet'
 
 # OSX / iTerm2 key bindings
 bindkey $terminfo[kbs]   backward-delete-char           # Backspace

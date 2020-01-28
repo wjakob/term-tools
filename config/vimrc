@@ -30,7 +30,6 @@
 " :Gitv — show history <leader><leader> -- comment/uncomment a code block
 
 set nocompatible
-let g:python2_host_prog = '/usr/bin/python2.7'
 
 "
 " Plugins {{{
@@ -70,7 +69,7 @@ Plugin 'rking/ag.vim'
 " Snippet manager (*)
  Plugin 'SirVer/ultisnips'
 " Nice indentation marks (**)
-Plugin 'Yggdroot/indentLine'
+Plugin 'nathanaelkane/vim-indent-guides'
 " Syntastic (**)
 Plugin 'scrooloose/syntastic'
 " Automatic generation of closing braces etc (**)
@@ -90,8 +89,6 @@ Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-function'
 " GLSL syntax highlighting
 Plugin 'tikhomirov/vim-glsl'
-" Python auto-formatting
-Plugin 'pignacio/vim-yapf-format'
 " Hard mode :)
 "Plugin 'takac/vim-hardtime'
 
@@ -343,6 +340,7 @@ let g:bufferline_show_bufnr = 0
 " Nerd commenter
 let g:NERDCreateDefaultMappings = 0
 map <Leader><Leader> <Plug>NERDCommenterToggle
+let g:NERDCustomDelimiters = { '': { 'left': '# ' } }
 
 " YouCompleteMe settings
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
@@ -353,7 +351,6 @@ let g:ycm_confirm_extra_conf = 0
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_enable_diagnostic_signs = 0
-let g:ycm_path_to_python_interpreter="/usr/bin/python2.7"
 
 " Disable automatic popups (too slow for C++ stuff)
 let g:ycm_auto_trigger = 0
@@ -400,15 +397,18 @@ noremap   <Down>   <NOP>
 noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
 
-" Indentline
-let g:indentLine_char = '¦'
-let g:indentLine_color_term = 236
-let g:indentLine_fileType = ['python']
+" Indent guides
+let g:indent_guides_guide_size = 1
+let g:indent_guides_start_level = 2
+let g:indent_guides_auto_colors = 0
+let g:indent_guides_enable_on_vim_startup = 0
+
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=236
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=237
+au FileType python :IndentGuidesEnable
 
 " Convenient key binding for delimitMate
 au FileType cpp inoremap <buffer> {<CR> {<CR>}<C-o>O
-
-let g:indentLine_faster = 1
 
 " Visualize TeX characters using the conceal feature
 " " (accents, bold/italic, delimiters, greek, math symbols)
@@ -480,86 +480,12 @@ endfun
 
 let c_no_curly_error=1 " Be more lenient with C++11 syntax
 au Syntax cpp syn keyword cType Float
+au Syntax cpp syn keyword cType Spectrum
 
 au BufNewFile,BufRead */mitsuba* call HighlightTabsAndTrailingSpaces()
 
 " }}}
 
-" PBRT editing environment {{{
-python << EOF
-def pbrt_search(search):
-    import os, glob, vim
-    search += ">="
-    for name in list(glob.iglob('ch*.tex')) + list(glob.iglob('app*.tex')):
-        with open(name, 'r') as f:
-            lines = f.readlines()
-            for row, text in enumerate(lines):
-                col = text.find(search)
-                if col != -1:
-                    vim.command("silent edit %s:%i:%i" % (name, row+1, col+1))
-EOF
-
-function! PBRTJump()
-    let l:save_clipboard = &clipboard
-    set clipboard= " Avoid clobbering the selection and clipboard registers.
-    let l:save_reg = getreg('"')
-    let l:save_regmode = getregtype('"')
-    normal! ya<
-    let l:text = @@
-    call setreg('"', l:save_reg, l:save_regmode)
-    let &clipboard = l:save_clipboard
-    python pbrt_search(vim.eval('l:text'))
-endfunction
-
-function! PBRTTeXInit()
-    if exists('b:current_syntax') && b:current_syntax == 'pbrt'
-        return
-    endif
-    setlocal nocindent
-    unlet! b:current_syntax
-    syn include @CPP syntax/cpp.vim
-    syn region cppSnip matchgroup=Snip start=/^@.*=$/ end=/^@\./ contains=@CPP
-    syn region cppSnip matchgroup=Snip start=/^@.*=(.*)$/ end=/^@\./ contains=@CPP
-    syn spell toplevel
-    let b:current_syntax='pbrt'
-    syn match phantomdfnCommand "\\phantomdfn{[^}]\{-}}"hs=s+12,he=e-1 containedin=texStatement contains=@NoSpell
-    syn match useCommand "\\use{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
-    syn match monoCommand "\\mono{[^}]\{-}}"hs=s+6,he=e-1 containedin=texStatement contains=@NoSpell
-    syn match refCommand "\\ref{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
-    syn match tagCommand "\\tag{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
-    syn match artCommand "\\art{[^}]\{-}}{[^}]\{-}}"hs=s+5,he=e-1 containedin=texStatement contains=@NoSpell
-
-    hi phantomdfnCommand ctermfg=4
-    hi useCommand ctermfg=4
-    hi monoCommand ctermfg=4
-    hi refCommand ctermfg=4
-    hi tagCommand ctermfg=4
-    nnoremap J :call PBRTJump()<CR>
-    nnoremap <Leader>b :wa<CR>:silent! make! pdfbook \| :!open book.pdf<CR><CR>
-endfunction
-
-function! PBRTCPPInit()
-    if exists('b:current_syntax') && b:current_syntax == 'pbrt'
-        return
-    endif
-    let b:current_syntax='pbrt'
-    call EnableConceal()
-    syntax match PBRTRef /^\/\*\s\p*:\d*\s\*\/ / conceal
-    "nnoremap <buffer>gf 3\|gF
-    "nnoremap <buffer>i 3\|gFi
-    "nnoremap <buffer>o 3\|gFo
-    "nnoremap <buffer>I 3\|gFI
-    "nnoremap <buffer>O 3\|gFO
-    "nnoremap <buffer>d 3\|gFd
-endfunction
-
-au BufEnter,BufRead ~/projects/pbrt-3ed/book/*.tex call PBRTTeXInit()
-au BufEnter,BufRead ~/projects/pbrt-3ed/src/*.h call PBRTCPPInit()
-au BufEnter,BufRead ~/projects/pbrt-3ed/src/*.cpp call PBRTCPPInit()
-au BufEnter,BufRead ~/nori2/* set et ts=4 sw=4
-
-" }}}
-"
 " Other commands and abbreviations {{{
 
 set makeprg='ninja'
@@ -688,10 +614,8 @@ nmap <leader>P O<space><bs><esc>]pk"_dd
 nmap <leader>p o<space><bs><esc>]pk"_dd
 
 " <leader>l to format Python or C++ (visual and normal mode)
-au FileType cpp nnoremap <silent> <buffer> <leader>l 1GVG:pyf $TERM_TOOLS/config/clang-format.py<cr>
-au FileType cpp vnoremap <silent> <buffer> <leader>l :pyf $TERM_TOOLS/config/clang-format.py<cr>
-au FileType python vnoremap <silent> <buffer> <leader>l :YapfFormat<cr>
-au FileType python nnoremap <silent> <buffer> <leader>l :YapfFullFormat<cr>
+au FileType cpp nnoremap <silent> <buffer> <leader>l 1GVG:py3f $TERM_TOOLS/config/clang-format.py<cr>
+au FileType cpp vnoremap <silent> <buffer> <leader>l :py3f $TERM_TOOLS/config/clang-format.py<cr>
 
 " remove trailing newlines
 noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
