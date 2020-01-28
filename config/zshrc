@@ -67,9 +67,6 @@ export INTEL_DISABLE_ISIP=1
 # Don't make core dumps by default
 ulimit -c 0
 
-source /opt/intel/bin/compilervars.sh intel64
-source /opt/intel/vtune_amplifier_xe/amplxe-vars.sh quiet
-
 # Emulate pbcopy/pbpaste on OSX
 case "$OSTYPE" in
   linux*)
