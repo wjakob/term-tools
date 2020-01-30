@@ -51,8 +51,6 @@ Plugin 'vim-airline/vim-airline-themes'
 "Plugin 'bling/vim-bufferline'
 " NetRW alternative
 Plugin 'justinmk/vim-dirvish'
-" C++/Python autocompletion (**)
-"Plugin 'Valloric/YouCompleteMe'
 " Git integration
 Plugin 'tpope/vim-fugitive'
 " Easily search for, substitute, and abbreviate multiple variants of a word
@@ -176,6 +174,10 @@ let &t_ut=''
 
 " Window navigation {{{
 " Move around using Alt + navigation keys
+
+nnoremap K <PageUp>
+nnoremap J <PageDown>
+
 nnoremap <silent> <M-k> :wincmd k<CR>
 nnoremap <silent> <M-j> :wincmd j<CR>
 nnoremap <silent> <M-h> :wincmd h<CR>
@@ -200,9 +202,6 @@ nnoremap <silent> <C-F> <C-W>_            " fullscreen
 " Move to next / previous buffer
 nnoremap <silent> < :bp<CR>
 nnoremap <silent> > :bn<CR>
-
-" ctrl+a : select all
-nnoremap <C-A> 1GVG
 
 " Replace colon and semicolon
 nnoremap ; :
@@ -459,9 +458,6 @@ au FileType text,tex,plaintex,html,gitcommit setlocal spell
 au FileType text,tex,plaintex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
 au FileType text,tex,plaintex,html hi link TmlDoubleWords WarningMsg
 
-" Autocompletion
-au FileType python,cpp nnoremap <buffer> J :YcmCompleter GoTo<CR>zv
-
 " }}}
 
 " Mitsuba specific {{{
@@ -613,7 +609,7 @@ nnoremap <expr> i IndentWithI()
 nmap <leader>P O<space><bs><esc>]pk"_dd
 nmap <leader>p o<space><bs><esc>]pk"_dd
 
-" <leader>l to format Python or C++ (visual and normal mode)
+" <leader>l to format C++ (visual and normal mode)
 au FileType cpp nnoremap <silent> <buffer> <leader>l 1GVG:py3f $TERM_TOOLS/config/clang-format.py<cr>
 au FileType cpp vnoremap <silent> <buffer> <leader>l :py3f $TERM_TOOLS/config/clang-format.py<cr>
 
@@ -627,71 +623,6 @@ set t_ZH=[3m
 set t_ZR=[23m
 highlight Comment cterm=italic
 
-nnoremap <buffer> ][ :<c-u>call <sid>jumpmethod('{', 'w',  'n')<cr>
-nnoremap <buffer> [[ :<c-u>call <sid>jumpmethod('{', 'wb', 'n')<cr>
-nnoremap <buffer> ]] :<c-u>call <sid>jumpmethod('}', 'w',  'n')<cr>
-nnoremap <buffer> [] :<c-u>call <sid>jumpmethod('}', 'wb', 'n')<cr>
-
-xnoremap <buffer> ][ :<c-u>call <sid>jumpmethod('{', 'w',  'v')<cr>
-xnoremap <buffer> [[ :<c-u>call <sid>jumpmethod('{', 'wb', 'v')<cr>
-xnoremap <buffer> ]] :<c-u>call <sid>jumpmethod('}', 'w',  'v')<cr>
-xnoremap <buffer> [] :<c-u>call <sid>jumpmethod('}', 'wb', 'v')<cr>
-
-onoremap <buffer> ][ :<c-u>call <sid>jumpmethod('{', 'w',  'o')<cr>
-onoremap <buffer> [[ :<c-u>call <sid>jumpmethod('{', 'wb', 'o')<cr>
-onoremap <buffer> ]] :<c-u>call <sid>jumpmethod('}', 'w',  'o')<cr>
-onoremap <buffer> [] :<c-u>call <sid>jumpmethod('}', 'wb', 'o')<cr>
-
-function! s:jumpmethod(char, flags, mode)
-    let original_cursor = getpos('.')
-
-    if a:mode == 'v'
-        normal! gv
-    elseif a:mode == 'o'
-        normal! v
-    endif
-
-    while search(a:char, a:flags) > 0
-        if a:char == '}'
-            " jump to the opening one to analyze the definition
-            normal! %
-        endif
-
-        let current_line = line('.')
-
-        if getline(current_line) =~ '^\s*{'
-            " it's alone on the line, check the above one
-            let method_line = current_line - 1
-        else
-            let method_line = current_line
-        endif
-
-        let method_line_body = getline(method_line)
-
-        if method_line_body =~ '\k\+\s*(.*)' && method_line_body !~ '\<\(for\|foreach\|if\|while\|switch\|using\|catch\|get\|set\)\>'
-            " it's probably a function call
-
-            if a:char == '}'
-                " we need to go back to the closing bracket
-                normal! %
-            endif
-
-            echo
-            return
-        else
-            if a:char == '}'
-                " we still need to go back to the closing bracket
-                normal! %
-            endif
-        endif
-    endwhile
-
-    " if we're here, the search has failed, restore cursor position
-    echo
-    call setpos('.', original_cursor)
-endfunction
-" }}}
-"
 " Mapping selecting mappings
 nnoremap <c-p> :FZF<cr>
 set rtp+=/usr/local/opt/fzf
