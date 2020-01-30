@@ -47,8 +47,6 @@ Plugin 'wjakob/wjakob.vim'
 " Airline status bar (**)
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-" Display open buffers in airline
-"Plugin 'bling/vim-bufferline'
 " NetRW alternative
 Plugin 'justinmk/vim-dirvish'
 " Git integration
@@ -66,8 +64,6 @@ Plugin 'junegunn/fzf.vim'
 Plugin 'rking/ag.vim'
 " Snippet manager (*)
  Plugin 'SirVer/ultisnips'
-" Nice indentation marks (**)
-Plugin 'nathanaelkane/vim-indent-guides'
 " Syntastic (**)
 Plugin 'scrooloose/syntastic'
 " Automatic generation of closing braces etc (**)
@@ -395,16 +391,6 @@ noremap   <Up>     <NOP>
 noremap   <Down>   <NOP>
 noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
-
-" Indent guides
-let g:indent_guides_guide_size = 1
-let g:indent_guides_start_level = 2
-let g:indent_guides_auto_colors = 0
-let g:indent_guides_enable_on_vim_startup = 0
-
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=236
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=237
-au FileType python :IndentGuidesEnable
 
 " Convenient key binding for delimitMate
 au FileType cpp inoremap <buffer> {<CR> {<CR>}<C-o>O
