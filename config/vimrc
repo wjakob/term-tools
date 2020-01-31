@@ -173,6 +173,8 @@ let &t_ut=''
 
 nnoremap K <PageUp>
 nnoremap J <PageDown>
+nnoremap H <Home>
+nnoremap L <End>
 
 nnoremap <silent> <M-k> :wincmd k<CR>
 nnoremap <silent> <M-j> :wincmd j<CR>
