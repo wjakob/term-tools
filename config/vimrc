@@ -176,18 +176,32 @@ nnoremap J <PageDown>
 nnoremap H <Home>
 nnoremap L <End>
 
-nnoremap <silent> <M-k> :wincmd k<CR>
-nnoremap <silent> <M-j> :wincmd j<CR>
-nnoremap <silent> <M-h> :wincmd h<CR>
-nnoremap <silent> <M-l> :wincmd l<CR>
-nnoremap <silent> <M-o> :ZoomWin<CR>
-
 " As above (Mac keyboard)
-nnoremap <silent> ˙ :wincmd h<CR>
-nnoremap <silent> ∆ :wincmd j<CR>
-nnoremap <silent> ˚ :wincmd k<CR>
-nnoremap <silent> ¬ :wincmd l<CR>
-nnoremap <silent> ø :ZoomWin<CR>
+if has("macunix")
+    nnoremap <silent> ˙ :wincmd h<CR>
+    nnoremap <silent> ∆ :wincmd j<CR>
+    nnoremap <silent> ˚ :wincmd k<CR>
+    nnoremap <silent> ¬ :wincmd l<CR>
+    nnoremap <silent> ø :ZoomWin<CR>
+else
+    nnoremap <silent> <A-k> :wincmd k<CR>
+    nnoremap <silent> <A-j> :wincmd j<CR>
+    nnoremap <silent> <A-h> :wincmd h<CR>
+    nnoremap <silent> <A-l> :wincmd l<CR>
+    nnoremap <silent> <A-o> :ZoomWin<CR>
+
+    " Don't insert accented characters when the alt key is pressed
+    for i in range(0, 25)
+        let ch = nr2char(char2nr('a') + i)
+        execute "inoremap <A-" . ch . "> " . ch
+        let ch = nr2char(char2nr('A') + i)
+        execute "inoremap <A-" . ch . "> " . ch
+    endfor
+    for i in range(0, 9)
+        let ch = nr2char(char2nr('0') + i)
+        execute "inoremap <A-" . ch . "> " . ch
+    endfor
+endif
 
 " Window resize / close commands
 nnoremap <silent> <C-L> :vertical resize +5<cr>
