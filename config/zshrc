@@ -42,12 +42,15 @@ EOT
 # Support High-DPI in Qt5 apps
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 
+# Generate a compile_commands.json file
+alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1'
+
 # Convenience flags to switch between release and debug mode
 alias cmake_deb='cmake $@ -GNinja -DCMAKE_BUILD_TYPE=DEBUG'
 alias cmake_rel='cmake $@ -GNinja -DCMAKE_BUILD_TYPE=RELEASE'
 
 # CMake aliases for various compilers
-alias cmake_gcc='cmake $@ -GNinja -DCMAKE_CXX_COMPILER=g++-7 -DCMAKE_C_COMPILER=gcc-7'
+alias cmake_gcc='cmake $@ -GNinja -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc'
 alias cmake_clang='cmake $@ -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++'
 alias cmake_clean='rm -rf CMakeCache.txt CMakeFiles'
 
