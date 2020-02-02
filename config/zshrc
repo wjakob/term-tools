@@ -17,7 +17,9 @@ alias gdb='gdb -quiet'
 bindkey $terminfo[kbs]   backward-delete-char           # Backspace
 bindkey $terminfo[kdch1] delete-char                    # Delete
 bindkey $terminfo[khome] beginning-of-line              # Home
+bindkey "^A"             beginning-of-line
 bindkey $terminfo[kend]  end-of-line                    # End
+bindkey "^E"             end-of-line
 bindkey $terminfo[kpp]   up-line-or-history             # PageUp
 bindkey $terminfo[knp]   down-line-or-history           # PageDown
 bindkey $terminfo[kcuu1] up-line-or-beginning-search    # Down
@@ -30,14 +32,6 @@ bindkey -M vicmd $terminfo[kend]  end-of-line           # End
 
 # Search paths
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-
-function of() {
-  osascript <<EOT
-  tell application "OmniFocus"
-    parse tasks into default document with transport text "$@"
-  end tell
-EOT
-}
 
 # Support High-DPI in Qt5 apps
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
@@ -54,7 +48,9 @@ alias cmake_gcc='cmake $@ -GNinja -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gc
 alias cmake_clang='cmake $@ -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++'
 alias cmake_clean='rm -rf CMakeCache.txt CMakeFiles'
 
-export BROWSER="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+# ls: don't wrap entries with spaces into quotes
+export QUOTING_STYLE=literal
+
 export NINJA_STATUS="[%u/%r/%f] "
 export CMAKE_GENERATOR='Ninja'
 
@@ -63,15 +59,6 @@ export LANG=en_US.UTF-8
 
 # Don't make core dumps by default
 ulimit -c 0
-
-# Emulate pbcopy/pbpaste on OSX
-case "$OSTYPE" in
-  linux*)
-        alias pbcopy='xclip -selection clipboard'
-        alias pbpaste='xclip -selection clipboard -o'
-        ;;
-  *)    ;;
-esac
 
 # Other aliases
 alias n=ninja

@@ -1,219 +1,58 @@
-" Wenzel's .vimrc
-
-" Useful shortcuts:
-" Ctrl-O/I: move forward/backwards through previously visited buffer positions
-
-" use ]p/]P to paste while respecting the current indent level.
-" gv re-selects a previous visual selection
-" git log origin/master ^master --stat
-"
-" s or <leader> s/f/F -- EasyMotion 1 character searches
-" <leader> j/k     -- EasyMotion row searches
-" <leader> m       -- run make
-" <leader> p/P     -- indented paste
-" <leader> dw      -- remove trailing spaces
-" <leader> dd      -- fix trailing ^M characters
-" <leader> l       -- format Python/C++ code
-" <leader> /       -- clear highlighted search results
-"
-" vim-easymotion (“s”)
-" Vim-fugitive:
-" :Git log, etc.
-" :Gwrite (Git add %)
-" :Gread (Git co %), reverts
-" :Gstatus
-" :Gdiff (press - key to add/remove files)
-"
-" Move to next/previous Git change: [h, ]h
-" Stage hunk: <leader> hs
-"
-" :Gitv — show history <leader><leader> -- comment/uncomment a code block
-
 set nocompatible
 
-"
-" Plugins {{{
+call plug#begin('~/.vim/modules')
 
-filetype off " Needed (this interferes with Vundle)
+" Assorted scripts, modified tomorrow night colorscheme
+Plug 'wjakob/wjakob.vim'
 
-set rtp+=~/.vim/bundle/Vundle.vim/
+" Airline status bar
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
-call vundle#begin() " required
-
-" Let Vundle manage Vundle (**)
-Plugin 'gmarik/Vundle.vim'
-" Assorted scripts, modified tomorrow night colorscheme (**)
-Plugin 'wjakob/wjakob.vim'
-" Airline status bar (**)
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
 " NetRW alternative
-Plugin 'justinmk/vim-dirvish'
-" Git integration
-Plugin 'tpope/vim-fugitive'
+Plug 'justinmk/vim-dirvish'
+
+" Quick motions that search for 2 characters
+Plug 'justinmk/vim-sneak'
+
+" Version control annotations
+Plug 'mhinz/vim-signify'
+
+" Fast recursive file search
+Plug 'junegunn/fzf', { 'do': './install --all' }
+
+" The silver searcher integration
+Plug 'mileszs/ack.vim', { 'on': 'Ack' }
+
+" Dispatch build jobs asynchronously
+Plug 'tpope/vim-dispatch'
+
 " Easily search for, substitute, and abbreviate multiple variants of a word
-Plugin 'tpope/vim-abolish'
-" GUI extension for the fugitive plugin
-Plugin 'gregsexton/gitv'
-" EasyMotion plugin
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim'
-" Convenient recursive filename search
-" Ag searcher (*)
-Plugin 'rking/ag.vim'
-" Snippet manager (*)
- Plugin 'SirVer/ultisnips'
-" Syntastic (**)
-Plugin 'scrooloose/syntastic'
-" Automatic generation of closing braces etc (**)
-Plugin 'Raimondi/delimitMate'
-" Easily comment / uncomment text (**)
-Plugin 'scrooloose/nerdcommenter'
-" Maximize a buffer and restore later on (C-W o)
-Plugin 'regedarek/ZoomWin'
-" Git gutter (**)
-Plugin 'airblade/vim-gitgutter'
-" Delete all but the current buffer (*)
-Plugin 'vim-scripts/BufOnly.vim'
-" Align tabular data (**)
-Plugin 'godlygeek/tabular'
-" Text object for Java/VIM/C functions
-Plugin 'kana/vim-textobj-user'
-Plugin 'kana/vim-textobj-function'
+Plug 'tpope/vim-abolish'
+
+" Automatic generation of closing braces etc
+Plug 'Raimondi/delimitMate'
+
+" Python PEP8 checker
+Plug 'nvie/vim-flake8'
+
+" Command to temporily maximize a buffer
+Plug 'szw/vim-maximizer'
+
 " GLSL syntax highlighting
-Plugin 'tikhomirov/vim-glsl'
-" Hard mode :)
-"Plugin 'takac/vim-hardtime'
+Plug 'tikhomirov/vim-glsl'
 
-call vundle#end() " required
+" Linting / compilation / autocompletion
+Plug 'dense-analysis/ale'
 
-filetype plugin indent on
+" Initialize plugin system
+call plug#end()
 
-" }}}
-
-" Core VIM settings {{{
-set encoding=utf-8             " use UTF-8 (default latin1)
-set autoread                   " auto-reload modified files (with no local changes)
-set undolevels=65536           " lots of undo (default 1000)
-set history=1024               " lots of history (default 20)
-set mouse=a                    " enable mouse (set mouse= to disable mouse)
-set hidden                     " allow un-saved buffers in background
-set lazyredraw                 " no redraws in macros
-set confirm                    " dialog when :q, :w, :x, :wq fails
-set title                      " change terminal title
-set nostartofline              " don't move cursor when switching buffers/files
-set ttyfast                    " smoother changes
-set backspace=2                " Backspace can move back beyond the start of the insertion
-set backspace=indent,eol,start " Make backspace behave more like in other editors
-set splitbelow                 " Open splits below (more natural), :sp makes a split
-set splitright                 " Similar to the above (for vsplit)
-let mapleader=","              " Map the leader key to comma
-set nojoinspaces               " Don't insert two spaces after a period when joining lines
-
-" Control what extra information is shown
-set showmode                   " show which mode we are in
-set showcmd                    " show state of keyboard input
-set showmatch                  " show brace match
-set matchtime=2                " when writing braces, only briefly flash the opening one (200ms)
-set report=0                   " always report how many occurrences were changed by search/replace etc
-set ruler                      " show position in bottom right
-set winminheight=0             " allow to collapse down windows to their status line only
-
-" Tabs, wrapping, folding, and indentation
-set autoindent                 " automatic indentation
-set copyindent                 " copy the previous indentation on autoindenting
-set tabstop=4                  " Number of spaces that a <Tab> in the file counts for (default 8)
-set shiftwidth=4               " Number of spaces to use for each step of (auto)indent.
-"set softtabstop=-1             " Disable softtabstop (reverts to shiftwidth)
-set smarttab                   " insert tabs on the start of a line according to
-                               " shiftwidth, not tabstop
-set expandtab                  " Expand tabs to spaces
-set textwidth=0                " no hard wrapping by default
-set foldmethod=syntax          " fold using syntax by default
-set foldminlines=4             " require a medium size to fold
-set foldnestmax=3              " max 3 fold levels for syntax/indent folding
-
-" Appearance
-set number                     " enable line numbers
-set scrolloff=3                " keep 3 lines below and above cursor
-set linebreak                  " show wrap at word boundaries
-set showbreak=\ ↪\             " prefix wrap with ↪
-
-" Autocompletion
-set wildmenu                   " completion with menu
-set wildmode=full              " show list with navigation
-set wildignore=*~,*.o,*.d,*.obj,*.class,*.pyc,*.bak,*.swp,.svn,.git,.hg,*.orig
-set suffixes=~,.o,.d,.obj,.class,.pyc,.bak,.swp,.orig
-set completeopt=menu,preview   " Completion with a menu
-
-" Searching
-set incsearch                  " incremental search
-set hlsearch                   " enable search highlighting
-
-" Store swapfiles in a central location
-set backup
-set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set backupskip=/tmp/*,/private/tmp/*
-set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set writebackup
-
-set spelllang=en
-set spellfile=$HOME/Dropbox/.spell-en.utf-8.add
-
-" vim hardcodes background color erase even if the terminfo file does
-" not contain bce (not to mention that libvte based terminals
-" incorrectly contain bce in their terminfo files). This causes
-" incorrect background rendering when using a color theme with a
-" background color.
-let &t_ut=''
-
-" Window navigation {{{
-" Move around using Alt + navigation keys
-
+" Large navigation steps from home row
 nnoremap K <PageUp>
 nnoremap J <PageDown>
 nnoremap H <Home>
 nnoremap L <End>
-
-" As above (Mac keyboard)
-if has("macunix")
-    nnoremap <silent> ˙ :wincmd h<CR>
-    nnoremap <silent> ∆ :wincmd j<CR>
-    nnoremap <silent> ˚ :wincmd k<CR>
-    nnoremap <silent> ¬ :wincmd l<CR>
-    nnoremap <silent> ø :ZoomWin<CR>
-else
-    nnoremap <silent> <A-k> :wincmd k<CR>
-    nnoremap <silent> <A-j> :wincmd j<CR>
-    nnoremap <silent> <A-h> :wincmd h<CR>
-    nnoremap <silent> <A-l> :wincmd l<CR>
-    nnoremap <silent> <A-o> :ZoomWin<CR>
-
-    " Don't insert accented characters when the alt key is pressed
-    for i in range(0, 25)
-        let ch = nr2char(char2nr('a') + i)
-        execute "inoremap <A-" . ch . "> " . ch
-        let ch = nr2char(char2nr('A') + i)
-        execute "inoremap <A-" . ch . "> " . ch
-    endfor
-    for i in range(0, 9)
-        let ch = nr2char(char2nr('0') + i)
-        execute "inoremap <A-" . ch . "> " . ch
-    endfor
-endif
-
-" Window resize / close commands
-nnoremap <silent> <C-L> :vertical resize +5<cr>
-nnoremap <silent> <C-H> :vertical resize -5<cr>
-nnoremap <silent> <C-K> :resize -5<cr>
-nnoremap <silent> <C-J> :resize +5<cr>
-nnoremap <silent> <C-X> :wincmd c<CR>     " close
-nnoremap <silent> <C-F> <C-W>_            " fullscreen
-
-" Move to next / previous buffer
-nnoremap <silent> < :bp<CR>
-nnoremap <silent> > :bn<CR>
 
 " Replace colon and semicolon
 nnoremap ; :
@@ -225,23 +64,101 @@ vnoremap : ;
 vnoremap Q gq
 nnoremap Q gqap
 
-" Map cn/cp to navigate through search results (formerly :cn/:cp)
-nnoremap cn :cn<CR>zv
-nnoremap cp :cp<CR>zv
+" Fast recursive file search
+nnoremap <c-p> :FZF<cr>
 
-" Allow 'gf' to jump to file:line links
-nnoremap gf gF
+" Core settings of VIM
+set encoding=utf-8             " use UTF-8 (default latin1)
+set autoread                   " auto-reload modified files (with no local changes)
+set undolevels=65536           " lots of undo (default 1000)
+set history=1024               " lots of history (default 20)
+set mouse=a                    " enable mouse (set mouse= to disable mouse)
+set hidden                     " allow un-saved buffers in background
+set lazyredraw                 " no redraws in macros
+set title                      " change terminal title
+set nostartofline              " don't move cursor when switching buffers/files
+set ttyfast                    " smoother changes
+set backspace=indent,eol,start " Make backspace behave more like in other editors
+set nojoinspaces               " Don't insert two spaces after a period when joining lines
+set confirm                    " dialog when :q, :w, :x, :wq fails
+set splitbelow                 " Open splits below (more natural), :sp makes a split
+set splitright                 " Similar to the above (for vsplit)
+set display+=lastline          " Show as much as possible of the last line if it doesn't fit
+set nrformats-=octal           " Don't interpret numbers with leading zero as octal
+set formatoptions+=j           " Delete comment character when joining commented lines
+set tabpagemax=50              " Increase tab limit (default = 10)
+set sessionoptions-=options    " Don't store options in sessions and views, since these
+set viewoptions-=options       " can be quite difficult to track down.
+set signcolumn=yes             " Always show the sign column to avoid 'popping'
+let mapleader=","              " Map the leader key to comma
 
-" Bind F2 as a quick paste mode toggle key
-set pastetoggle=<F2>
+" Control what extra information is shown
+set showmode                   " show which mode we are in
+set showcmd                    " show state of keyboard input
+set showmatch                  " show brace match
+set matchtime=2                " when writing braces, only briefly flash the opening one (200ms)
+set report=0                   " always report how many occurrences were changed by search/replace etc
+set ruler                      " show position in bottom right
+set winminheight=0             " allow to collapse down windows to their status line only
+set laststatus=2               " Always show status bar
 
-" Hide shown search results
-nnoremap <silent> <leader>/ :nohlsearch<CR>
+" Tabs, wrapping, folding, and indentation
+set autoindent                 " automatic indentation
+set copyindent                 " copy the previous indentation on autoindenting
+set tabstop=4                  " Number of spaces that a <Tab> in the file counts for (default 8)
+set shiftwidth=4               " Number of spaces to use for each step of (auto)indent.
+set smarttab                   " insert tabs on the start of a line according to
+                               " shiftwidth, not tabstop
+set expandtab                  " Expand tabs to spaces
+set textwidth=0                " no hard wrapping by default
+set foldmethod=syntax          " fold using syntax by default
+set foldminlines=4             " require a medium size to fold
+set foldnestmax=3              " max 3 fold levels for syntax/indent folding
 
-" Automaticall unfold when jumping to a line in a file
-nnoremap <expr> G (v:count ? 'Gzv' : 'G')
+" Appearance
+set number                     " enable line numbers
+set scrolloff=3                " keep 3 lines below and above cursor
+set sidescrolloff=5            " keep 5 columns to the left and right
+set linebreak                  " show wrap at word boundaries
+set showbreak=\ ↪\             " prefix wrap with ↪
 
-" }}}
+" Autocompletion
+set wildmenu                   " completion with menu
+set wildmode=full              " show list with navigation
+set wildignore=*~,*.o,*.obj,*.pyc,*.bak,*.swp,.git,*.orig
+set completeopt=menuone,noselect " Completion with a menu
+set complete-=i                " Don't parse headers in autocompletions
+
+" Open 'tab completion' with Ctrl-Space
+inoremap <Nul> <C-n>
+" Navigate tab completion with Ctrl + 'j' and 'j' keys
+inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>"))
+inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
+
+" Searching
+set incsearch                  " incremental search
+set hlsearch                   " enable search highlighting
+
+" Store swap and backup files in a central location
+set backupdir=/var/tmp,/tmp
+set directory=/var/tmp,/tmp
+set writebackup
+set backup
+
+" Spell checking
+set spelllang=en
+set spellfile=$HOME/Dropbox/.spell-en.utf-8.add
+
+" Use OS clipboard
+if has('unix') && system("uname") == "Linux\n"
+    set clipboard=unnamedplus  " Share X windows clipboard.
+else
+    set clipboard=unnamed      " Share system clipboard.
+endif
+
+" Be quiet
+set noerrorbells visualbell t_vb=  " No bell
+au GUIEnter * set visualbell t_vb= " No bell in GUI mode
 
 " Tell vim to remember certain things when we exit
 "  '50  :  marks will be remembered for up to 50 previously edited files
@@ -251,42 +168,81 @@ nnoremap <expr> G (v:count ? 'Gzv' : 'G')
 "  n... :  where to save the viminfo files
 set viminfo='50,\"100,:50,%
 
-" }}}
+" Syntax highlighting
+let &t_ut=''          " Fix background color rendering
+set t_Co=256          " Assume a 256 color terminal
+set t_ZH=[3m        " Comments in cursive..
+set t_ZR=[23m
+set background=dark
+hi Folded ctermfg=248 ctermbg=237 guibg=#3a3a3a guifg=#a8a8a8
+hi Comment cterm=italic
 
-" Global fixes {{{
-
-" Be quiet
-set noerrorbells visualbell t_vb=  " No bell
-au GUIEnter * set visualbell t_vb= " No bell in GUI mode
-
-" Faster timeouts
-set timeout timeoutlen=1000 ttimeoutlen=100
-
-" Use OS clipboard
-if has('unix') && system("uname") == "Linux\n"
-    set clipboard=unnamedplus  " Share X windows clipboard.
-    if !has('gui_running')
-        " Fix handling of Alt/Meta in Gnome Terminal
-        "let c='a'
-        "while c <= 'z'
-          "exec "set <A-".c.">=\e".c
-          "exec "imap \e".c." <A-".c.">"
-          "let c = nr2char(1+char2nr(c))
-        "endw
-    endif
-else
-    set clipboard=unnamed      " Share system clipboard.
+if filereadable(expand("$HOME/.vim/modules/wjakob.vim/colors/tomorrow-night.vim"))
+    colorscheme tomorrow-night
 endif
+
+" Decode Alt + key combinations from terminal escape sequence
+for i in range(0, 25)
+   let ch_l = nr2char(char2nr('a') + i)
+   execute "set <A-" . ch_l . ">=\e" . ch_l
+   execute "inoremap <A-" . ch_l . "> " . ch_l
+
+   if i != 15
+       " For all characters except Alt-P which causes some issues
+       let ch_u = nr2char(char2nr('A') + i)
+       execute "set <A-" . ch_u . ">=\e" . ch_u
+       execute "inoremap <A-" . ch_u . "> " . ch_u
+    end
+endfor
+
+for i in range(0, 9)
+   let ch = nr2char(char2nr('0') + i)
+   execute "set <A-" . ch . ">=\e" . ch
+   execute "inoremap <A-" . ch . "> " . ch
+endfor
+
+" .. and adjust timeouts for this to work properly
+set timeout timeoutlen=1000 ttimeoutlen=25
+
+" Move around using Alt + navigation keys
+nnoremap <silent> <A-k> :wincmd k<CR>
+nnoremap <silent> <A-j> :wincmd j<CR>
+nnoremap <silent> <A-h> :wincmd h<CR>
+nnoremap <silent> <A-l> :wincmd l<CR>
+nnoremap <silent> <A-c> :wincmd c<CR>  " close
+nnoremap <silent> <A-f> :MaximizerToggle<CR>
+let g:maximizer_set_default_mapping = 0
+
+" Window resize / close commands
+nnoremap <silent> <C-l> :vertical resize +5<cr>
+nnoremap <silent> <C-h> :vertical resize -5<cr>
+nnoremap <silent> <C-k> :resize -5<cr>
+nnoremap <silent> <C-j> :resize +5<cr>
+
+" Move to next / previous buffer
+nnoremap <silent> < :bp<CR>
+nnoremap <silent> > :bn<CR>
+
+" After a search, press enter/space to disable highlighting
+nnoremap <expr> <Space> &buftype ==# 'quickfix' ? "\<Space>" : ':noh <CR>'
+nnoremap <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>" : ':noh <CR>'
+
+" Get rid of old habits (cursor keys disabled)
+inoremap  <Up>     <NOP>
+inoremap  <Down>   <NOP>
+inoremap  <Left>   <NOP>
+inoremap  <Right>  <NOP>
+noremap   <Up>     <NOP>
+noremap   <Down>   <NOP>
+noremap   <Left>   <NOP>
+noremap   <Right>  <NOP>
+
+" Move by displayed lines, not physical lines
+nnoremap j gj
+nnoremap k gk
 
 " Re-adjust windows on window resize
 au VimResized * wincmd =
-
-" Insert mode -- don't create/close folds when typing
-aug NoInsertFolding
-    au!
-    au InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
-    au InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
-aug END
 
 " Remove the toolbar if we're running under a GUI
 if has("gui_running")
@@ -306,153 +262,6 @@ au BufReadPost *
   \   endif |
   \ endif
 
-" Delete trailing white space
-fun! DeleteTrailingWS()
-    let l:winview = winsaveview()
-    %s/\s\+$//ge
-    call winrestview(l:winview)
-endfun
-
-" }}}
-
-" Color scheme {{{
-
-set t_Co=256
-set background=dark
-syntax on
-colorscheme tomorrow-night
-hi Folded ctermfg=248 ctermbg=237 guibg=#3a3a3a guifg=#a8a8a8
-
-hi SpellBad guibg=#FF0000
-
-" }}}
-
-" Plugin config {{{
-
-" Syntastic
-let g:syntastic_mode_map = { 'mode': 'passive',
-    \ 'active_filetypes': ['python'],
-    \ 'passive_filetypes': [] }
-let g:syntastic_python_checkers = ['flake8']
-let g:syntastic_python_flake8_args="--ignore=E126,E128,E221"
-
-" Powerline -- fancy status line
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#wordcount#enabled = 0
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-set laststatus=2  " 2 means always show status
-
-" Bufferline
-let g:bufferline_echo = 0
-let g:bufferline_show_bufnr = 0
-
-" Nerd commenter
-let g:NERDCreateDefaultMappings = 0
-map <Leader><Leader> <Plug>NERDCommenterToggle
-let g:NERDCustomDelimiters = { '': { 'left': '# ' } }
-
-" YouCompleteMe settings
-let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
-let g:ycm_filetype_whitelist = {'cpp' : '', 'bib' : '', 'sh' : '', 'tex' : '', 'plaintex' : '', 'xml' : ''}
-let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
-let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_enable_diagnostic_signs = 0
-
-" Disable automatic popups (too slow for C++ stuff)
-let g:ycm_auto_trigger = 0
-
-" Bi-directional find motion
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-map <Leader> <Plug>(easymotion-prefix)
-map s <Plug>(easymotion-s)
-
-" UltiSnips shortcuts
-let g:UltiSnipsExpandTrigger       = "<tab>"
-let g:UltiSnipsJumpForwardTrigger  = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-function! g:UltiSnips_Complete()
-    call UltiSnips#ExpandSnippet()
-    if g:ulti_expand_res == 0
-        if pumvisible()
-            return "\<C-n>"
-        else
-            call UltiSnips#JumpForwards()
-            if g:ulti_jump_forwards_res == 0
-               return "\<TAB>"
-            endif
-        endif
-    endif
-    return ""
-endfunction
-
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr><C-O>zv"
-
-" Get rid of bad habits
-let g:hardtime_default_on = 1
-let g:hardtime_allow_different_key = 1
-let g:hardtime_maxcount = 1
-set mouse=
-inoremap  <Up>     <NOP>
-inoremap  <Down>   <NOP>
-inoremap  <Left>   <NOP>
-inoremap  <Right>  <NOP>
-noremap   <Up>     <NOP>
-noremap   <Down>   <NOP>
-noremap   <Left>   <NOP>
-noremap   <Right>  <NOP>
-
-" Convenient key binding for delimitMate
-au FileType cpp inoremap <buffer> {<CR> {<CR>}<C-o>O
-
-" Visualize TeX characters using the conceal feature
-" " (accents, bold/italic, delimiters, greek, math symbols)
-let g:tex_conceal="abgm"
-
-set ambw="single"
-
-" Folding for TeX files (disabled)
-"let g:tex_fold_enabled = 1
-" Don't spell-check comments
-let g:tex_comment_nospell=1
-
-let g:gitgutter_map_keys = 0
-nmap [h <Plug>GitGutterPrevHunk
-nmap ]h <Plug>GitGutterNextHunk
-nmap <Leader>hs <Plug>GitGutterStageHunk
-nmap <Leader>hr <Plug>GitGutterUndoHunk
-
-" Set the right file type for Django when editing .html
-au BufNewFile,BufRead *.html setlocal filetype=htmldjango
-
-au BufNewFile,BufRead *.frag setlocal filetype=glsl
-au BufNewFile,BufRead *.vert setlocal filetype=glsl
-au BufNewFile,BufRead *.geo setlocal filetype=glsl
-
-" }}}
-
-" Filetype-specific settings {{{
-
-" SCons* files are Python scripts
-au BufRead,BufNewFile SCons* setlocal filetype=python
-
-" Latex and Python: do not use tabs
-au FileType cmake setlocal expandtab tabstop=2 shiftwidth=2
-au FileType tex,plaintex setlocal expandtab | :call EnableConceal()
-au FileType python setlocal expandtab | :call EnableConceal()
-
-" Vimrc -- fold with markers
-au FileType vim setlocal foldmethod=marker
-
-" Mathematica binding files
-au BufNewFile,BufRead *.tm setlocal filetype=cpp
-
 " Spell-check text files
 au FileType text,tex,plaintex,html,gitcommit setlocal spell
 
@@ -460,143 +269,82 @@ au FileType text,tex,plaintex,html,gitcommit setlocal spell
 au FileType text,tex,plaintex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
 au FileType text,tex,plaintex,html hi link TmlDoubleWords WarningMsg
 
-" }}}
+" GLSL syntax highlighting
+au BufNewFile,BufRead *.frag setlocal filetype=glsl
+au BufNewFile,BufRead *.vert setlocal filetype=glsl
+au BufNewFile,BufRead *.geo  setlocal filetype=glsl
 
-" Mitsuba specific {{{
-"
+" The silver searcher integration
+let g:ackprg = 'ag --vimgrep'
+"cnoreabbrev ag Ack
+
+" Powerline -- fancy status line
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#wordcount#enabled = 0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline_extensions = ['tabline', 'ale']
+
+" 2-character Sneak (default)
+let g:sneak#label = 1
+let g:sneak#s_next = 1
+highlight Sneak ctermfg=160 ctermbg=232
+highlight SneakLabel ctermfg=160 ctermbg=232
+
+" Insert mode -- don't create/close folds when typing
+aug NoInsertFolding
+    au!
+    au InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
+    au InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+aug END
+
+" Git version control annotations
+let g:signify_vcs_cmds = { 'git': 'git diff --no-color --no-ext-diff -U0 -- %f' }
+let g:signify_vcs_cmds_diffmode = { 'git': 'git show HEAD:./%f' }
+let g:signify_sign_show_count = 0
+set updatetime=100
+nmap <leader>j <plug>(signify-next-hunk)
+nmap <leader>k <plug>(signify-prev-hunk)
+nmap <leader>J 9999<leader>j
+nmap <leader>K 9999<leader>k
+highlight SignifySignAdd    ctermfg=green
+highlight SignifySignDelete ctermfg=red
+highlight SignifySignChange ctermfg=yellow
+
+" <leader>l to format C++ (visual and normal mode)
+au FileType cpp nnoremap <silent> <buffer> <leader>l 1GVG:py3f $TERM_TOOLS/config/clang-format.py<cr>
+au FileType cpp vnoremap <silent> <buffer> <leader>l :py3f $TERM_TOOLS/config/clang-format.py<cr>
+
+" Delete trailing white space
+fun! DeleteTrailingWS()
+    let l:winview = winsaveview()
+    %s/\s\+$//ge
+    call winrestview(l:winview)
+endfun
+noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
+
+" Mitsuba: Highlight tabs and trailing whitespace in the most annoying way possible.
 hi BadWhitespace ctermbg=red guibg=red
 au ColorScheme * hi BadWhitespace ctermbg=red guibg=red
 hi BadTabs ctermbg=red guibg=red
 au ColorScheme * hi BadTabs ctermbg=red guibg=red
 
-" Highlight tabs and trailing whitespace in the most annoying way possible.
 fun! HighlightTabsAndTrailingSpaces()
     au BufWinEnter * match BadWhitespace /\(\t\|\s\+$\)/
     au InsertEnter * match BadWhitespace /\(\t\|\s\+\%#\@<!$\)/
     au InsertLeave * match BadWhitespace /\(\t\|\s\+$\)/
 endfun
 
-let c_no_curly_error=1 " Be more lenient with C++11 syntax
+au BufNewFile,BufRead */mitsuba* call HighlightTabsAndTrailingSpaces()
+
 au Syntax cpp syn keyword cType Float
 au Syntax cpp syn keyword cType Spectrum
 
-au BufNewFile,BufRead */mitsuba* call HighlightTabsAndTrailingSpaces()
+" Convenient key binding for delimitMate
+au FileType cpp inoremap <buffer> {<CR> {<CR>}<C-o>O
 
-" }}}
-
-" Other commands and abbreviations {{{
-
-set makeprg='ninja'
-
-function! CommandCabbr(abbreviation, expansion)
-  execute 'cabbr ' . a:abbreviation . ' <c-r>=getcmdpos() == 1 && getcmdtype() == ":" ? "' . a:expansion . '" : "' . a:abbreviation . '"<CR>'
-endfunction
-
-command! -nargs=+ CommandCabbr call CommandCabbr(<f-args>)
-
-" Run make and don't prompt for ENTER
-nnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
-vnoremap <silent> <Leader>m :wa<CR>:silent! make! \| redraw! \| cw \| <CR><CR>zv
-au BufEnter *.tex nnoremap <silent> <buffer> <Leader>m :wa<CR>:silent! make! \| redraw! \| <CR>
-au BufEnter *.tex vnoremap <silent> <buffer> <Leader>m :wa<CR>:silent! make! \| redraw! \| <CR>
-au BufEnter *.tex set makeprg='make'
-
-" w!! command which writes with root permissions
-cmap w!! w !sudo tee % >/dev/null
-
-CommandCabbr ag Ag
-CommandCabbr git Git
-CommandCabbr gitv Gitv
-
-function! ForwardSkipConceal(count)
-    let cnt=a:count
-    let mvcnt=0
-    let c=col('.')
-    let l=line('.')
-    let lc=col('$')
-    let line=getline('.')
-    while cnt
-        if c>=lc
-            let mvcnt+=cnt
-            break
-        endif
-        if stridx(&concealcursor, 'n')==-1
-            let isconcealed=0
-        else
-            let [isconcealed, cchar, group]=synconcealed(l, c)
-        endif
-        if isconcealed
-            let cnt-=strchars(cchar)
-            let oldc=c
-            let c+=1
-            while c < lc
-              let [isconcealed2, cchar2, group2] = synconcealed(l, c)
-              if !isconcealed2 || cchar2!=cchar
-                  break
-              endif
-              let c+= 1
-            endwhile
-            let mvcnt+=strchars(line[oldc-1:c-2])
-        else
-            let cnt-=1
-            let mvcnt+=1
-            let c+=len(matchstr(line[c-1:], '.'))
-        endif
-    endwhile
-    return ":\<C-u>\e".mvcnt.'l'
-endfunction
-
-function! BackwardSkipConceal(count)
-    let cnt=a:count
-    let mvcnt=0
-    let c=col('.')
-    let l=line('.')
-    let lc=0
-    let line=getline('.')
-    while cnt
-        if c<=1
-            let mvcnt+=cnt
-            break
-        endif
-        if stridx(&concealcursor, 'n')==-1 || c == 0
-            let isconcealed=0
-        else
-            let [isconcealed, cchar, group]=synconcealed(l, c-1)
-        endif
-        if isconcealed
-            let cnt-=strchars(cchar)
-            let oldc=c
-            let c-=1
-            while c>1
-              let [isconcealed2, cchar2, group2] = synconcealed(l, c-1)
-              if !isconcealed2 || cchar2!=cchar
-                    break
-              endif
-              let c-=1
-            endwhile
-            let c = max([c, 1])
-            let mvcnt+=strchars(line[c-1:oldc-2])
-        else
-            let cnt-=1
-            let mvcnt+=1
-            let c-=len(matchstr(line[:c-2], '.$'))
-        endif
-    endwhile
-    return ":\<C-u>\e".mvcnt.'h'
-endfunction
-
-function! EnableConceal()
-    nnoremap <buffer> <expr> l ForwardSkipConceal(v:count1)
-    nnoremap <buffer> <expr> h BackwardSkipConceal(v:count1)
-    setlocal conceallevel=2 concealcursor=nc
-endfunction
-au BufEnter *.tex,*.py hi Conceal ctermfg=4 | set concealcursor=nc
-
-" Move by displayed lines, not physical lines
-nnoremap j gj
-nnoremap k gk
-
-" smart indent when entering insert mode with i on empty lines
+" Smart indent when entering insert mode with i on empty lines
 function! IndentWithI()
     if len(getline('.')) == 0 && line('.') != line('$')
         return "\"_ddO"
@@ -607,24 +355,27 @@ endfunction
 
 nnoremap <expr> i IndentWithI()
 
-" Paste into new line while respecting the current indent level
-nmap <leader>P O<space><bs><esc>]pk"_dd
-nmap <leader>p o<space><bs><esc>]pk"_dd
+" SCons* files are Python scripts
+au BufRead,BufNewFile SCons* setlocal filetype=python
+au BufNewFile,BufRead *.html setlocal filetype=htmldjango
 
-" <leader>l to format C++ (visual and normal mode)
-au FileType cpp nnoremap <silent> <buffer> <leader>l 1GVG:py3f $TERM_TOOLS/config/clang-format.py<cr>
-au FileType cpp vnoremap <silent> <buffer> <leader>l :py3f $TERM_TOOLS/config/clang-format.py<cr>
+" Different indentation settings for CMake
+au FileType cmake setlocal tabstop=2 shiftwidth=2
 
-" remove trailing newlines
-noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
-" remove incorrect line endings from windows machines
-noremap <leader>dd :%s/\r\n/\r/g<cr>
+" When reading a buffer (after 1s), and when writing.
+set makeprg='ninja'
 
-" Comments in cursive..
-set t_ZH=[3m
-set t_ZR=[23m
-highlight Comment cterm=italic
+" Build system -- run make/ninja and don't prompt for ENTER
+let g:dispatch_no_maps = 1
+nnoremap <silent> <Leader>m :Make<CR>
+au BufEnter *.tex nnoremap <silent> <buffer> <Leader>m :Dispatch! make<CR>
 
-" Mapping selecting mappings
-nnoremap <c-p> :FZF<cr>
-set rtp+=/usr/local/opt/fzf
+let g:ale_linters = {
+\   'cpp': ['clangd'],
+\   'python': ['pep8', 'pylint']
+\}
+let g:ale_completion_enabled = 1
+
+nnoremap <silent> D :ALEGoToDefinition<CR>zO<CR>
+nnoremap <silent> R :ALEFindReferences<CR>
+
