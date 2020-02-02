@@ -1,0 +1,69 @@
+{
+  "title": "Wenzel's Karabiner preferences",
+  "rules": [
+    {
+      "description": "Caps lock -> Escape",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "caps_lock"
+          },
+          "to": [
+            {
+              "key_code": "escape"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Left Command to Alt in Kitty.app only",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "left_command"
+          },
+          "to": [
+            {
+              "key_code": "left_alt"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^net.kovidgoyal.kitty"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Left Alt to Command in Kitty.app only",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "left_alt"
+          },
+          "to": [
+            {
+              "key_code": "left_command"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^net.kovidgoyal.kitty"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
