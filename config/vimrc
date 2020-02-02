@@ -147,10 +147,10 @@ set backup
 
 " Spell checking
 set spelllang=en
-set spellfile=$HOME/Dropbox/.spell-en.utf-8.add
+exec 'set spellfile='. $TERM_TOOLS . '/config/spell.en.utf-8.add'
 
 " Use OS clipboard
-if has('unix') && system("uname") == "Linux\n"
+if has('unix') && system('uname') == 'Linux\n'
     set clipboard=unnamedplus  " Share X windows clipboard.
 else
     set clipboard=unnamed      " Share system clipboard.
