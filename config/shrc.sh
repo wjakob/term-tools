@@ -163,23 +163,34 @@ if [ "$ZSH_VERSION" ]; then
 
     # Change cursor shape for different vi modes.
     function zle-keymap-select {
-      if [[ ${KEYMAP} == vicmd ]] ||
-         [[ $1 = 'block' ]]; then
-        echo -ne '\e[1 q'
-
-      elif [[ ${KEYMAP} == main ]] ||
-           [[ ${KEYMAP} == viins ]] ||
-           [[ ${KEYMAP} = '' ]] ||
-           [[ $1 = 'beam' ]]; then
-        echo -ne '\e[5 q'
-      fi
+        if [[ ${KEYMAP} == vicmd ]] ||
+           [[ $1 = 'block' ]]; then
+            echo -ne '\e[1 q'
+            psvar[1]="1"
+        elif [[ ${KEYMAP} == main ]] ||
+             [[ ${KEYMAP} == viins ]] ||
+             [[ ${KEYMAP} = '' ]] ||
+             [[ $1 = 'beam' ]]; then
+            echo -ne '\e[5 q'
+            psvar[1]=""
+        fi
+        zle reset-prompt
     }
     zle -N zle-keymap-select
 
-    _fix_cursor() {
-       echo -ne '\e[5 q'
+    PR_COUNT=0
+    _my_precmd() {
+       # Switch to insert mode, add newline before prompt (except first)
+       ((PR_COUNT++))
+       if ! [ $PR_COUNT = 1 ]; then
+           echo -e '\e[5 q'
+       else
+           echo -ne '\e[5 q'
+       fi
+       psvar[1]=""
+       psvar[2]=`git rev-parse --abbrev-ref HEAD 2> /dev/null`
     }
-    precmd_functions+=(_fix_cursor)
+    precmd_functions+=(_my_precmd)
 
     # Perform a prefix history search when navigating previous commands
     bindkey -M vicmd 'k' history-beginning-search-backward
