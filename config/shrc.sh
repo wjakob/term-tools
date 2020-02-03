@@ -198,10 +198,24 @@ if [ "$ZSH_VERSION" ]; then
     autoload -Uz compinit
     compinit -d $TERM_TOOLS/.zcompdump-$ZSH_VERSION
 
-    # A colorful prompt
-    PROMPT="%{%f%k%b%}
-%{%K{black}%B%F{green}%}%n%{%B%F{blue}%}@%{%B%F{cyan}%}%m%{%B%F{green}%} %{%b%F{yellow}%K{black}%}%~%{%B%F{green}%}%E%{%b%}
-%{%K{black}%}%{%K{black}%} %#%{%f%k%b%} "
+    # Set up a table with color codes (from oh-my-zsh's spectrum.zsh)
+    typeset -AHg FX FG BG
+
+    FX=(
+        reset     "%{[00m%}"
+        bold      "%{[01m%}" no-bold      "%{[22m%}"
+        italic    "%{[03m%}" no-italic    "%{[23m%}"
+        underline "%{[04m%}" no-underline "%{[24m%}"
+        blink     "%{[05m%}" no-blink     "%{[25m%}"
+        reverse   "%{[07m%}" no-reverse   "%{[27m%}"
+    )
+
+    for color in {000..255}; do
+        FG[$color]="%{[38;5;${color}m%}"
+        BG[$color]="%{[48;5;${color}m%}"
+    done
+
+    source $TERM_TOOLS/config/prompt.zsh
 fi
 
 # bash-specific configuration
@@ -234,4 +248,3 @@ if [ "$BASH_VERSION" ]; then
     alias mv='nocorrect mv '
     alias mkdir='nocorrect mkdir '
 fi
-

@@ -102,7 +102,7 @@ set signcolumn=yes             " Always show the sign column to avoid 'popping'
 let mapleader=","              " Map the leader key to comma
 
 " Control what extra information is shown
-set showmode                   " show which mode we are in
+set noshowmode                 " don't show the mode (vim-airline already does so)
 set showcmd                    " show state of keyboard input
 set showmatch                  " show brace match
 set matchtime=2                " when writing braces, only briefly flash the opening one (200ms)
