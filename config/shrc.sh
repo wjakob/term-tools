@@ -15,35 +15,30 @@ export EDITOR="vim"
 export SAVEHIST=10000
 export HISTSIZE=50000
 export HISTFILESIZE=1000000
-export HISTFILE=$TERM_TOOLS/history
-
-# zstyle :compinstall filename '/Users/wjakob/.zshrc'
-# autoload -Uz compinit
-# compinit
 
 # enable core dumps
 ulimit -c unlimited 2>/dev/null
 
 # 256 colors
 if [[ "$TERM" == "xterm" ]]; then
-	export TERM="xterm-256color"
+    export TERM="xterm-256color"
 fi
 
 if uname | grep Darwin > /dev/null; then
-	# Mac specific commands
+    # Mac specific commands
 
-	# Also bind find to 'gfind' (install via brew)
-	alias find=gfind
+    # Also bind find to 'gfind' (install via brew)
+    alias find=gfind
 
-	# top: sort by cpu
-	alias top="top -o cpu"
+    # top: sort by cpu
+    alias top="top -o cpu"
 
     export BROWSER=/Applications/Firefox.app/Contents/MacOS/firefox-bin
 
-	# ls with a 1-second timeout
-	function ls_safe {
-		$TERM_TOOLS/config/timeout3.sh -t 1 ls -G
-	}
+    # ls with a 1-second timeout
+    function ls_safe {
+        $TERM_TOOLS/config/timeout3.sh -t 1 ls -G
+    }
 
     function skim () {
         /Applications/Skim.app/Contents/MacOS/Skim $@ &> /dev/null &
@@ -52,13 +47,13 @@ if uname | grep Darwin > /dev/null; then
     # Don't include "_something" AppleDouble files in tar files, etc.
     export COPYFILE_DISABLE=1
 else
-	alias gnome-open=gvfs-open
-	alias open=gvfs-open
-	alias gdate=date
+    alias gnome-open=gvfs-open
+    alias open=gvfs-open
+    alias gdate=date
 
-	function ls_safe {
-		$TERM_TOOLS/config/timeout3.sh -t 1 ls --color=auto
-	}
+    function ls_safe {
+        $TERM_TOOLS/config/timeout3.sh -t 1 ls --color=auto
+    }
 
     # Support High-DPI in Qt5 apps
     export QT_AUTO_SCREEN_SCALE_FACTOR=1
@@ -72,6 +67,15 @@ ulimit -c 0
 
 # Colors in LS
 alias ls='ls -G'
+
+# make less more friendly for non-text input files
+if [ -e /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
+   export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
+   export LESS=' -R '
+elif [ -e /usr/local/bin/src-hilite-lesspipe.sh ]; then
+   export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+   export LESS=' -R '
+fi
 
 # Locale
 export LC_ALL=en_US.UTF-8
@@ -104,48 +108,51 @@ alias pdb='python3 -u -m pdb -c continue'
 
 # zsh-specific configuration
 if [ "$ZSH_VERSION" ]; then
+    export HISTFILE=$TERM_TOOLS/.zsh-history
+
     autoload -U history-search-end
     zle -N history-beginning-search-backward-end history-search-end
     zle -N history-beginning-search-forward-end history-search-end
 
-    bindkey $terminfo[kbs]   backward-delete-char           # Backspace
-    bindkey $terminfo[kdch1] delete-char                    # Delete
-    bindkey '\e[3~'          delete-char
-    bindkey $terminfo[khome] beginning-of-line              # Home
-    bindkey "^A"             beginning-of-line
-    bindkey $terminfo[kend]  end-of-line                    # End
-    bindkey "^E"             end-of-line
-    bindkey $terminfo[kcuu1] history-beginning-search-backward-end # Down
-    bindkey "^[[A"           history-beginning-search-backward-end # Down
-    bindkey $terminfo[kcud1] history-beginning-search-forward-end  # Up
-    bindkey "^[[B"           history-beginning-search-forward-end  # Up
+    bindkey -M viins $terminfo[kbs] backward-delete-char # Backspace
 
-    bindkey $terminfo[kcub1] backward-char                  # Left
-    bindkey $terminfo[kcuf1] forward-char                   # Right
+    for mode in vicmd viins
+    do
+        bindkey -M $mode $terminfo[kcub1] backward-char # Left
+        bindkey -M $mode $terminfo[kcuf1] forward-char  # Right
 
-    bindkey -M vicmd $terminfo[khome] beginning-of-line
-    bindkey -M vicmd "^A"             beginning-of-line
-    bindkey -M vicmd $terminfo[kend]  end-of-line           # End
-    bindkey -M vicmd "^E"             end-of-line
-    bindkey -M vicmd '\e[3~'          delete-char
+        bindkey -M $mode $terminfo[khome] beginning-of-line
+        bindkey -M $mode "^A"             beginning-of-line
+        bindkey -M $mode $terminfo[kend]  end-of-line
+        bindkey -M $mode "^E"             end-of-line
+        bindkey -M $mode '\e[3~'          delete-char
 
-	# ls after every cd
-	function chpwd() {
-		emulate -L zsh
-		ls_safe
-	}
+        bindkey -M $mode $terminfo[kdch1] delete-char # Delete
+        bindkey -M $mode '\e[3~'          delete-char
 
-	# no error if glob fails to expand (scp fix)
-	unsetopt nomatch
+        bindkey -M $mode $terminfo[kcuu1] history-beginning-search-backward-end # Down
+        bindkey -M $mode "^[[A"           history-beginning-search-backward-end # Down
+        bindkey -M $mode $terminfo[kcud1] history-beginning-search-forward-end  # Up
+        bindkey -M $mode "^[[B"           history-beginning-search-forward-end  # Up
+    done
 
-	# Automatically escape wildcards in 'scp', 'rsync', and any command with http/ftp args
-	autoload -U url-quote-magic
-	zle -N self-insert url-quote-magic
-	zstyle -e :urlglobber url-other-schema \ '[[ $words[1] == scp ]] && reply=("*") || reply=(http https ftp)'
+    # ls after every cd
+    function chpwd() {
+        emulate -L zsh
+        ls_safe
+    }
 
-	# VI mode: enable
-	export KEYTIMEOUT=1
-	bindkey -v
+    # no error if glob fails to expand (scp fix)
+    unsetopt nomatch
+
+    # Automatically escape wildcards in 'scp', 'rsync', and any command with http/ftp args
+    autoload -U url-quote-magic
+    zle -N self-insert url-quote-magic
+    zstyle -e :urlglobber url-other-schema \ '[[ $words[1] == scp ]] && reply=("*") || reply=(http https ftp)'
+
+    # VI mode: enable
+    export KEYTIMEOUT=1
+    bindkey -v
 
     # VI mode: allow deleting beyond original insertion
     bindkey -M viins '^?' backward-delete-char
@@ -171,22 +178,22 @@ if [ "$ZSH_VERSION" ]; then
     }
     precmd_functions+=(_fix_cursor)
 
-	# Perform a prefix history search when navigating previous commands
-	bindkey -M vicmd 'k' history-beginning-search-backward
-	bindkey -M vicmd 'j' history-beginning-search-forward
+    # Perform a prefix history search when navigating previous commands
+    bindkey -M vicmd 'k' history-beginning-search-backward
+    bindkey -M vicmd 'j' history-beginning-search-forward
 
     autoload -U edit-command-line
-	zle -N edit-command-line
-	bindkey -M vicmd V edit-command-line
+    zle -N edit-command-line
+    bindkey -M vicmd V edit-command-line
 
-	# Share history between multiple terminals
+    # Share history between multiple terminals
     setopt inc_append_history
     setopt share_history
 
     # Completions
     zstyle :compinstall filename '~/.zshrc'
     autoload -Uz compinit
-    compinit -d $TERM_TOOLS/zcompdump-$ZSH_VERSION
+    compinit -d $TERM_TOOLS/.zcompdump-$ZSH_VERSION
 
     # A colorful prompt
     PROMPT="%{%f%k%b%}
@@ -196,33 +203,32 @@ fi
 
 # bash-specific configuration
 if [ "$BASH_VERSION" ]; then
-	# ls after every cd
-	function cd()  {
-		 builtin cd "$@" && ls_safe
-	}
+    export HISTFILE=$TERM_TOOLS/.bash-history
 
-	DEFAULT_COLOR="\[\e[0m\]"
-	PS1_COLOR="\[\e[34m\]"
-	TITLEBAR="\[\e]0;\h \w\007\]"
-	PS1="$TITLEBAR\n$PS1_COLOR\h:\w\n \$$DEFAULT_COLOR "
+    # ls after every cd
+    function cd()  {
+         builtin cd "$@" && ls_safe
+    }
 
-	# don't put duplicate lines or lines starting with space in the history.
-	export HISTCONTROL=ignoreboth
+    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
-	# don't clobber history
-	shopt -s histappend
+    # don't put duplicate lines or lines starting with space in the history.
+    export HISTCONTROL=ignoreboth
 
-	# check the window size after each command and, if necessary,
-	# update the values of LINES and COLUMNS.
-	shopt -s checkwinsize
+    # don't clobber history
+    shopt -s histappend
 
-	# automatically correct cd spelling errors
-	shopt -s cdspell
+    # check the window size after each command and, if necessary,
+    # update the values of LINES and COLUMNS.
+    shopt -s checkwinsize
 
-	# The correctall feature is at times painful to use with 'cp', 'mv', and 'mkdir' -- disable it!
-	# http://superuser.com/questions/251818/exceptions-to-zsh-correctall-feature
-	alias cp='nocorrect cp '
-	alias mv='nocorrect mv '
-	alias mkdir='nocorrect mkdir '
+    # automatically correct cd spelling errors
+    shopt -s cdspell
+
+    # The correctall feature is at times painful to use with 'cp', 'mv', and 'mkdir' -- disable it!
+    # http://superuser.com/questions/251818/exceptions-to-zsh-correctall-feature
+    alias cp='nocorrect cp '
+    alias mv='nocorrect mv '
+    alias mkdir='nocorrect mkdir '
 fi
 
