@@ -1,0 +1,4 @@
+set history save on
+set print pretty
+source ~/.gdb/enoki_gdb.py
+set history filename ~/.gdb/history 

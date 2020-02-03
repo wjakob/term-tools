@@ -12,17 +12,17 @@ Plug 'vim-airline/vim-airline-themes'
 " NetRW alternative
 Plug 'justinmk/vim-dirvish'
 
+" Linting / compilation / autocompletion
+Plug 'dense-analysis/ale'
+
 " Quick motions that search for 2 characters
 Plug 'justinmk/vim-sneak'
 
 " Version control annotations
 Plug 'mhinz/vim-signify'
 
-" Fast recursive file search
-Plug 'junegunn/fzf', { 'do': './install --all' }
-
-" The silver searcher integration
-Plug 'mileszs/ack.vim', { 'on': 'Ack' }
+" Automatic generation of closing braces etc
+Plug 'Raimondi/delimitMate'
 
 " Dispatch build jobs asynchronously
 Plug 'tpope/vim-dispatch'
@@ -30,8 +30,11 @@ Plug 'tpope/vim-dispatch'
 " Easily search for, substitute, and abbreviate multiple variants of a word
 Plug 'tpope/vim-abolish'
 
-" Automatic generation of closing braces etc
-Plug 'Raimondi/delimitMate'
+" Fast recursive file search
+Plug 'junegunn/fzf'
+
+" The silver searcher integration
+Plug 'mileszs/ack.vim', { 'on': 'Ack' }
 
 " Python PEP8 checker
 Plug 'nvie/vim-flake8'
@@ -39,11 +42,17 @@ Plug 'nvie/vim-flake8'
 " Command to temporily maximize a buffer
 Plug 'szw/vim-maximizer'
 
+" Adapt indentation behavior for Python files
+Plug 'Vimjas/vim-python-pep8-indent'
+
+" Git integration
+Plug 'tpope/vim-fugitive'
+
+" Don't recompute folds so often
+Plug 'Konfekt/FastFold'
+
 " GLSL syntax highlighting
 Plug 'tikhomirov/vim-glsl'
-
-" Linting / compilation / autocompletion
-Plug 'dense-analysis/ale'
 
 " Initialize plugin system
 call plug#end()
@@ -111,9 +120,11 @@ set smarttab                   " insert tabs on the start of a line according to
                                " shiftwidth, not tabstop
 set expandtab                  " Expand tabs to spaces
 set textwidth=0                " no hard wrapping by default
-set foldmethod=syntax          " fold using syntax by default
-set foldminlines=4             " require a medium size to fold
+set foldenable
+set foldmethod=syntax          " fold using indentation by default
+set foldminlines=8             " require a medium size to fold
 set foldnestmax=3              " max 3 fold levels for syntax/indent folding
+set foldcolumn=0
 
 " Appearance
 set number                     " enable line numbers
@@ -209,7 +220,7 @@ nnoremap <silent> <A-k> :wincmd k<CR>
 nnoremap <silent> <A-j> :wincmd j<CR>
 nnoremap <silent> <A-h> :wincmd h<CR>
 nnoremap <silent> <A-l> :wincmd l<CR>
-nnoremap <silent> <A-c> :wincmd c<CR>  " close
+nnoremap <silent> <A-q> :wincmd c<CR>  " close
 nnoremap <silent> <A-f> :MaximizerToggle<CR>
 let g:maximizer_set_default_mapping = 0
 
@@ -224,8 +235,10 @@ nnoremap <silent> < :bp<CR>
 nnoremap <silent> > :bn<CR>
 
 " After a search, press enter/space to disable highlighting
-nnoremap <expr> <Space> &buftype ==# 'quickfix' ? "\<Space>" : ':noh <CR>'
-nnoremap <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>" : ':noh <CR>'
+nnoremap <silent> <expr> <cr> &buftype ==# 'quickfix' ? "\<cr>" : ':noh <cr>'
+
+" Toggle folds with the spacebar
+nnoremap <silent> <expr> <space> 'za'
 
 " Get rid of old habits (cursor keys disabled)
 inoremap  <Up>     <NOP>
@@ -266,8 +279,8 @@ au BufReadPost *
 au FileType text,tex,plaintex,html,gitcommit setlocal spell
 
 " Highlight repeated words
-au FileType text,tex,plaintex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
-au FileType text,tex,plaintex,html hi link TmlDoubleWords WarningMsg
+" au FileType text,tex,plaintex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
+" au FileType text,tex,plaintex,html hi link TmlDoubleWords WarningMsg
 
 " GLSL syntax highlighting
 au BufNewFile,BufRead *.frag setlocal filetype=glsl
@@ -327,11 +340,8 @@ noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
 " Mitsuba: Highlight tabs and trailing whitespace in the most annoying way possible.
 hi BadWhitespace ctermbg=red guibg=red
 au ColorScheme * hi BadWhitespace ctermbg=red guibg=red
-hi BadTabs ctermbg=red guibg=red
-au ColorScheme * hi BadTabs ctermbg=red guibg=red
 
 fun! HighlightTabsAndTrailingSpaces()
-    au BufWinEnter * match BadWhitespace /\(\t\|\s\+$\)/
     au InsertEnter * match BadWhitespace /\(\t\|\s\+\%#\@<!$\)/
     au InsertLeave * match BadWhitespace /\(\t\|\s\+$\)/
 endfun
@@ -366,16 +376,43 @@ au FileType cmake setlocal tabstop=2 shiftwidth=2
 set makeprg='ninja'
 
 " Build system -- run make/ninja and don't prompt for ENTER
-let g:dispatch_no_maps = 1
+let g:dispatch_no_maps = 1 " We want to set up our own keybindings
 nnoremap <silent> <Leader>m :Make<CR>
 au BufEnter *.tex nnoremap <silent> <buffer> <Leader>m :Dispatch! make<CR>
 
+" Asynchronous linter
 let g:ale_linters = {
 \   'cpp': ['clangd'],
-\   'python': ['pep8', 'pylint']
+\   'python': ['pycodestyle', 'pyflakes']
 \}
 let g:ale_completion_enabled = 1
 
-nnoremap <silent> D :ALEGoToDefinition<CR>zO<CR>
+nnoremap <silent> D :ALEGoToDefinition<CR>
 nnoremap <silent> R :ALEFindReferences<CR>
 
+" TeX settings
+let g:tex_conceal="abmgs"
+let g:tex_fold_enabled=1
+let g:tex_comment_nospell=1
+let g:tex_no_error=1
+au BufEnter *.tex setlocal conceallevel=2
+
+" Debug highlighting groups
+" function! SynStack ()
+"     for i1 in synstack(line("."), col("."))
+"         let i2 = synIDtrans(i1)
+"         let n1 = synIDattr(i1, "name")
+"         let n2 = synIDattr(i2, "name")
+"         echo n1 "->" n2
+"     endfor
+" endfunction
+" nnoremap <leader>q :call SynStack()<CR>
+
+" Vim fugitive
+set diffopt=vertical " Split diffs side-by-side
+nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>gr :Gread<CR>
+nnoremap <leader>gw :Gwrite<CR><CR>
+nnoremap <leader>gc :Gcommit -v -q<CR>
+nnoremap <leader>ga :Git add %:p<CR><CR>
+nnoremap <leader>gd :Gdiff<CR>
