@@ -46,6 +46,9 @@ if uname | grep Darwin > /dev/null; then
 
     # Don't include "_something" AppleDouble files in tar files, etc.
     export COPYFILE_DISABLE=1
+
+    # Colors in LS
+    alias ls='ls -G'
 else
     alias gnome-open=gvfs-open
     alias open=gvfs-open
@@ -60,13 +63,13 @@ else
 
     # GNU ls: don't wrap entries with spaces into quotes
     export QUOTING_STYLE=literal
+
+    # Colors in LS
+    alias ls='ls --color=auto'
 fi
 
 # Don't make core dumps by default
 ulimit -c 0
-
-# Colors in LS
-alias ls='ls -G'
 
 # make less more friendly for non-text input files
 if [ -e /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then

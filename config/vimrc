@@ -192,6 +192,12 @@ if filereadable(expand("$HOME/.vim/modules/wjakob.vim/colors/tomorrow-night.vim"
     colorscheme tomorrow-night
 endif
 
+" Change cursor style depending on mode
+
+let &t_SI.="\e[6 q" " SI = INSERT mode (1=block, 4=underscore, 6=bar)
+let &t_SR.="\e[4 q" " SR = REPLACE mode
+let &t_EI.="\e[2 q" " EI = NORMAL mode
+
 " Decode Alt + key combinations from terminal escape sequence
 for i in range(0, 25)
    let ch_l = nr2char(char2nr('a') + i)
