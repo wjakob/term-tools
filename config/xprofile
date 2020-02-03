@@ -1,3 +1,0 @@
-#!/bin/bash 
-
-bash -c "sleep 5; xmodmap ~/.Xmodmap"&
