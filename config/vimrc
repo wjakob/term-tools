@@ -354,6 +354,8 @@ endfun
 
 au BufNewFile,BufRead */mitsuba* call HighlightTabsAndTrailingSpaces()
 
+au BufNewFile,BufRead mitsuba.conf set syntax=jsonc
+
 au Syntax cpp syn keyword cType Float
 au Syntax cpp syn keyword cType Spectrum
 
