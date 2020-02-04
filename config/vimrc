@@ -60,17 +60,6 @@ Plug 'christoomey/vim-tmux-navigator'
 " Initialize plugin system
 call plug#end()
 
-" Large navigation steps from home row
-nnoremap K <PageUp>
-nnoremap J <PageDown>
-nnoremap H <Home>
-nnoremap L <End>
-
-vnoremap K <PageUp>
-vnoremap J <PageDown>
-vnoremap H <Home>
-vnoremap L <End>
-
 " Replace colon and semicolon
 nnoremap ; :
 nnoremap : ;
@@ -90,6 +79,7 @@ set autoread                   " auto-reload modified files (with no local chang
 set undolevels=65536           " lots of undo (default 1000)
 set history=1024               " lots of history (default 20)
 set mouse=a                    " enable mouse (set mouse= to disable mouse)
+set ttymouse=xterm2            " enable mouse resizing of splits
 set hidden                     " allow un-saved buffers in background
 set lazyredraw                 " no redraws in macros
 set title                      " change terminal title
@@ -238,8 +228,18 @@ nnoremap <silent> <C-k> :resize -5<cr>
 nnoremap <silent> <C-j> :resize +5<cr>
 
 " Move to next / previous buffer
-nnoremap <silent> < :bp<CR>
-nnoremap <silent> > :bn<CR>
+nnoremap <nowait><silent> [ :bp<CR>
+nnoremap <nowait><silent> ] :bn<CR>
+
+function! MakeBracketMaps()
+    nnoremap <nowait><silent><buffer> [ :bp<CR>
+    nnoremap <nowait><silent><buffer> ] :bn<CR>
+endfunction
+
+augroup bracketmaps
+    autocmd!
+    autocmd FileType * call MakeBracketMaps()
+augroup END
 
 " After a search, press enter/space to disable highlighting
 nnoremap <silent> <expr> <cr> &buftype ==# 'quickfix' ? "\<cr>" : ':noh <cr>'
@@ -397,6 +397,8 @@ let g:ale_linters = {
 \}
 
 let g:ale_completion_enabled = 1
+let g:ale_virtualenv_dir_names = []
+let g:ale_cache_executable_check_failures = 1
 
 let g:ale_pattern_options = {
 \   '.*\.tex$': {'ale_enabled': 0}
@@ -444,5 +446,7 @@ nnoremap <silent> <A-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <A-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <A-l> :TmuxNavigateRight<cr>
 
-nnoremap <silent> <Escape>[ :vsplit<cr>
-nnoremap <silent> <Escape>] :split <cr>
+execute "set <A-.>=\e."
+execute "set <A-,>=\e,"
+nnoremap <silent> <A-.> :vsplit<cr>
+nnoremap <silent> <A-,> :split<cr>

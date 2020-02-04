@@ -1,6 +1,6 @@
 # Key bindings
 # ------------
-# CTRL-T - Paste the selected file path(s) into the command line
+# Alt-P - Paste the selected file path(s) into the command line
 __fsel() {
   local cmd="${FZF_CTRL_T_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
     -o -type f -print \
@@ -22,8 +22,8 @@ fzf-file-widget() {
   return $ret
 }
 zle     -N   fzf-file-widget
-bindkey M-p  fzf-file-widget
-bindkey ð    fzf-file-widget
+bindkey "ð"    fzf-file-widget
+bindkey "^[p"  fzf-file-widget
 
 # Ensure precmds are run after cd
 fzf-redraw-prompt() {
@@ -35,7 +35,7 @@ fzf-redraw-prompt() {
 }
 zle -N fzf-redraw-prompt
 
-# ALT-C - cd into the selected directory
+# ALT-D - cd into the selected directory
 fzf-cd-widget() {
   local cmd="${FZF_ALT_C_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
     -o -type d -print 2> /dev/null | cut -b3-"}"
@@ -51,11 +51,12 @@ fzf-cd-widget() {
   zle fzf-redraw-prompt
   return $ret
 }
-zle     -N    fzf-cd-widget
-bindkey ã     fzf-cd-widget
-bindkey M-c   fzf-cd-widget
 
-# CTRL-R - Paste the selected command from history into the command line
+zle     -N     fzf-cd-widget
+bindkey "ã"    fzf-cd-widget
+bindkey "^[d"  fzf-cd-widget
+
+# ALT-R - Paste the selected command from history into the command line
 fzf-history-widget() {
   local selected num
   setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2> /dev/null
@@ -72,4 +73,4 @@ fzf-history-widget() {
   return $ret
 }
 zle     -N   fzf-history-widget
-bindkey '^R' fzf-history-widget
+bindkey '^[r' fzf-history-widget
