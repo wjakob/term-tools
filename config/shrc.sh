@@ -5,8 +5,10 @@ else
 fi
 
 # Don't pause VIM upon Ctrl-S shortcut..
-stty stop undef
-stty -ixon
+if [ -t 1 ]; then
+    stty stop undef
+    stty -ixon
+fi
 
 # vim by default
 export EDITOR="vim"
