@@ -66,7 +66,7 @@
       ]
     },
     {
-      "description": "Escape -> Grave accent + Tilde in Kitty.app only",
+      "description": "Escape -> Grave accent + Tilde in Kitty.app and Slack.app",
       "manipulators": [
         {
           "type": "basic",
@@ -82,7 +82,8 @@
             {
               "type": "frontmost_application_if",
               "bundle_identifiers": [
-                "^net.kovidgoyal.kitty"
+                "^net.kovidgoyal.kitty",
+                "^com.tinyspeck.slackmacgap"
               ]
             }
           ]
