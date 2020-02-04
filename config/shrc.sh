@@ -82,6 +82,16 @@ elif [ -e /usr/local/bin/src-hilite-lesspipe.sh ]; then
    export LESS=' -R '
 fi
 
+if type "fd" > /dev/null; then
+    export FZF_DEFAULT_COMMAND="fd --type f"
+else
+    export FZF_DEFAULT_COMMAND="fdfind --type f"
+    alias fd=fdfind
+fi
+
+export FZF_DEFAULT_OPTS="--extended"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
 # Locale
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
@@ -229,6 +239,7 @@ if [ "$ZSH_VERSION" ]; then
     done
 
     source $TERM_TOOLS/config/prompt.zsh
+    source $TERM_TOOLS/config/fzf.zsh
 fi
 
 # bash-specific configuration
