@@ -54,6 +54,9 @@ Plug 'Konfekt/FastFold'
 " GLSL syntax highlighting
 Plug 'tikhomirov/vim-glsl'
 
+" tmux intergration
+Plug 'christoomey/vim-tmux-navigator'
+
 " Initialize plugin system
 call plug#end()
 
@@ -198,7 +201,6 @@ if filereadable(expand("$HOME/.vim/modules/wjakob.vim/colors/tomorrow-night.vim"
 endif
 
 " Change cursor style depending on mode
-
 let &t_SI.="\e[6 q" " SI = INSERT mode (1=block, 4=underscore, 6=bar)
 let &t_SR.="\e[4 q" " SR = REPLACE mode
 let &t_EI.="\e[2 q" " EI = NORMAL mode
@@ -225,12 +227,6 @@ endfor
 
 " .. and adjust timeouts for this to work properly
 set timeout timeoutlen=1000 ttimeoutlen=25
-
-" Move around using Alt + navigation keys
-nnoremap <silent> <A-k> :wincmd k<CR>
-nnoremap <silent> <A-j> :wincmd j<CR>
-nnoremap <silent> <A-h> :wincmd h<CR>
-nnoremap <silent> <A-l> :wincmd l<CR>
 nnoremap <silent> <A-q> :wincmd c<CR>  " close
 nnoremap <silent> <A-f> :MaximizerToggle<CR>
 let g:maximizer_set_default_mapping = 0
@@ -406,7 +402,6 @@ let g:ale_pattern_options = {
 \   '.*\.tex$': {'ale_enabled': 0}
 \}
 
-
 nnoremap <silent> D :ALEGoToDefinition<CR>
 nnoremap <silent> R :ALEFindReferences<CR>
 
@@ -439,3 +434,15 @@ nnoremap <leader>gd :Gdiff<CR>
 
 " Make a markdown file by default
 autocmd VimEnter {} setlocal ft=markdown
+
+" tmux integration
+let g:tmux_navigator_no_mappings = 1
+
+" Seamlessly move around using Alt + navigation keys
+nnoremap <silent> <A-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <A-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <A-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <A-l> :TmuxNavigateRight<cr>
+
+nnoremap <silent> <Escape>[ :vsplit<cr>
+nnoremap <silent> <Escape>] :split <cr>
