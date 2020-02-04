@@ -63,6 +63,11 @@ nnoremap J <PageDown>
 nnoremap H <Home>
 nnoremap L <End>
 
+vnoremap K <PageUp>
+vnoremap J <PageDown>
+vnoremap H <Home>
+vnoremap L <End>
+
 " Replace colon and semicolon
 nnoremap ; :
 nnoremap : ;
@@ -303,6 +308,7 @@ let g:airline#extensions#wordcount#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline_extensions = ['tabline', 'ale']
 
 " 2-character Sneak (default)
@@ -393,17 +399,23 @@ let g:ale_linters = {
 \   'cpp': ['clangd'],
 \   'python': ['pycodestyle', 'pyflakes']
 \}
+
 let g:ale_completion_enabled = 1
+
+let g:ale_pattern_options = {
+\   '.*\.tex$': {'ale_enabled': 0}
+\}
+
 
 nnoremap <silent> D :ALEGoToDefinition<CR>
 nnoremap <silent> R :ALEFindReferences<CR>
 
 " TeX settings
-let g:tex_conceal="abmgs"
+let g:tex_conceal="abmg"
 let g:tex_fold_enabled=1
 let g:tex_comment_nospell=1
 let g:tex_no_error=1
-au BufEnter *.tex setlocal conceallevel=2
+au BufEnter *.tex setlocal conceallevel=2 ft=tex
 
 " Debug highlighting groups
 " function! SynStack ()
@@ -424,3 +436,6 @@ nnoremap <leader>gw :Gwrite<CR><CR>
 nnoremap <leader>gc :Gcommit -v -q<CR>
 nnoremap <leader>ga :Git add %:p<CR><CR>
 nnoremap <leader>gd :Gdiff<CR>
+
+" Make a markdown file by default
+autocmd VimEnter {} setlocal ft=markdown

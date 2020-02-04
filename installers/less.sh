@@ -6,4 +6,4 @@ if [ -z "$TERM_TOOLS" ]; then
     exit 1
 fi
 
-ln $@ -s $TERM_TOOLS/config/less ~/.less
+lesskey -o ~/.less $TERM_TOOLS/config/lesskey
