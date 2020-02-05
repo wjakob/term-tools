@@ -6,4 +6,10 @@ if [ -z "$TERM_TOOLS" ]; then
     exit 1
 fi
 
-ln $@ -s $TERM_TOOLS/config/clang-format ~/.clang-format
+if [ -e ~/.clang-format ]; then
+    echo "Error: file already exists.  Move or delete ~/.clang-format"
+    exit 1
+else
+    echo "Installing .clang-format .."
+    ln -s $TERM_TOOLS/config/clang-format ~/.clang-format
+fi

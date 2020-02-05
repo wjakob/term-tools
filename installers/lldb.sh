@@ -6,4 +6,10 @@ if [ -z "$TERM_TOOLS" ]; then
     exit 1
 fi
 
-ln $@ -s $TERM_TOOLS/config/lldbinit ~/.lldbinit
+if [ -e ~/.lldbinit ]; then
+    echo "Error: file already exists.  Move or delete ~/.lldbinit"
+    exit 1
+else
+    echo "Installing .lldbinit .."
+    ln -s $TERM_TOOLS/config/lldbinit ~/.lldbinit
+fi

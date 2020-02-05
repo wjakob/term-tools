@@ -82,7 +82,7 @@ elif [ -e /usr/local/bin/src-hilite-lesspipe.sh ]; then
    export LESS=' -R '
 fi
 
-if type "fd" > /dev/null; then
+if hash fd 2> /dev/null; then
     export FZF_DEFAULT_COMMAND="fd --type f"
 else
     export FZF_DEFAULT_COMMAND="fdfind --type f"

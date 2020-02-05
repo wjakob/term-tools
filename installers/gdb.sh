@@ -6,4 +6,10 @@ if [ -z "$TERM_TOOLS" ]; then
     exit 1
 fi
 
-ln $@ -s $TERM_TOOLS/config/gdbinit ~/.gdbinit
+if [ -e ~/.gdbinit ]; then
+    echo "Error: file already exists.  Move or delete ~/.gdbinit"
+    exit 1
+else
+    echo "Installing .gdbinit .."
+    ln -s $TERM_TOOLS/config/gdbinit ~/.gdbinit
+fi

@@ -6,8 +6,14 @@ if [ -z "$TERM_TOOLS" ]; then
     exit 1
 fi
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    ln $@ -s $TERM_TOOLS/config/gitconfig-osx ~/.gitconfig
+if [ -e ~/.gitconfig ]; then
+    echo "Error: file already exists.  Move or delete ~/.gitconfig"
+    exit 1
 else
-    ln $@ -s $TERM_TOOLS/config/gitconfig-linux ~/.gitconfig
+    echo "Installing .gitconfig .."
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        ln $@ -s $TERM_TOOLS/config/gitconfig-osx ~/.gitconfig
+    else
+        ln $@ -s $TERM_TOOLS/config/gitconfig-linux ~/.gitconfig
+    fi
 fi

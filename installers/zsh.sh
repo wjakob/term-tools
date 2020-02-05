@@ -7,8 +7,8 @@ if [ -z "$TERM_TOOLS" ]; then
 fi
 
 if [ -e ~/.zshrc ]; then
-    echo "Error: .zshrc exists.  Move or delete ~/.zshrc"
-    exit 1
+    echo "Error: file already exists.  Move or delete ~/.zshrc"
 else
+    echo "Installing .zshrc .."
 	cp $TERM_TOOLS/config/zshrc ~/.zshrc
 fi

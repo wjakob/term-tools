@@ -6,16 +6,14 @@ if [ -z "$TERM_TOOLS" ]; then
     exit 1
 fi
 
-if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+if [[ "$OSTYPE" == "linux"* ]]; then
 	if [ -e ~/.Xresources ]; then
-		if [ "$1" == "-f" ]; then
-			echo "Note: deleting ~/.Xresources"
-			rm -rf ~/.Xresources
-		else
-			echo "Error: .Xresources exists.  Move or delete ~/.Xresources"
-			exit 1
-		fi
+        echo "Error: file already exists.  Move or delete ~/.Xresources"
+        exit -1
+    else
+        echo "Installing .Xresources .."
+        ln -s $TERM_TOOLS/config/Xresources ~/.Xresources
 	fi
-	echo "Installing .Xresources"
-	ln $@ -s $TERM_TOOLS/config/Xresources ~/.Xresources
+else
+    echo "Skipping (linux only)"
 fi

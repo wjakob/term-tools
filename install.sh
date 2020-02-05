@@ -31,20 +31,16 @@ trap print_err ERR
 
 set -e
 
-git pull
-git submodule init
-git submodule update
-
 # run through the installers
 for f in $(ls -1 installers/*.sh); do
 	inst="y"
+	echo ""
 	read -r -p "Install config for $(basename $f .sh)? [Y/n] " response
 	if [ -z "$response" ] || [[ $response =~ ^[Yy]$ ]] ;  then
-		if bash $f $@; then
+		if bash $f; then
 			echo "SUCCESS: $f"
 		else
 			echo "ERROR: $f"
-			exit 1
 		fi
 	else
 		echo "SKIPPING: $f"

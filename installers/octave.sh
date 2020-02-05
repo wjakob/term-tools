@@ -6,4 +6,10 @@ if [ -z "$TERM_TOOLS" ]; then
     exit 1
 fi
 
-ln $@ -s $TERM_TOOLS/config/octaverc ~/.octaverc
+if [ -e ~/.octaverc ]; then
+    echo "Error: file already exists.  Move or delete ~/.octaverc"
+    exit 1
+else
+    echo "Installing .octaverc .."
+    ln -s $TERM_TOOLS/config/octaverc ~/.octaverc
+fi
