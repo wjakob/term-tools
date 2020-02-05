@@ -71,6 +71,7 @@ Alt + P              Open a file using FZF
 
 <leader>m            Launch a compilation job (using 'ninja')
 :ag [keywords]       Search for a file using 'ag'
+U                    Undo tree
 
 
 VIM C++ integration

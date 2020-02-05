@@ -36,6 +36,9 @@ Plug 'junegunn/fzf'
 " The silver searcher integration
 Plug 'mileszs/ack.vim', { 'on': 'Ack' }
 
+" The silver searcher integration
+Plug 'mbbill/undotree'
+
 " Python PEP8 checker
 Plug 'nvie/vim-flake8'
 
@@ -428,6 +431,9 @@ autocmd VimEnter {} setlocal ft=markdown
 
 " tmux integration
 let g:tmux_navigator_no_mappings = 1
+
+" undo tree
+nnoremap <silent> U :UndotreeToggle<CR>
 
 " Seamlessly move around using Alt + navigation keys
 nnoremap <silent> <A-h> :TmuxNavigateLeft<cr>
