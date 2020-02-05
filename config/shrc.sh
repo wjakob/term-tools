@@ -89,7 +89,7 @@ else
     alias fd=fdfind
 fi
 
-export FZF_DEFAULT_OPTS="--extended"
+export FZF_DEFAULT_OPTS="--extended --bind=pgup:up,pgdn:down "
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # Locale

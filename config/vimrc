@@ -57,6 +57,9 @@ Plug 'tikhomirov/vim-glsl'
 " tmux intergration
 Plug 'christoomey/vim-tmux-navigator'
 
+" Have a hard time :)
+Plug 'takac/vim-hardtime'
+
 " Initialize plugin system
 call plug#end()
 
@@ -140,9 +143,10 @@ set complete-=i                " Don't parse headers in autocompletions
 
 " Open 'tab completion' with Ctrl-Space
 inoremap <Nul> <C-n>
-" Navigate tab completion with Ctrl + 'j' and 'j' keys
-inoremap <expr> <C-j> ((pumvisible())?("\<C-n>"):("\<C-j>"))
-inoremap <expr> <C-k> ((pumvisible())?("\<C-p>"):("\<C-k>"))
+
+" Navigate tab completion with PageDOwn (Ctrl-J) and PageUp (Ctrl-K)
+inoremap <expr> <PageUp>   ((pumvisible())?("\<C-p>"):("\<PageUp>"))
+inoremap <expr> <PageDown> ((pumvisible())?("\<C-n>"):("\<PageDown>"))
 
 " Searching
 set incsearch                  " incremental search
@@ -215,17 +219,14 @@ for i in range(0, 9)
    execute "inoremap <A-" . ch . "> " . ch
 endfor
 
+execute "set <A-.>=\e."
+execute "set <A-,>=\e,"
+
 " .. and adjust timeouts for this to work properly
 set timeout timeoutlen=1000 ttimeoutlen=25
 nnoremap <silent> <A-q> :wincmd c<CR>  " close
 nnoremap <silent> <A-f> :MaximizerToggle<CR>
 let g:maximizer_set_default_mapping = 0
-
-" Window resize / close commands
-nnoremap <silent> <C-l> :vertical resize +5<cr>
-nnoremap <silent> <C-h> :vertical resize -5<cr>
-nnoremap <silent> <C-k> :resize -5<cr>
-nnoremap <silent> <C-j> :resize +5<cr>
 
 " Move to next / previous buffer
 nnoremap <nowait><silent> [ :bp<CR>
@@ -238,7 +239,7 @@ endfunction
 
 augroup bracketmaps
     autocmd!
-    autocmd FileType * call MakeBracketMaps()
+    autocmd BufEnter * call MakeBracketMaps()
 augroup END
 
 " After a search, press enter/space to disable highlighting
@@ -257,7 +258,7 @@ noremap   <Down>   <NOP>
 noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
 
-" Move by displayed lines, not physical lines
+" Move by displayed lines, not physical lines (relevant when lines wrap)
 nnoremap j gj
 nnoremap k gk
 
@@ -446,7 +447,5 @@ nnoremap <silent> <A-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <A-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <A-l> :TmuxNavigateRight<cr>
 
-execute "set <A-.>=\e."
-execute "set <A-,>=\e,"
 nnoremap <silent> <A-.> :vsplit<cr>
 nnoremap <silent> <A-,> :split<cr>

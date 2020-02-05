@@ -10,7 +10,7 @@ XTerm.vt100.scrollTtyOutput: false
 XTerm.vt100.scrollKey: true
 XTerm.vt100.alwaysUseMods: true
 XTerm.vt100.selectToClipboard: true
-XTerm.vt100.metaSendsEscape: false
+XTerm.vt100.metaSendsEscape: true
 XTerm.vt100.utf8: true
 XTerm.vt100.utf8Title: true
 XTerm.vt100.colorMode:  true
@@ -33,8 +33,9 @@ XTerm.vt100.color13:    #9f7aa5
 XTerm.vt100.color14:    #638e8a
 XTerm.vt100.color15:    #e3e8e3
 XTerm.vt100.translations: #override \n\
-  Alt <Key> Up: scroll-back(1,halfpage) \n\
-  Alt <Key> Down: scroll-forw(1,halfpage) \n\
   Ctrl <Key> minus: smaller-vt-font() \n\
   Ctrl <Key> plus: larger-vt-font()
+Xft.antialias: 1
 Xft.rgba: rgba
+Xft.lcdfilter: lcddefault
+Xft.hintstyle: hintslight
