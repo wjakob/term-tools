@@ -184,15 +184,15 @@ set viminfo='50,\"100,:50,%
 " Syntax highlighting
 let &t_ut=''          " Fix background color rendering
 set t_Co=256          " Assume a 256 color terminal
-set t_ZH=[3m        " Comments in cursive..
-set t_ZR=[23m
+let &t_ZH.="\e[3m"    " Comments in italics..
+let &t_ZR.="\e[23m"
 set background=dark
-hi Folded ctermfg=248 ctermbg=237 guibg=#3a3a3a guifg=#a8a8a8
-hi Comment cterm=italic
 
 if filereadable(expand("$HOME/.vim/modules/wjakob.vim/colors/tomorrow-night.vim"))
     colorscheme tomorrow-night
 endif
+hi Folded ctermfg=248 ctermbg=237 guibg=#3a3a3a guifg=#a8a8a8
+hi Comment cterm=italic
 
 " Change cursor style depending on mode
 let &t_SI.="\e[6 q" " SI = INSERT mode (1=block, 4=underscore, 6=bar)
@@ -405,15 +405,15 @@ let g:tex_no_error=1
 au BufEnter *.tex setlocal conceallevel=2 ft=tex
 
 " Debug highlighting groups
-" function! SynStack ()
-"     for i1 in synstack(line("."), col("."))
-"         let i2 = synIDtrans(i1)
-"         let n1 = synIDattr(i1, "name")
-"         let n2 = synIDattr(i2, "name")
-"         echo n1 "->" n2
-"     endfor
-" endfunction
-" nnoremap <leader>q :call SynStack()<CR>
+function! SynStack ()
+    for i1 in synstack(line("."), col("."))
+        let i2 = synIDtrans(i1)
+        let n1 = synIDattr(i1, "name")
+        let n2 = synIDattr(i2, "name")
+        echo n1 "->" n2
+    endfor
+endfunction
+nnoremap <leader>q :call SynStack()<CR>
 
 " Vim fugitive
 set diffopt=vertical " Split diffs side-by-side

@@ -93,4 +93,6 @@ VIM Git integration
 <leader>gw           GIT write from index (aka. git add)
 <leader>gc           GIT commit with message
 <leader>gd           GIT diff
+dp                   Diff put (in 2/3-way split)
+do                   Diff get ("obtain")
 ```
