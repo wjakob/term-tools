@@ -33,6 +33,8 @@ XTerm.vt100.color13:    #9f7aa5
 XTerm.vt100.color14:    #638e8a
 XTerm.vt100.color15:    #e3e8e3
 XTerm.vt100.translations: #override \n\
+  Alt <Key> V: insert-selection(CLIPBOARD) \n\
+  Alt <Key> C: select-end(CLIPBOARD) \n\
   Ctrl <Key> BackSpace: string("\033[3~") \n\
   Ctrl <Key> minus: smaller-vt-font() \n\
   Ctrl <Key> plus: larger-vt-font()

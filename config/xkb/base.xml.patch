@@ -1,0 +1,15 @@
+--- base.xml	2020-02-05 16:27:19.916397096 +0100
++++ base.xml	2020-02-05 16:27:37.276307240 +0100
+@@ -1363,6 +1363,12 @@
+         </variant>
+         <variant>
+           <configItem>
++            <name>fc66c</name>
++            <description>English (US, FC66C)</description>
++          </configItem>
++        </variant>
++        <variant>
++          <configItem>
+             <name>euro</name>
+             <description>English (US, euro on 5)</description>
+           </configItem>
