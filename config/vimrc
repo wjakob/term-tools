@@ -342,24 +342,16 @@ fun! DeleteTrailingWS()
 endfun
 noremap <silent> <leader>dw <esc>:call DeleteTrailingWS()<cr>
 
-" Mitsuba: Highlight tabs and trailing whitespace in the most annoying way possible.
-hi BadWhitespace ctermbg=red guibg=red
-au ColorScheme * hi BadWhitespace ctermbg=red guibg=red
+" C++: warn about space errors (tabs, trailing spaces)
+let c_space_errors = 1
 
-fun! HighlightTabsAndTrailingSpaces()
-    au InsertEnter * match BadWhitespace /\(\t\|\s\+\%#\@<!$\)/
-    au InsertLeave * match BadWhitespace /\(\t\|\s\+$\)/
-endfun
-
-au BufNewFile,BufRead */mitsuba* call HighlightTabsAndTrailingSpaces()
+" C++: Convenient key binding for delimitMate
+au FileType cpp inoremap <buffer> {<CR> {<CR>}<C-o>O
 
 au BufNewFile,BufRead mitsuba.conf set syntax=jsonc
 
 au Syntax cpp syn keyword cType Float
 au Syntax cpp syn keyword cType Spectrum
-
-" Convenient key binding for delimitMate
-au FileType cpp inoremap <buffer> {<CR> {<CR>}<C-o>O
 
 " Smart indent when entering insert mode with i on empty lines
 function! IndentWithI()
