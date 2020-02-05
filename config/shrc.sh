@@ -89,6 +89,9 @@ else
     alias fd=fdfind
 fi
 
+# 'tmux-256color' is not a widely recognized terminal type
+alias ssh='TERM=xterm-256color ssh'
+
 export FZF_DEFAULT_OPTS="--extended --bind=pgup:up,pgdn:down "
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
