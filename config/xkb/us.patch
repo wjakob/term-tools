@@ -12,5 +12,4 @@
 +
 +    key <CAPS> {	[ Escape ]	};
 +    key <ESC> {	[     grave,	asciitilde	]	};
-+    key <TLDE> {	[     grave,	asciitilde	]	};
 +};

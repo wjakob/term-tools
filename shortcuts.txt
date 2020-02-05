@@ -24,6 +24,7 @@ Alt + D              Jump to directory
 Alt + P              Paste filename
 Alt + R              Search history
 Ctrl + JK            Navigate through search results
+Shift + Alt + JK     TMUX: move through scroll buffer
 
 
 VIM Normal mode
