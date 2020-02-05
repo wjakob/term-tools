@@ -297,6 +297,7 @@ cnoreabbrev ag Ack
 
 " Powerline -- fancy status line
 let g:airline_powerline_fonts = 1
+let g:airline_skip_empty_sections = 1
 let g:airline#extensions#wordcount#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
@@ -436,3 +437,8 @@ nnoremap <silent> <A-l> :TmuxNavigateRight<cr>
 
 nnoremap <silent> <A-.> :vsplit<cr>
 nnoremap <silent> <A-,> :split<cr>
+
+let g:hardtime_default_on = 1
+let g:hardtime_ignore_quickfix = 1
+let g:hardtime_allow_different_key=1
+
