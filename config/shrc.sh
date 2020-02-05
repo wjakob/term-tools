@@ -111,6 +111,16 @@ alias cmake_gcc='cmake $@ -GNinja -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gc
 alias cmake_clang='cmake $@ -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++'
 alias cmake_clean='rm -rf CMakeCache.txt CMakeFiles'
 
+function screenshot_win() {
+    FNAME=$(date +screenshot_%d%m%y_%H%M%S.png)
+    xwd | convert xwd:- png:- > $FNAME
+}
+
+function screenshot_root() {
+    FNAME=$(date +screenshot_%d%m%y_%H%M%S.png)
+    xwd -root | convert xwd:- png:- > $FNAME
+}
+
 # Other aliases
 alias grpe=grep
 alias gdb='gdb -quiet'
