@@ -425,6 +425,7 @@ nnoremap <leader>gr :Gread<CR>
 nnoremap <leader>gw :Gwrite<CR><CR>
 nnoremap <leader>gc :Gcommit -v -q<CR>
 nnoremap <leader>gd :Gdiff<CR>
+nnoremap <leader>gl :Glog<CR>
 
 " Make a markdown file by default
 autocmd VimEnter {} setlocal ft=markdown

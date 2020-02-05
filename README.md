@@ -57,6 +57,12 @@ Alt + R              Search history
 Ctrl + JK            Navigate through search results
 Shift + Alt + JK     TMUX: move through scroll buffer
 
+ZSH
+---
+<VIM keybinding>     Go to normal/insert mode using escape, 'i', 'v', etc.
+/ ?                  Normal mode: forward or reverse search through the command line
+n N                  Navigate through search results
+V                    Edit the current command line in VIM
 
 VIM Normal mode
 ---------------

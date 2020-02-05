@@ -2,12 +2,13 @@ set nocompatible
 set et
 set ts=4
 set sw=4
+
 " Replace colon and semicolon
 nnoremap ; :
 nnoremap : ;
 vnoremap ; :
 vnoremap : ;
-"
+
 " " Use Q for formatting the current paragraph (or selection)
 vnoremap Q gq
 nnoremap Q gqap
