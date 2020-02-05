@@ -155,10 +155,12 @@ if [ "$ZSH_VERSION" ]; then
         bindkey -M $mode $terminfo[kdch1] delete-char # Delete
         bindkey -M $mode '\e[3~'          delete-char
 
-        bindkey -M $mode $terminfo[kcuu1] history-beginning-search-backward-end # Down
-        bindkey -M $mode "^[[A"           history-beginning-search-backward-end # Down
-        bindkey -M $mode $terminfo[kcud1] history-beginning-search-forward-end  # Up
-        bindkey -M $mode "^[[B"           history-beginning-search-forward-end  # Up
+        bindkey -M $mode $terminfo[kcuu1] history-beginning-search-backward-end # Up
+        bindkey -M $mode "^[[A"           history-beginning-search-backward-end # Up
+        bindkey -M $mode "^[[5~"          history-beginning-search-backward-end # Ctrl-J
+        bindkey -M $mode $terminfo[kcud1] history-beginning-search-forward-end  # Down
+        bindkey -M $mode "^[[B"           history-beginning-search-forward-end  # Down
+        bindkey -M $mode "^[[6~"          history-beginning-search-forward-end  # Ctrl-K
     done
 
     # ls after every cd

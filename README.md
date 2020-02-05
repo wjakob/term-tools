@@ -39,6 +39,7 @@ Basics
 Shift + Alt + JK     TMUX: scroll up/down
 Ctrl + HJKL          PgUp/PgDown/Home/End
 Ctrl + Backspace     Delete
+Ctrl + JK            Navigate through zsh history
 
 Splits/Panes
 ------------
