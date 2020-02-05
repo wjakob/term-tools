@@ -144,7 +144,7 @@ set complete-=i                " Don't parse headers in autocompletions
 " Open 'tab completion' with Ctrl-Space
 inoremap <Nul> <C-n>
 
-" Navigate tab completion with PageDOwn (Ctrl-J) and PageUp (Ctrl-K)
+" Navigate tab completion with PageDown (Ctrl-J) and PageUp (Ctrl-K)
 inoremap <expr> <PageUp>   ((pumvisible())?("\<C-p>"):("\<PageUp>"))
 inoremap <expr> <PageDown> ((pumvisible())?("\<C-n>"):("\<PageDown>"))
 
@@ -270,10 +270,6 @@ if has("gui_running")
   set guioptions=-t
 endif
 
-if has('mac') && !has('nvim')
-    fixdel
-endif
-
 " Jump to last known line when opening a file (change ' to ` to do column too)
 au BufReadPost *
   \ if line("'\"") > 0 && line("'\"") <= line("$") |
@@ -297,7 +293,7 @@ au BufNewFile,BufRead *.geo  setlocal filetype=glsl
 
 " The silver searcher integration
 let g:ackprg = 'ag --vimgrep'
-"cnoreabbrev ag Ack
+cnoreabbrev ag Ack
 
 " Powerline -- fancy status line
 let g:airline_powerline_fonts = 1
@@ -432,7 +428,6 @@ nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gr :Gread<CR>
 nnoremap <leader>gw :Gwrite<CR><CR>
 nnoremap <leader>gc :Gcommit -v -q<CR>
-nnoremap <leader>ga :Git add %:p<CR><CR>
 nnoremap <leader>gd :Gdiff<CR>
 
 " Make a markdown file by default
