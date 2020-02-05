@@ -16,13 +16,16 @@ __fsel() {
 }
 
 fzf-file-widget() {
-  LBUFFER="${LBUFFER}$(__fsel)"
+  if [ -z $LBUFFER ]; then
+      LBUFFER="vim $(__fsel)"
+  else
+      LBUFFER="${LBUFFER}$(__fsel)"
+  fi
   local ret=$?
   zle reset-prompt
   return $ret
 }
-zle     -N   fzf-file-widget
-bindkey "ð"    fzf-file-widget
+zle     -N     fzf-file-widget
 bindkey "^[p"  fzf-file-widget
 
 # Ensure precmds are run after cd
@@ -53,7 +56,6 @@ fzf-cd-widget() {
 }
 
 zle     -N     fzf-cd-widget
-bindkey "ã"    fzf-cd-widget
 bindkey "^[d"  fzf-cd-widget
 
 # ALT-R - Paste the selected command from history into the command line
