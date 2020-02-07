@@ -69,7 +69,8 @@ VIM Normal mode
 <space>              Toggle folds
 <enter>              Clear search results (press enter twice after search)
 Q                    Justify selection/paragraph to 80 cols
-: ;                  ':' and ';' are swapped (saves a 'shift' key on very common operations)
+: ;                  ':' and ';' are swapped (saves a 'shift' key on very
+                     common operations)
 Ctrl + Space         Open context completion
 Ctrl + JK            Navigate through context completion
 Alt + P              Open a file using FZF
@@ -78,6 +79,8 @@ Alt + P              Open a file using FZF
 U                    Undo tree
 ,m                   Launch a compilation job (using 'ninja')
 ,,                   Comment the line or visual selection
+,a                   Align columns of a table (followed by an alignment character,
+                     e.g. '=' or '2=' for the second occurrence)
 
 
 VIM C++ semantic integration

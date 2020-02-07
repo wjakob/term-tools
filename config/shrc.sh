@@ -130,11 +130,13 @@ function screenshot_root() {
 alias grpe=grep
 alias gdb='gdb -quiet'
 alias n=ninja
+alias p=python3
 alias python=python3
 alias ipython=ipython3
 alias pip=pip3
-alias octave='octave --no-gui-libs'
 alias pdb='python3 -u -m pdb -c continue'
+alias pytest='python3 -m pytest'
+alias octave='octave --no-gui-libs'
 
 # zsh-specific configuration
 if [ "$ZSH_VERSION" ]; then
