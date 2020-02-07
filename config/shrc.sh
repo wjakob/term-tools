@@ -116,11 +116,13 @@ alias cmake_clean='rm -rf CMakeCache.txt CMakeFiles'
 
 function screenshot_win() {
     FNAME=$(date +screenshot_%d%m%y_%H%M%S.png)
+    echo "Writing to $FNAME .."
     xwd | convert xwd:- png:- > $FNAME
 }
 
 function screenshot_root() {
     FNAME=$(date +screenshot_%d%m%y_%H%M%S.png)
+    echo "Writing to $FNAME .."
     xwd -root | convert xwd:- png:- > $FNAME
 }
 

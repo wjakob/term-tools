@@ -1,0 +1,9 @@
+# move to ~/.config/autostart
+[Desktop Entry]
+Type=Application
+Exec=bash -c "(sleep 1; xrdb -m /home/wjakob/.Xresources)&"
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=xresources
+Comment=force reloading Xresources

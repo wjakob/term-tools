@@ -10,5 +10,5 @@ if [ -e ~/.zshrc ]; then
     echo "Error: file already exists.  Move or delete ~/.zshrc"
 else
     echo "Installing .zshrc .."
-	cp $TERM_TOOLS/config/zshrc ~/.zshrc
+    cp $TERM_TOOLS/config/zshrc ~/.zshrc
 fi
