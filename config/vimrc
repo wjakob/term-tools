@@ -63,6 +63,9 @@ Plug 'christoomey/vim-tmux-navigator'
 " Have a hard time :)
 Plug 'takac/vim-hardtime'
 
+" Easily comment/uncomment code
+Plug 'scrooloose/nerdcommenter', { 'on': '<plug>NERDCommenterToggle' }
+
 " Initialize plugin system
 call plug#end()
 
@@ -445,7 +448,15 @@ nnoremap <silent> <A-l> :TmuxNavigateRight<cr>
 nnoremap <silent> <A-.> :vsplit<cr>
 nnoremap <silent> <A-,> :split<cr>
 
-let g:hardtime_default_on = 1
+let g:hardtime_default_on = 0
 let g:hardtime_ignore_quickfix = 1
 let g:hardtime_allow_different_key=1
 
+" Comments
+let NERDCreateDefaultMappings=0
+let NERDCommentEmptyLines=1
+let NERDSpaceDelims=1
+let NERDTrimTrailingWhitespace=1
+let NERDDefaultNesting=0
+nmap <leader><leader> <plug>NERDCommenterToggle
+vmap <leader><leader> <plug>NERDCommenterToggle

@@ -66,7 +66,6 @@ V                    Edit the current command line in VIM
 
 VIM Normal mode
 ---------------
-
 <space>              Toggle folds
 <enter>              Clear search results (press enter twice after search)
 Q                    Justify selection/paragraph to 80 cols
@@ -75,31 +74,32 @@ Ctrl + Space         Open context completion
 Ctrl + JK            Navigate through context completion
 Alt + P              Open a file using FZF
 
-<leader>m            Launch a compilation job (using 'ninja')
 :ag [keywords]       Search for a file using 'ag'
 U                    Undo tree
+,m                   Launch a compilation job (using 'ninja')
+,,                   Comment the line or visual selection
 
 
-VIM C++ integration
--------------------
+VIM C++ semantic integration
+----------------------------
 
 D                    Jump to definition
 R                    Find all references
-<leader>l            Format selected code using 'clang-format'
+,l                   Format selected code using 'clang-format'
 
 
 VIM Git integration
 -------------------
-<leader>j            Jump to next modified hunk
-<leader>k            Jump to previous modified hunk
-<leader>K            Jump to first modified hunk
-<leader>J            Jump to last modified hunk
-<leader>gs           GIT status
+,k                   Jump to previous modified hunk
+,j                   Jump to next modified hunk
+,K                   Jump to first modified hunk
+,J                   Jump to last modified hunk
+,gs                  GIT status
 -                    Toggle files to be committed in GIT status
-<leader>gr           GIT read from index  (aka. git co ..)
-<leader>gw           GIT write from index (aka. git add)
-<leader>gc           GIT commit with message
-<leader>gd           GIT diff
+,gr                  GIT read from index  (aka. git co ..)
+,gw                  GIT write from index (aka. git add)
+,gc                  GIT commit with message
+,gd                  GIT diff
 dp                   Diff put (in 2/3-way split)
 do                   Diff get ("obtain")
 ```
