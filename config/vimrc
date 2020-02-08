@@ -42,9 +42,6 @@ Plug 'mileszs/ack.vim', { 'on': 'Ack' }
 " The silver searcher integration
 Plug 'mbbill/undotree'
 
-" Python PEP8 checker
-Plug 'nvie/vim-flake8'
-
 " Command to temporily maximize a buffer
 Plug 'szw/vim-maximizer'
 
@@ -195,7 +192,6 @@ let &t_ut=''          " Fix background color rendering
 set t_Co=256          " Assume a 256 color terminal
 let &t_ZH.="\e[3m"    " Comments in italics..
 let &t_ZR.="\e[23m"
-set background=dark
 
 if filereadable(expand("$HOME/.vim/modules/wjakob.vim/colors/tomorrow-night.vim"))
     colorscheme tomorrow-night
@@ -316,7 +312,14 @@ let g:airline_extensions = ['tabline', 'ale']
 
 " 2-character Sneak (default)
 let g:sneak#label = 1
-let g:sneak#s_next = 1
+let g:sneak#s_next = 0
+nmap s <Plug>Sneak_s
+nmap S <Plug>Sneak_S
+xmap s <Plug>Sneak_s
+xmap S <Plug>Sneak_S
+omap s <Plug>Sneak_s
+omap S <Plug>Sneak_S
+
 highlight Sneak ctermfg=160 ctermbg=232
 highlight SneakLabel ctermfg=160 ctermbg=232
 
@@ -434,7 +437,7 @@ nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>gl :Glog<CR>
 
 " Make a markdown file by default
-autocmd VimEnter {} setlocal ft=markdown
+autocmd VimEnter {} setlocal ft=txt
 
 " tmux integration
 let g:tmux_navigator_no_mappings = 1
@@ -451,7 +454,7 @@ nnoremap <silent> <A-l> :TmuxNavigateRight<cr>
 nnoremap <silent> <A-.> :vsplit<cr>
 nnoremap <silent> <A-,> :split<cr>
 
-let g:hardtime_default_on = 0
+let g:hardtime_default_on = 1
 let g:hardtime_ignore_quickfix = 1
 let g:hardtime_allow_different_key=1
 
