@@ -288,8 +288,8 @@ au BufReadPost *
 au FileType text,tex,plaintex,html,gitcommit setlocal spell
 
 " Highlight repeated words
-" au FileType text,tex,plaintex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
-" au FileType text,tex,plaintex,html hi link TmlDoubleWords WarningMsg
+au FileType text,tex,plaintex,html syn match TmlDoubleWords /\c\<\(\S\+\)\_s\+\1\ze\_s/ containedin=ALL
+au FileType text,tex,plaintex,html hi link TmlDoubleWords WarningMsg
 
 " GLSL syntax highlighting
 au BufNewFile,BufRead *.frag setlocal filetype=glsl
