@@ -310,9 +310,14 @@ let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline_extensions = ['tabline', 'ale']
 
-" 2-character Sneak (default)
+" Enhanced 'f', 's', 't' search using vim-sneak
 let g:sneak#label = 1
 let g:sneak#s_next = 0
+let g:sneak#f_reset = 1
+let g:sneak#t_reset = 1
+let g:sneak#prompt = '> '
+let g:sneak#absolute_dir = 0
+
 nmap s <Plug>Sneak_s
 nmap S <Plug>Sneak_S
 xmap s <Plug>Sneak_s
@@ -320,8 +325,25 @@ xmap S <Plug>Sneak_S
 omap s <Plug>Sneak_s
 omap S <Plug>Sneak_S
 
-highlight Sneak ctermfg=160 ctermbg=232
-highlight SneakLabel ctermfg=160 ctermbg=232
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+xmap f <Plug>Sneak_f
+xmap F <Plug>Sneak_F
+omap f <Plug>Sneak_f
+omap F <Plug>Sneak_F
+
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+xmap t <Plug>Sneak_t
+xmap T <Plug>Sneak_T
+omap t <Plug>Sneak_t
+omap T <Plug>Sneak_T
+
+nmap <expr> N sneak#is_sneaking() ? '<Plug>Sneak_,' : 'N'
+nmap <expr> n sneak#is_sneaking() ? '<Plug>Sneak_;' : 'n'
+
+highlight Sneak cterm=bold ctermbg=71 ctermfg=255
+highlight SneakLabel cterm=bold ctermbg=71 ctermfg=255
 
 " Insert mode -- don't create/close folds when typing
 aug NoInsertFolding
@@ -391,6 +413,7 @@ set makeprg='ninja'
 let g:dispatch_no_maps = 1 " We want to set up our own keybindings
 nnoremap <silent> <Leader>m :Make<CR>
 au BufEnter *.tex nnoremap <silent> <buffer> <Leader>m :Dispatch! make<CR>
+au BufEnter *.py nnoremap <silent> <buffer> <Leader>t :Dispatch bash -c "export COLUMNS=30; pytest -q --color=no --tb=short %"<CR>
 
 " Asynchronous linter
 let g:ale_linters = {
