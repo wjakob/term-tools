@@ -24,7 +24,7 @@ PR_COL4_FG="250"
 PR_COL5_BG="237" # Return value
 PR_COL5_FG="250"
 
-if [ ! -z $SSH_CLIENT ]; then
+if [ ! -z $SSH_CONNECTION ]; then
     PR_HOSTNAME="$FG[$PR_COL1_FG]$BG[$PR_COL1_BG] %m $FG[$PR_COL1_BG]$BG[$PR_COL2_BG]$PR_L"
 else
     PR_HOSTNAME=""
