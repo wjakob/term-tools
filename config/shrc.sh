@@ -43,7 +43,7 @@ if uname | grep Darwin > /dev/null; then
     }
 
     function skim () {
-        /Applications/Skim.app/Contents/MacOS/Skim $@ &> /dev/null &
+        /Applications/Skim.app/Contents/MacOS/Skim $@ &|
     }
 
     # Don't include "_something" AppleDouble files in tar files, etc.
@@ -178,6 +178,9 @@ if [ "$ZSH_VERSION" ]; then
 
     # no error if glob fails to expand (scp fix)
     unsetopt nomatch
+
+    # No need to 'bg' jobs before 'disown' (Ctrl-Z disown is enough)
+    setopt AUTO_CONTINUE
 
     # Automatically escape wildcards in 'scp', 'rsync', and any command with http/ftp args
     autoload -U url-quote-magic
