@@ -106,3 +106,10 @@ VIM Git integration
 dp                   Diff put (in 2/3-way split)
 do                   Diff get ("obtain")
 ```
+
+Miscellaneous features
+----------------------
+
+When running a SSH session, tmux will forward pane/window navigation key
+bindings to the remote that is also presumed to run tmux. Prefix Ctrl-A to
+execute them locally.
