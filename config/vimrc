@@ -439,6 +439,8 @@ let g:tex_comment_nospell=1
 let g:tex_no_error=1
 au BufEnter *.tex setlocal conceallevel=2 ft=tex
 
+nnoremap <silent> <leader>t :Dispatch!/Applications/Skim.app/Contents/SharedSupport/displayline -g <C-r>=line('.')<cr> *.pdf %<<CR>
+
 " Debug highlighting groups
 function! SynStack ()
     for i1 in synstack(line("."), col("."))

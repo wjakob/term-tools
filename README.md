@@ -77,10 +77,11 @@ Alt + P              Open a file using FZF
 
 :ag [keywords]       Search for a file using 'ag'
 U                    Undo tree
-,m                   Launch a compilation job (using 'ninja')
 ,,                   Comment the line or visual selection
+,m                   Launch a compilation job (using 'ninja')
 ,a                   Align columns of a table (followed by an alignment character,
                      e.g. '=' or '2=' for the second occurrence)
+,t                   SyncTeX: highlight the selected line in Skim.app.
 
 
 VIM C++ semantic integration
@@ -89,7 +90,6 @@ VIM C++ semantic integration
 D                    Jump to definition
 R                    Find all references
 ,l                   Format selected code using 'clang-format'
-
 
 VIM Git integration
 -------------------
