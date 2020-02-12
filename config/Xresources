@@ -32,6 +32,7 @@ XTerm.vt100.color12:    #789bad
 XTerm.vt100.color13:    #9f7aa5
 XTerm.vt100.color14:    #638e8a
 XTerm.vt100.color15:    #e3e8e3
+Xterm.vt100.disallowedWindowOps: 20,21,SetXprop
 XTerm.vt100.translations: #override \n\
   Alt <Key> V: insert-selection(CLIPBOARD) \n\
   Alt <Key> C: select-end(CLIPBOARD) \n\
