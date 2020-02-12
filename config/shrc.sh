@@ -21,11 +21,6 @@ export HISTFILESIZE=1000000
 # enable core dumps
 ulimit -c unlimited 2>/dev/null
 
-# 256 colors
-if [[ "$TERM" == "xterm" ]]; then
-    export TERM="xterm-256color"
-fi
-
 if uname | grep Darwin > /dev/null; then
     # Mac specific commands
 
@@ -52,8 +47,8 @@ if uname | grep Darwin > /dev/null; then
     # Colors in LS
     alias ls='ls -G'
 else
-    alias gnome-open=gvfs-open
-    alias open=gvfs-open
+    alias open="gio open"
+    alias gnome-open="gio open"
     alias gdate=date
 
     function ls_safe {
@@ -114,19 +109,19 @@ alias cmake_rel='cmake $@ -GNinja -DCMAKE_BUILD_TYPE=RELEASE'
 
 # CMake aliases for various compilers
 alias cmake_gcc='cmake $@ -GNinja -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc'
-alias cmake_clang='cmake $@ -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++'
+alias cmake_clang='CXXFLAGS="-I$LIBCPP_DIR" cmake $@ -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++'
 alias cmake_clean='rm -rf CMakeCache.txt CMakeFiles'
 
 function screenshot_win() {
     FNAME=$(date +screenshot_%d%m%y_%H%M%S.png)
-    echo "Writing to $FNAME .."
     xwd | convert xwd:- png:- > $FNAME
+    echo "Wrote image to $FNAME."
 }
 
 function screenshot_root() {
     FNAME=$(date +screenshot_%d%m%y_%H%M%S.png)
-    echo "Writing to $FNAME .."
     xwd -root | convert xwd:- png:- > $FNAME
+    echo "Wrote image to $FNAME."
 }
 
 # Other aliases

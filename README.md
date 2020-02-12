@@ -1,5 +1,8 @@
-term-tools
-==========
+# term-tools
+
+<p align="center">
+   <img src="https://github.com/wjakob/term-tools/raw/master/screenshot.png" alt="screenshot" width="400"/>
+</p>
 
 Wenzel's terminal setup. Contains nice default settings for
 
@@ -8,8 +11,41 @@ Wenzel's terminal setup. Contains nice default settings for
 * zsh
 * git
 * octave
+* karabiner
+* kitty
 * xterm
-* karabiner (OSX)
+
+The VIM configuration enables a few powerful features that I find very useful
+for development and writing research papers:
+
+* Code completion & validation for C++
+* Code validation & PEP8 checks for Python
+* Mathematical symbols in TeX using Unicode
+
+Navigation through through tmux "pane"s and VIM windows works transparently
+using the same set of key bindings.
+
+On Linux, this is intended to be used with good old xterm, which blows modern
+terminals (Gnome, KDE) out of the water especially when combined with tmux. On
+MacOS, use kitty (https://sw.kovidgoyal.net/kitty/). Everything (vim, tmux,
+zsh) consistently uses the tomorrow night theme and powerline fonts. If you use
+a different terminal, a number of carefully tweaked interactions won't work
+anymore--you have been warned :).
+
+The whole setup is optimized to have extremely low latency, both when starting
+terminal/zsh/tmux/vim and during normal usage. For instance, the terminal
+prompt shows the current repository branch (very quick to determine), but it
+does not inspect whether there are changed files, which can easily add a few
+hundred milliseconds of latency to each shell interaction when navigating
+through complex projects. Over time, I have progressively replaced popular but
+very heavy extensions (e.g. oh-my-zsh for ZSH, or YouCompleteMe for VIM) since
+they added too much latency.
+
+The keyboard layout in tmux and VIM is optimized around the home row
+(HJKL-style navigation) and, e.g., also maps panel navigation and
+home/end/pageup/pagedown into Alt+HJKL and Ctrl+HJKL. It soon feels very
+natural, and it is no longer necessary to use the right portion of the
+keyboard.
 
 How to install
 --------------
