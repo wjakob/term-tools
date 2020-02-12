@@ -18,6 +18,25 @@
       ]
     },
     {
+      "description": "Control + Backspace -> Delete",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "delete_or_backspace",
+            "modifiers": {
+              "mandatory": [ "control" ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "delete_forward"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "description": "Escape -> Grave accent + Tilde",
       "manipulators": [
         {
@@ -44,30 +63,6 @@
           "to": [
             {
               "key_code": "left_alt"
-            }
-          ],
-          "conditions": [
-            {
-              "type": "frontmost_application_if",
-              "bundle_identifiers": [
-                "^net.kovidgoyal.kitty"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": "Left Alt to Command in Kitty.app only",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {
-            "key_code": "left_alt"
-          },
-          "to": [
-            {
-              "key_code": "left_command"
             }
           ],
           "conditions": [
