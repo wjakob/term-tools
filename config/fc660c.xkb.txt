@@ -1,4 +1,6 @@
 Add the following two lines to 'us(basic)' in /usr/share/X11/xkb/symbols/us
 
-    key <CAPS> {    [ Escape ]  };
-    key <ESC> { [     grave,    asciitilde  ]   };
+    key <TLDE> {	[     grave,	asciitilde	]	};
+    key <CAPS> {	[ Escape ]	};
+    key <ESC> {	[     grave,	asciitilde	]	};
+    key <LWIN> {	[ Alt_L		]	};
