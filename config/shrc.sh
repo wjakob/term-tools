@@ -153,8 +153,10 @@ if [ "$ZSH_VERSION" ]; then
 
         bindkey -M $mode $terminfo[khome] beginning-of-line
         bindkey -M $mode "^A"             beginning-of-line
+        bindkey -M $mode "\e[1~"          beginning-of-line
         bindkey -M $mode $terminfo[kend]  end-of-line
         bindkey -M $mode "^E"             end-of-line
+        bindkey -M $mode "\e[4~"          end-of-line
         bindkey -M $mode '\e[3~'          delete-char
 
         bindkey -M $mode $terminfo[kdch1] delete-char # Delete
