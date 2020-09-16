@@ -586,3 +586,6 @@ JIT
 C99
 LLVM
 unbiasedness
+GMMs
+backpropagations
+adjointness

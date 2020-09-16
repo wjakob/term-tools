@@ -13,7 +13,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'justinmk/vim-dirvish'
 
 " Linting / compilation / autocompletion
-Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
 
 " Quick motions that search for 2 characters
 Plug 'justinmk/vim-sneak'
@@ -62,6 +62,9 @@ Plug 'christoomey/vim-tmux-navigator'
 
 " Easily comment/uncomment code
 Plug 'scrooloose/nerdcommenter', { 'on': '<plug>NERDCommenterToggle' }
+
+" Adjust makeprg dynamically
+Plug 'johnsyweb/vim-makeshift'
 
 " Initialize plugin system
 call plug#end()
@@ -410,7 +413,12 @@ au BufNewFile,BufRead *.html setlocal filetype=htmldjango
 au FileType cmake setlocal tabstop=2 shiftwidth=2
 
 " When reading a buffer (after 1s), and when writing.
-set makeprg='ninja'
+" set makeprg='ninja'
+let g:makeshift_systems = {
+        \'Makefile': 'make',
+        \'build.ninja': 'ninja'
+    \}
+let g:makeshift_ignored = ['Jamfile', 'Rakefile', 'SConstruct', 'build.gradle', 'build.xml', 'mix.exs', 'pom.xml', 'wscript']
 
 " Build system -- run make/ninja and don't prompt for ENTER
 let g:dispatch_no_maps = 1 " We want to set up our own keybindings
@@ -440,7 +448,8 @@ let g:tex_conceal="abmg"
 let g:tex_fold_enabled=1
 let g:tex_comment_nospell=1
 let g:tex_no_error=1
-au BufEnter *.tex setlocal conceallevel=2 ft=tex nowrap
+
+au BufEnter *.tex setlocal conceallevel=2 ft=tex nowrap foldmethod=manual
 
 nnoremap <silent> <leader>t :Dispatch!/Applications/Skim.app/Contents/SharedSupport/displayline -g <C-r>=line('.')<cr> *.pdf %<<CR>
 

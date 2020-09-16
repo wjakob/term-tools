@@ -100,6 +100,8 @@ alias pdflatex='pdflatex -interaction=nonstopmode -file-line-error -halt-on-erro
 # Ninja: fancy status message
 export NINJA_STATUS="[%u/%r/%f] "
 
+export CMAKE_GENERATOR=Ninja
+
 # Generate a compile_commands.json file
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1'
 
