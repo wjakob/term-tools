@@ -38,7 +38,7 @@ if uname | grep Darwin > /dev/null; then
     }
 
     function skim () {
-        /Applications/Skim.app/Contents/MacOS/Skim $@ &|
+        /Applications/Skim.app/Contents/MacOS/Skim $@ &
     }
 
     # Don't include "_something" AppleDouble files in tar files, etc.
