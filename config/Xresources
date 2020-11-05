@@ -1,3 +1,5 @@
+*customization: -color
+XTerm.termName: xterm-256color
 XTerm.vt100.geometry: 94x28
 XTerm.vt100.loginShell: true
 XTerm.vt100.scrollBar: false
@@ -34,6 +36,7 @@ XTerm.vt100.color14:    #638e8a
 XTerm.vt100.color15:    #e3e8e3
 Xterm.vt100.disallowedWindowOps: 20,21,SetXprop
 XTerm.vt100.translations: #override \n\
+  <Key> F11: fullscreen(toggle) \n\
   Alt <Key> V: insert-selection(CLIPBOARD) \n\
   Alt <Key> C: select-end(CLIPBOARD) \n\
   Ctrl <Key> BackSpace: string("\033[3~") \n\
