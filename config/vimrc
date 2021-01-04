@@ -63,9 +63,6 @@ Plug 'christoomey/vim-tmux-navigator'
 " Easily comment/uncomment code
 Plug 'scrooloose/nerdcommenter', { 'on': '<plug>NERDCommenterToggle' }
 
-" Adjust makeprg dynamically
-Plug 'johnsyweb/vim-makeshift'
-
 " Initialize plugin system
 call plug#end()
 
@@ -412,13 +409,7 @@ au BufNewFile,BufRead *.html setlocal filetype=htmldjango
 " Different indentation settings for CMake
 au FileType cmake setlocal tabstop=2 shiftwidth=2
 
-" When reading a buffer (after 1s), and when writing.
-" set makeprg='ninja'
-let g:makeshift_systems = {
-        \'Makefile': 'make',
-        \'build.ninja': 'ninja'
-    \}
-let g:makeshift_ignored = ['Jamfile', 'Rakefile', 'SConstruct', 'build.gradle', 'build.xml', 'mix.exs', 'pom.xml', 'wscript']
+set makeprg='ninja'
 
 " Build system -- run make/ninja and don't prompt for ENTER
 let g:dispatch_no_maps = 1 " We want to set up our own keybindings

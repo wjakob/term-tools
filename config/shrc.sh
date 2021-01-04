@@ -103,7 +103,7 @@ export NINJA_STATUS="[%u/%r/%f] "
 export CMAKE_GENERATOR=Ninja
 
 # Generate a compile_commands.json file
-alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1'
+# alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1'
 
 # Convenience flags to switch between release and debug mode
 alias cmake_deb='cmake $@ -GNinja -DCMAKE_BUILD_TYPE=DEBUG'
