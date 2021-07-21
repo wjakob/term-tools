@@ -15,7 +15,6 @@
     pullall = "!f(){ git pull \"$@\" && git submodule update --init --recursive; }; f"
     pr  = "!f() { git fetch -fu ${2:-origin} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
     pr-clean = "!git for-each-ref refs/heads/pr/* --format='%(refname)' | while read ref ; do branch=${ref#refs/heads/} ; git branch -D $branch ; done"
-    purify = clean -f -d -x
 [push]
     default = upstream
 [mergetool "araxis"]
@@ -31,12 +30,5 @@
     helper = store
 [color]
     ui = auto
-[alias]
-    pr  = "!f() { git fetch -fu ${2:-origin} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
-    pr-clean = "!git for-each-ref refs/heads/pr/* --format='%(refname)' | while read ref ; do branch=${ref#refs/heads/} ; git branch -D $branch ; done"
-    rhm = reset --hard origin/master
-[filter "lfs"]
-    clean = git-lfs clean -- %f
-    smudge = git-lfs smudge -- %f
-    process = git-lfs filter-process
-    required = true
+[pull]
+	ff = only
