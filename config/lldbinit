@@ -7,3 +7,6 @@ settings set thread-format "\x1b\x5b42;1mthread #${thread.index}: tid = ${thread
 #command script import ~/.lldb/enoki_lldb.py
 
 command alias threads thread list 
+
+# Don't break at _dyld_start when another process is launched (tends to happen with Python)
+settings set target.process.stop-on-exec false
