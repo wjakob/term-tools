@@ -10,6 +10,9 @@ if [ -t 1 ]; then
     stty -ixon
 fi
 
+# Avoid XSMP latencies in vim launch
+export SESSION_MANAGER=
+
 # vim by default
 export EDITOR="vim"
 

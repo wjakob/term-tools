@@ -309,7 +309,6 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
-" let g:airline_extensions = ['tabline', 'ale']
 let g:airline_extensions = ['tabline']
 
 " Enhanced 'f', 's', 't' search using vim-sneak
@@ -419,21 +418,21 @@ au BufEnter *.tex nnoremap <silent> <buffer> <Leader>m :Dispatch! make<CR>
 au BufEnter *.py nnoremap <silent> <buffer> <Leader>t :Dispatch bash -c "export COLUMNS=30; pytest -q --color=no --tb=short %"<CR>
 
 " Asynchronous linter
-let g:ale_linters = {
-\   'cpp': ['clangd'],
-\   'python': ['pycodestyle', 'pyflakes']
-\}
-
-let g:ale_completion_enabled = 1
-let g:ale_virtualenv_dir_names = []
-let g:ale_cache_executable_check_failures = 1
-
-let g:ale_pattern_options = {
-\   '.*\.tex$': {'ale_enabled': 0}
-\}
-
-nnoremap <silent> D :ALEGoToDefinition<CR>
-nnoremap <silent> R :ALEFindReferences<CR>
+" let g:ale_linters = {
+" \   'cpp': ['clangd'],
+" \   'python': ['pycodestyle', 'pyflakes']
+" \}
+"
+" let g:ale_completion_enabled = 1
+" let g:ale_virtualenv_dir_names = []
+" let g:ale_cache_executable_check_failures = 1
+"
+" let g:ale_pattern_options = {
+" \   '.*\.tex$': {'ale_enabled': 0}
+" \}
+"
+" nnoremap <silent> D :ALEGoToDefinition<CR>
+" nnoremap <silent> R :ALEFindReferences<CR>
 
 " TeX settings
 let g:tex_conceal="abmg"
