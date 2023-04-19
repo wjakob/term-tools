@@ -1,6 +1,6 @@
 [user]
-    email = wenzel.jakob@epfl.ch
-    name = Wenzel Jakob
+	email = wenzel.jakob@epfl.ch
+	name = Wenzel Jakob
 [submodule]
     fetchJobs = 4
 [alias]
@@ -32,3 +32,5 @@
     ui = auto
 [pull]
 	ff = only
+[init]
+	defaultBranch = master

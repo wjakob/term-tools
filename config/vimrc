@@ -63,6 +63,8 @@ Plug 'christoomey/vim-tmux-navigator'
 " Easily comment/uncomment code
 Plug 'scrooloose/nerdcommenter', { 'on': '<plug>NERDCommenterToggle' }
 
+Plug 'benknoble/vim-racket'
+
 " Initialize plugin system
 call plug#end()
 
@@ -371,6 +373,8 @@ au FileType cpp nnoremap <silent> <buffer> <leader>l 1GVG:py3f $TERM_TOOLS/confi
 au FileType cpp vnoremap <silent> <buffer> <leader>l :py3f $TERM_TOOLS/config/clang-format.py<cr>
 au FileType cuda nnoremap <silent> <buffer> <leader>l 1GVG:py3f $TERM_TOOLS/config/clang-format.py<cr>
 au FileType cuda vnoremap <silent> <buffer> <leader>l :py3f $TERM_TOOLS/config/clang-format.py<cr>
+
+au BufNewFile,BufRead *.mm set filetype=cpp
 
 " Delete trailing white space
 fun! DeleteTrailingWS()
