@@ -745,3 +745,8 @@ multilinear
 fixups
 ABI
 metaclass
+arclength
+binormal
+bitangent
+Bezier
+autodiff
