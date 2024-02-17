@@ -21,6 +21,7 @@
     path = /Applications/Araxis Merge.app/Contents/Utilities/compare
 [merge]
     tool = araxis
+	conflictstyle = zdiff3
 [diff]
     tool = araxis
 [core]
@@ -30,7 +31,13 @@
     helper = store
 [color]
     ui = auto
-[pull]
-	ff = only
 [init]
 	defaultBranch = master
+[rerere]
+	enabled = true
+[column]
+	ui = auto
+[branch]
+	sort = -committerdate
+[pull]
+	ff = only
