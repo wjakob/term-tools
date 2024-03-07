@@ -771,3 +771,6 @@ callables
 stringification
 eigendecomposition
 docstrings
+iterable
+nanobind's
+ndarray
