@@ -14,7 +14,7 @@ fi
 export SESSION_MANAGER=
 
 # vim by default
-export EDITOR="vim"
+export EDITOR="nvim"
 
 # Store extensive history
 export SAVEHIST=10000

@@ -47,8 +47,6 @@ vim.opt.laststatus = 3
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
--- and for left/right
-vim.opt.sidescrolloff = 5
 
 -- Make internal tab-completion more intuitive:
 -- 1st tab: fills longest completion and shows options,
@@ -81,11 +79,18 @@ vim.keymap.set('n', ';', ':', { noremap=true })
 vim.keymap.set('v', ':', ';', { noremap=true })
 vim.keymap.set('v', ';', ':', { noremap=true })
 
+-- Disable horizontal/vertical mouse wheel scrolling
+vim.keymap.set('n', '<ScrollWheelLeft>', '', { noremap=true })
+vim.keymap.set('n', '<ScrollWheelRight>', '', { noremap=true })
+
 --  Use Alt+<hjkl> to switch between windows
 vim.keymap.set('n', '<A-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<A-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<A-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<A-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<A-.>', '<cmd>vsplit<cr>', { desc = 'split the window vertically' })
+vim.keymap.set('n', '<A-,>', '<cmd>split<cr>', { desc = 'split the window horizontally' })
+
 
 -- Jump back and forth when navigating through multiple buffers (esp. with JSP go to reference)
 vim.keymap.set('n', 'gj', '<C-o>', { noremap=true, nowait=true, silent=true, desc='Jump list: next' })
@@ -110,6 +115,10 @@ vim.opt.backupdir = backup_dir
 vim.opt.backup = true
 
 vim.opt.spellfile = vim.env.TERM_TOOLS .. '/config/spell.en.utf-8.add'
+vim.opt.spelllang = 'en_us'
+
+-- Use njnja-build as 'Make' program by default
+vim.opt.makeprg='ninja'
 
 -- Sync clipboard between OS and Neovim.
 vim.opt.clipboard = 'unnamedplus'
@@ -181,7 +190,7 @@ require("lazy").setup({
       vim.cmd('hi LineNr guifg=#404040')
       vim.cmd('hi VertSplit guifg=#505050')
 
-      -- visually highlight spelling mistakes
+      -- visually highhight spelling mistakes
       vim.cmd('hi SpellBad gui=bold,undercurl guifg=#ff3333')
     end,
   },
@@ -224,6 +233,13 @@ require("lazy").setup({
     opts={ }
   },
 
+  -- Personal settings
+  {
+    "wjakob/wjakob.nvim",
+    opts={ }
+  },
+
+  -- Nice visual notifications
   {
     "rcarriga/nvim-notify",
     config = function()
@@ -231,6 +247,12 @@ require("lazy").setup({
       vim.notify = notify
       notify.setup()
     end
+  },
+
+  -- Async job processor (builds, etc.)
+  {
+    'stevearc/overseer.nvim',
+    lazy=true
   },
 
   -- Git decorations
@@ -248,27 +270,27 @@ require("lazy").setup({
           end
 
           -- Navigation
-          map('n', ']c', function()
-            if vim.wo.diff then return ']c' end
+          map('n', ']h', function()
+            if vim.wo.diff then return ']h' end
             vim.schedule(function() gs.next_hunk() end)
             return '<Ignore>'
-          end, {expr=true})
+          end, {expr=true, desc="Git: Next [H]unk"})
 
           map('n', '[c', function()
-            if vim.wo.diff then return '[c' end
+            if vim.wo.diff then return '[h' end
             vim.schedule(function() gs.prev_hunk() end)
             return '<Ignore>'
-          end, {expr=true})
+          end, {expr=true, desc="Git: Previous [H]unk"})
 
           -- Actions
-          map('n', '<leader>hs', gs.stage_hunk, { desc='[s]tage hunk' })
-          map('n', '<leader>hr', gs.reset_hunk, { desc='[r]eset hunk' })
-          map('n', '<leader>hu', gs.undo_stage_hunk, { desc='[u]nstage hunk' })
+          map('n', '<leader>hs', gs.stage_hunk, { desc='[S]tage hunk' })
+          map('n', '<leader>hr', gs.reset_hunk, { desc='[R]eset hunk' })
+          map('n', '<leader>hu', gs.undo_stage_hunk, { desc='[U]nstage hunk' })
           map('v', '<leader>hs', function() gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
           map('v', '<leader>hr', function() gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end)
           map('n', '<leader>hS', gs.stage_buffer, { desc='[S]tage buffer'})
           map('n', '<leader>hR', gs.reset_buffer, { desc='[R]eset buffer'})
-          map('n', '<leader>hb', function() gs.blame_line{full=true} end, { desc='Show [b]lame'})
+          map('n', '<leader>hb', function() gs.blame_line{full=true} end, { desc='Show [B]lame'})
 
           map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
         end
@@ -305,6 +327,27 @@ require("lazy").setup({
     end
   },
 
+  { -- Directory browser
+    'stevearc/oil.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("oil").setup({
+        default_file_explorer = true,
+        -- Id is automatically added at the beginning, and name at the end
+        -- See :help oil-columns
+        columns = {
+          "icon",
+          "permissions",
+          "size",
+          "mtime",
+        },
+      })
+      vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+    end
+  },
+
   { -- Fuzzy finder
     'nvim-telescope/telescope.nvim',
 --    event = 'VimEnter',
@@ -314,7 +357,6 @@ require("lazy").setup({
       'nvim-lua/plenary.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
       'nvim-telescope/telescope-ui-select.nvim',
-      'nvim-telescope/telescope-file-browser.nvim',
       'nvim-tree/nvim-web-devicons'
     },
     config = function()
@@ -328,10 +370,6 @@ require("lazy").setup({
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
-          file_browser = {
-            theme = "ivy",
-            hijack_netrw = true,
-          }
         },
         pickers = {
           colorscheme = {
@@ -353,10 +391,8 @@ require("lazy").setup({
       -- Enable telescope extensions
       telescope.load_extension('fzf')
       telescope.load_extension('ui-select')
-      telescope.load_extension('file_browser')
 
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>se', "<cmd>Telescope file_browser<CR>", { desc = '[S]earch with file [E]xplorer' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -394,7 +430,10 @@ require("lazy").setup({
             },
             auto_install = true,
             sync_install = false,
-            highlight = { enable = true },
+            highlight = {
+              enable = true,
+              additional_vim_regex_highlighting = false
+            },
             indent = { enable = true },
             incremental_selection = { enable = false },
           })
@@ -445,7 +484,7 @@ require("lazy").setup({
 
           -- Rename the variable under your cursor
           --  Most Language Servers support renaming across files, etc.
-          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          map('<leader>fr', vim.lsp.buf.rename, '[R]ename')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
@@ -492,7 +531,12 @@ require("lazy").setup({
       -- Enable the following language servers
       local servers = {
         cmake = {},
-        clangd = {},
+        clangd = {
+            cmd = {
+              "clangd",
+              "--offset-encoding=utf-16",
+            },
+        },
         pyright = {},
         --ruff_lsp = {},
       }
@@ -568,40 +612,40 @@ require("lazy").setup({
   },
 
   -- PyTest integration
-  {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "antoinemadec/FixCursorHold.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      'nvim-neotest/neotest-python'
-    },
-    event="VeryLazy",
-    config=function()
-      require("neotest").setup({
-        adapters = {
-          require("neotest-python")({ })
-        },
-        output = { open_on_run = true },
-        quickfix = {
-          open = function()
-            require("trouble").open({ mode = "quickfix", focus = false })
-          end,
-        },
-      })
-      local map = function(keys, func, desc)
-         vim.keymap.set('n', keys, func, {  desc = 'Test: ' .. desc })
-      end
-      map("<leader>tt", function() vim.api.nvim_command('silent update') require("neotest").run.run(vim.fn.expand("%")) end, "Run File")
-      map("<leader>tT", function() vim.api.nvim_command('silent update') require("neotest").run.run(vim.loop.cwd()) end, "Run All Test Files")
-      map("<leader>tr", function() vim.api.nvim_command('silent update') require("neotest").run.run() end, "Run Nearest")
-      map("<leader>tl", function() vim.api.nvim_command('silent update') require("neotest").run.run_last() end, "Run Last")
-      map("<leader>ts", function() require("neotest").summary.toggle() end, "Toggle Summary")
-      map("<leader>to", function() require("neotest").output.open({ enter = true, auto_close = true }) end, "Show Output")
-      map("<leader>tO", function() require("neotest").output_panel.toggle() end, "Toggle Output Panel")
-      map("<leader>tS", function() require("neotest").run.stop() end, "Stop")
-    end
-  },
+  --{
+  --  "nvim-neotest/neotest",
+  --  dependencies = {
+  --    "nvim-lua/plenary.nvim",
+  --    "antoinemadec/FixCursorHold.nvim",
+  --    "nvim-treesitter/nvim-treesitter",
+  --    'nvim-neotest/neotest-python'
+  --  },
+  --  event="VeryLazy",
+  --  config=function()
+  --    require("neotest").setup({
+  --      adapters = {
+  --        require("neotest-python")({ })
+  --      },
+  --      output = { open_on_run = true },
+  --      quickfix = {
+  --        open = function()
+  --          require("trouble").open({ mode = "quickfix", focus = false })
+  --        end,
+  --      },
+  --    })
+  --    local map = function(keys, func, desc)
+  --       vim.keymap.set('n', keys, func, {  desc = 'Test: ' .. desc })
+  --    end
+  --    map("<leader>tt", function() vim.api.nvim_command('silent update') require("neotest").run.run(vim.fn.expand("%")) end, "Run File")
+  --    map("<leader>tT", function() vim.api.nvim_command('silent update') require("neotest").run.run(vim.loop.cwd()) end, "Run All Test Files")
+  --    map("<leader>tr", function() vim.api.nvim_command('silent update') require("neotest").run.run() end, "Run Nearest")
+  --    map("<leader>tl", function() vim.api.nvim_command('silent update') require("neotest").run.run_last() end, "Run Last")
+  --    map("<leader>ts", function() require("neotest").summary.toggle() end, "Toggle Summary")
+  --    map("<leader>to", function() require("neotest").output.open({ enter = true, auto_close = true }) end, "Show Output")
+  --    map("<leader>tO", function() require("neotest").output_panel.toggle() end, "Toggle Output Panel")
+  --    map("<leader>tS", function() require("neotest").run.stop() end, "Stop")
+  --  end
+  --},
 
   -- Maximize/equalize windows with Alt-M/Alt-E
   { "anuvyklack/windows.nvim",
@@ -639,8 +683,13 @@ require("lazy").setup({
       { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
       { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
     },
-  }
+  },
+  --{
+  --  'github/copilot.vim'
+  --}
 }, {})
+
+vim.g.copilot_filetypes = {cpp = true, python=true}
 
 -------------------------------------------------------------------------------
 -- Miscellaneous
@@ -664,12 +713,12 @@ vim.api.nvim_create_autocmd('FileType', {
   end
 })
 
---vim.diagnostic.config({
---  virtual_text = {severity = {min = vim.diagnostic.severity.WARN}},
---  signs = {severity = {min = vim.diagnostic.severity.WARN}},
---  underline = {severity = {min = vim.diagnostic.severity.WARN}},
---})
---
+-- vim.diagnostic.config({
+--   virtual_text = {severity = {min = vim.diagnostic.severity.WARN}},
+--   signs = {severity = {min = vim.diagnostic.severity.WARN}},
+--   underline = {severity = {min = vim.diagnostic.severity.WARN}},
+-- })
+
 
 wk = require("which-key")
 --vim.keymap.set('n', 'gn', '<Nop>')
@@ -695,3 +744,32 @@ vim.keymap.set(
   end,
   { desc = 'Edit [L]ua configuration' }
 )
+
+-- Reload the file when changed outside of the editor
+vim.api.nvim_create_autocmd({'VimResume', 'FocusGained'}, {
+  callback = function()
+    vim.api.nvim_command('checktime')
+  end
+})
+
+vim.api.nvim_create_user_command("Make", function(params)
+  -- Insert args at the '$*' in the makeprg
+  local cmd, num_subs = vim.o.makeprg:gsub("%$%*", params.args)
+  if num_subs == 0 then
+    cmd = cmd .. " " .. params.args
+  end
+  local task = require("overseer").new_task({
+    cmd = vim.fn.expandcmd(cmd),
+    components = {
+      { "on_output_quickfix", open = not params.bang, open_height = 8 },
+      "default",
+    },
+  })
+  task:start()
+end, {
+  desc = "Run your makeprg as an Overseer task",
+  nargs = "*",
+  bang = true,
+})
+
+vim.keymap.set('n', '<leader>m', "<cmd>Make<cr>", { desc='[M]ake' })
