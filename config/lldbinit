@@ -4,8 +4,6 @@ settings set target.x86-disassembly-flavor intel
 settings set frame-format "frame #${frame.index}: ${frame.pc}{ \x1b\x5b36m${module.file.basename}\x1b\x5b39m{` \x1b\x5b33m${function.name-with-args} \x1b\x5b39m${function.pc-offset}}}{ at ${line.file.basename}:${line.number}}\n"
 settings set thread-format "\x1b\x5b42;1mthread #${thread.index}: tid = ${thread.id}{, ${frame.pc}}{ \x1b\x5b31m${module.file.basename}\x1b\x5b39m{`${function.name-with-args}${function.pc-offset}}}{ at ${line.file.basename}:${line.number}}{, name = '\x1b\x5b34m${thread.name}}\x1b\x5b39m{, queue = '${thread.queue}}{, stop reason = ${thread.stop-reason}}{\nReturn value: ${thread.return-value}}\x1b\x5b0m\n"
 
-#command script import ~/.lldb/enoki_lldb.py
-
 command alias threads thread list 
 
 # Don't break at _dyld_start when another process is launched (tends to happen with Python)
