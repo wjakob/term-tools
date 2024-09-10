@@ -6,24 +6,11 @@
 [alias]
     co = checkout
     df = diff -w
-    staged = diff --staged
-    unstage = reset HEAD
-    lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
-    outgoing = log --pretty=oneline --abbrev-commit --graph @{u}..
-    incoming = !git fetch && git log --pretty=oneline --abbrev-commit --graph ..@{u}
-    untrack = update-index --assume-unchanged
     pullall = "!f(){ git pull \"$@\" && git submodule update --init --recursive; }; f"
     pr  = "!f() { git fetch -fu ${2:-origin} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
     pr-clean = "!git for-each-ref refs/heads/pr/* --format='%(refname)' | while read ref ; do branch=${ref#refs/heads/} ; git branch -D $branch ; done"
 [push]
     default = upstream
-[mergetool "araxis"]
-    path = /Applications/Araxis Merge.app/Contents/Utilities/compare
-[merge]
-    tool = araxis
-	conflictstyle = zdiff3
-[diff]
-    tool = araxis
 [core]
     pager = less -x4
     trustctime = false

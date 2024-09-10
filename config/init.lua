@@ -335,14 +335,22 @@ require("lazy").setup({
     config = function()
       require("oil").setup({
         default_file_explorer = true,
+        delete_to_trash = true,
+        skip_confirm_for_simple_edits = true,
         -- Id is automatically added at the beginning, and name at the end
         -- See :help oil-columns
         columns = {
           "icon",
-          "permissions",
           "size",
           "mtime",
         },
+        view_options = {
+          show_hidden = true,
+          natural_order = true,
+          is_always_hidden = function(name,_)
+            return name == ".." or name == ".git"
+          end,
+        }
       })
       vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
     end
@@ -443,6 +451,9 @@ require("lazy").setup({
 
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
+    opts = {
+      inlay_hints = { enabled = true },
+    },
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for neovim
       'williamboman/mason.nvim',
@@ -724,17 +735,14 @@ wk = require("which-key")
 --vim.keymap.set('n', 'gn', '<Nop>')
 --vim.keymap.set('n', 'gN', '<Nop>')
 
-wk.register({
- t = { name = "[T]est ..", },
- s = { name = "[S]earch ..", },
- f = { name = "[F]ix ..", },
-}, { prefix = "<leader>" })
-
-wk.register({
-  g = {
-    n = "which_key_ignore"
+wk.add(
+  {
+    { "<leader>f", group = "[F]ix .." },
+    { "<leader>s", group = "[S]earch .." },
+    { "<leader>t", group = "[T]est .." },
+    { "gn", hidden = true },
   }
-}, { prefix = ""})
+)
 
 -- Edit this file
 vim.keymap.set(
@@ -773,3 +781,12 @@ end, {
 })
 
 vim.keymap.set('n', '<leader>m', "<cmd>Make<cr>", { desc='[M]ake' })
+vim.keymap.set('n', '<leader>H',
+    function()
+      if vim.lsp.inlay_hint.is_enabled() then
+        vim.lsp.inlay_hint.enable(false)
+      else
+        vim.lsp.inlay_hint.enable(true)
+      end
+    end
+)

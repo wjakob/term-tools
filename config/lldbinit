@@ -8,4 +8,3 @@ command alias threads thread list
 
 # Don't break at _dyld_start when another process is launched (tends to happen with Python)
 settings set target.process.stop-on-exec false
-command script import cpython_lldb
