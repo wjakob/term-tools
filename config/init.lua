@@ -541,7 +541,7 @@ require("lazy").setup({
 
       -- Enable the following language servers
       local servers = {
-        cmake = {},
+        -- cmake = {},
         clangd = {
             cmd = {
               "clangd",

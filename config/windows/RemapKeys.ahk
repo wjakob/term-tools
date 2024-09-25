@@ -3,10 +3,13 @@
 
 #NoTrayIcon
 
-CapsLock::Escape
-ScrollLock::CapsLock
+$CapsLock::Escape
+$ScrollLock::CapsLock
 
 #HotIf WinActive("ahk_class org.wezfurlong.wezterm")
-^j::PGUP
-^k::PGDN
+^j::PGDN
+^k::PGUP
+^h::HOME
+^l::END
+^Backspace::Delete
 #Enter::Send('!{Enter}')

@@ -30,12 +30,21 @@ config.color_scheme = 'Tomorrow Night'
 -- Set graphics card
 config.webgpu_preferred_adapter = {
   backend = 'Dx12',
-  device = 1071,
-  device_type = 'DiscreteGpu',
-  name = 'NVIDIA RTX 3500 Ada Generation Laptop GPU',
-  vendor = 4138,
+  device = 42912,
+  device_type = 'IntegratedGpu',
+  name = 'Intel(R) Iris(R) Xe Graphics',
+  vendor = 32902,
 }
+
 config.front_end = 'WebGpu'
+config.hide_tab_bar_if_only_one_tab = true
+
+config.window_padding = {
+  left = 0,
+  right = 0,
+  top = 0,
+  bottom = 0,
+}
 
 -- and finally, return the configuration to wezterm
 return config
