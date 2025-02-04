@@ -231,6 +231,7 @@ MEIS
 MERL
 MIP
 MIS
+MLP
 MLT
 MMLT
 MNEE
@@ -455,7 +456,6 @@ backpropagate
 backpropagates
 backpropagating
 backpropagation
-backpropagation
 backpropagations
 backstepping
 barycenter
@@ -477,7 +477,6 @@ chirality
 chromaticity
 classifier
 codebase
-collimated
 collimated
 collimation
 componentwise
@@ -587,7 +586,6 @@ interprocedural
 interreflection
 interreflections
 invertibility
-invertibility
 irradiance
 isolines
 isosurface
@@ -659,7 +657,6 @@ mutexes
 namespace
 namespaces
 nanobind
-nanobind
 nanobind's
 nanogui
 nanometer
@@ -711,7 +708,6 @@ plano
 plugin
 plugins
 pointwise
-pointwise
 polarimetric
 polarizer
 polarizers
@@ -732,9 +728,6 @@ pseudocode
 pseudoinverse
 pseudorandom
 psychovisual
-pybind11
-pybind11
-pybind11
 pybind11
 pybind11's
 quadrangulate
@@ -797,6 +790,7 @@ simplicial
 sinc
 sinogram
 sinusoidals
+size_valid
 slerp
 spectro
 specular
@@ -823,6 +817,7 @@ submodules
 subpath
 subpath's
 subpaths
+subproblem
 subsampling
 subtree
 superlinear

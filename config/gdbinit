@@ -1,3 +1,4 @@
 set history save on
 set print pretty
-set history filename ~/.gdb/history 
+set history filename ~/.gdb/history
+set debuginfod enabled off
