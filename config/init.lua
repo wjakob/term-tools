@@ -400,10 +400,26 @@ require("lazy").setup({
       telescope.load_extension('fzf')
       telescope.load_extension('ui-select')
 
+      find_files = function()
+          cwd = vim.loop.cwd()
+          if vim.endswith(cwd, "/build") then
+            cwd = vim.fs.dirname(cwd)
+          end
+          builtin.find_files({cwd = cwd})
+      end
+
+      live_grep = function()
+          cwd = vim.loop.cwd()
+          if vim.endswith(cwd, "/build") then
+            cwd = vim.fs.dirname(cwd)
+          end
+          builtin.live_grep({cwd = cwd})
+      end
+
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sf', find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sg', live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[,] Search existing buffers' })
 
