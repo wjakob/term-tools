@@ -887,3 +887,11 @@ wireframe
 workflow
 workflows
 x86
+evaluators
+activations
+scaler
+affine
+PBIR
+OPTO
+LAPD
+SPIE
