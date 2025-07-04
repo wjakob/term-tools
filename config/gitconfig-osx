@@ -28,3 +28,5 @@
 	sort = -committerdate
 [pull]
 	ff = only
+[http]
+	postBuffer = 157286400
