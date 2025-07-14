@@ -1,7 +1,0 @@
-# copy to /usr/share/applications
-[Desktop Entry]
-Name=XTerm
-Exec=xterm -fa "UbuntuMono Nerd Font Mono" -fs 14 -e tmux -2
-Icon=/usr/share/icons/Yaru/256x256/apps/terminal.png
-Terminal=false
-Type=Application

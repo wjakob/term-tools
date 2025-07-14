@@ -6,20 +6,10 @@ if [ -z "$TERM_TOOLS" ]; then
     exit 1
 fi
 
-if [ -e ~/.vim ]; then
-    echo "Error: .vim exists.  Move or delete ~/.vim"
+if [ -e ~/.config/nvim ]; then
+    echo "Error: ~/.config/nvim exists.  Move or delete the directory."
     exit 1
 fi
 
-if [ -e ~/.vimrc ]; then
-    echo "Error: .vimrc exists.  Move or delete ~/.vimrc"
-    exit 1
-fi
-
-# Install dotfiles (this will fail it already exists so we are safe)
-ln -s $TERM_TOOLS/config/vimrc ~/.vimrc
-
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-vim +PlugInstall +qall
+mkdir -p ~/.config/nvim
+ln -s $TERM_TOOLS/config/init.lua ~/.config/nvim/init.lua

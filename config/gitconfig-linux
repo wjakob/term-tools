@@ -21,7 +21,7 @@
 [core]
     pager = less -x4
 [credential]
-    helper = store
+	helper = store
 [color]
     ui = auto
 [alias]

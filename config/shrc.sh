@@ -268,7 +268,6 @@ if [ "$ZSH_VERSION" ]; then
     source $TERM_TOOLS/config/prompt.zsh
     source $TERM_TOOLS/config/fzf.zsh
     source $TERM_TOOLS/config/zsh-vi-search.zsh
-    source $TERM_TOOLS/config/aichat.zsh
 fi
 
 # bash-specific configuration
