@@ -239,16 +239,6 @@ require("lazy").setup({
     opts={ }
   },
 
-  -- Nice visual notifications
-  {
-    "rcarriga/nvim-notify",
-    config = function()
-      local notify = require("notify")
-      vim.notify = notify
-      notify.setup()
-    end
-  },
-
   -- Async job processor (builds, etc.)
   {
     'stevearc/overseer.nvim',
@@ -748,18 +738,18 @@ vim.api.nvim_create_autocmd('FileType', {
 -- })
 
 
-wk = require("which-key")
+local wk = require("which-key")
 --vim.keymap.set('n', 'gn', '<Nop>')
 --vim.keymap.set('n', 'gN', '<Nop>')
 
-wk.add(
-  {
-    { "<leader>f", group = "[F]ix .." },
-    { "<leader>s", group = "[S]earch .." },
-    { "<leader>t", group = "[T]est .." },
-    { "gn", hidden = true },
-  }
-)
+wk.register({
+  ["<leader>"] = {
+    f = { name = "[F]ix .." },
+    s = { name = "[S]earch .." },
+    t = { name = "[T]est .." },
+  },
+  gn = "which_key_ignore",
+})
 
 -- Edit this file
 vim.keymap.set(
