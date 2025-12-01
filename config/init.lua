@@ -218,8 +218,10 @@ require("lazy").setup({
       -- Comment and uncomment code snippets
       require('mini.comment').setup({
          mappings = {
+           comment = '',
+           comment_line = '<Leader>c',
            comment_visual = '<Leader>c',
-           comment_line = '<Leader>c'
+           textobject = '',
          }
       })
     end,
@@ -527,6 +529,13 @@ require("lazy").setup({
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+          -- Disable semantic tokens to avoid a Neovim bug where rapid scrolling
+          -- causes "attempt to index local 'request' (a nil value)" errors
+          if client and client.server_capabilities.semanticTokensProvider then
+            client.server_capabilities.semanticTokensProvider = nil
+          end
+
           if client and client.server_capabilities.documentHighlightProvider then
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -742,13 +751,11 @@ local wk = require("which-key")
 --vim.keymap.set('n', 'gn', '<Nop>')
 --vim.keymap.set('n', 'gN', '<Nop>')
 
-wk.register({
-  ["<leader>"] = {
-    f = { name = "[F]ix .." },
-    s = { name = "[S]earch .." },
-    t = { name = "[T]est .." },
-  },
-  gn = "which_key_ignore",
+wk.add({
+  { "<leader>f", group = "[F]ix .." },
+  { "<leader>s", group = "[S]earch .." },
+  { "<leader>t", group = "[T]est .." },
+  { "gn", hidden = true },
 })
 
 -- Edit this file
