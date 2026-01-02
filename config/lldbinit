@@ -10,3 +10,4 @@ command alias threads thread list
 settings set target.process.stop-on-exec false
 settings set symbols.enable-lldb-index-cache true
 settings set symbols.load-on-demand true
+settings set show-statusline false
