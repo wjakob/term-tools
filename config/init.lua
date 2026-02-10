@@ -96,6 +96,14 @@ vim.keymap.set('n', '<A-,>', '<cmd>split<cr>', { desc = 'split the window horizo
 vim.keymap.set('n', 'gj', '<C-o>', { noremap=true, nowait=true, silent=true, desc='Jump list: next' })
 vim.keymap.set('n', 'gk', '<C-i>', { noremap=true, nowait=true, silent=true, desc='Jump list: previous' })
 
+-- Page down/up with Ctrl-J/K
+vim.keymap.set({'n', 'v'}, '<C-j>', '<C-d>', { noremap=true, desc = 'Page down' })
+vim.keymap.set({'n', 'v'}, '<C-k>', '<C-u>', { noremap=true, desc = 'Page up' })
+
+-- Home/End of line with Ctrl-H/L
+vim.keymap.set({'n', 'v'}, '<C-h>', '^', { noremap=true, desc = 'Beginning of line' })
+vim.keymap.set({'n', 'v'}, '<C-l>', '$', { noremap=true, desc = 'End of line' })
+
 -- vim.keymap.set('n', '', builtin.grep_string, { desc = '[S]earch current [W]ord' })
 
 -- Use the 'Q' key to reformat paragraphs
@@ -380,9 +388,8 @@ require("lazy").setup({
         defaults = {
           mappings = {
             i = {
-              -- These are actually rempaped from C-j/C-k by tmux
-              ["<PageDown>"] = actions.move_selection_next,
-              ["<PageUp>"] = actions.move_selection_previous,
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
               ["<Escape>"] = actions.close
             }
           }

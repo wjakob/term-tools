@@ -51,30 +51,6 @@
           ]
         }
       ]
-    },
-    {
-      "description": "Left Command to Alt in Kitty.app only",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {
-            "key_code": "left_command"
-          },
-          "to": [
-            {
-              "key_code": "left_alt"
-            }
-          ],
-          "conditions": [
-            {
-              "type": "frontmost_application_if",
-              "bundle_identifiers": [
-                "^net.kovidgoyal.kitty"
-              ]
-            }
-          ]
-        }
-      ]
     }
   ]
 }
